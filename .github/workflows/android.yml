@@ -36,6 +36,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Fetch verified native runtime
+        env:
+          JNI_DIR: ${{ github.workspace }}/toolchains/out/jniLibs
         run: bash native/prebuilt.sh fetch
 
       - name: Build JavaScript engine
@@ -46,8 +48,32 @@ jobs:
       - name: Test and assemble debug APK
         run: >-
           bash gradlew :engine:test :app:testDebugUnitTest :app:assembleDebug
+          -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs
           -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine
           --stacktrace
+
+      - name: Verify APK runtime
+        run: |
+          apk=app/build/outputs/apk/debug/app-debug.apk
+          test -f "$apk"
+          unzip -t "$apk" >/dev/null
+          entries="$(unzip -Z1 "$apk")"
+          for entry in \
+            lib/arm64-v8a/libnode.so \
+            lib/arm64-v8a/libdshengine.so \
+            lib/arm64-v8a/libdshnode.so \
+            lib/arm64-v8a/libc++_shared.so \
+            lib/arm64-v8a/libdsh_pty.so \
+            lib/arm64-v8a/libdsh_flock.so \
+            lib/arm64-v8a/librg.so \
+            assets/engine.zip \
+            assets/shizuku/shizuku.apk \
+            assets/shizuku/LICENSE
+          do
+            printf '%s\n' "$entries" | grep -Fxq "$entry" || { echo "Missing APK entry: $entry" >&2; exit 1; }
+          done
+          unzip -p "$apk" assets/engine.zip > "$RUNNER_TEMP/engine.zip"
+          unzip -t "$RUNNER_TEMP/engine.zip" >/dev/null
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
