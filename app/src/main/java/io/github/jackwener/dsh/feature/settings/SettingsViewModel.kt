@@ -26,6 +26,11 @@ import io.github.jackwener.dsh.core.diagnostics.DiagnosticsInput
 import io.github.jackwener.dsh.core.diagnostics.DiagnosticsReport
 import io.github.jackwener.dsh.core.diagnostics.ProviderFacts
 import io.github.jackwener.dsh.core.provider.HeaderRow
+import io.github.jackwener.dsh.core.provider.OPENAI_CHAT_COMPLETIONS
+import io.github.jackwener.dsh.core.provider.planAddProviderKey
+import io.github.jackwener.dsh.core.provider.planDeleteProviderKey
+import io.github.jackwener.dsh.core.provider.planSelectProviderKey
+import io.github.jackwener.dsh.core.provider.providerSecretNames
 import io.github.jackwener.dsh.core.provider.ProviderConfig
 import io.github.jackwener.dsh.core.provider.appRequestHeaders
 import io.github.jackwener.dsh.core.provider.appUserAgent
@@ -44,6 +49,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.HttpURLConnection
@@ -89,50 +96,86 @@ class SettingsViewModel @Inject constructor(
     // Saving changes the engine's patch layer / key environment: the engine picks it up on its next
     // idle restart (EngineManager.profileFingerprint), so nothing running is interrupted here.
     /**
-     * Saves [p]; a non-blank [key] replaces the stored key (Keystore-encrypted, never in settings).
+     * Saves [p]; a non-blank [key] adds and activates a named key (Keystore-encrypted, never in settings).
      * [headerRows] (the editor's 额外请求头) replace [p]'s headers: secret-looking values go to
      * SecretStore like the key (planHeaders); null keeps [p.headers] as they are.
      */
-    suspend fun saveProvider(p: ProviderConfig, key: String?, headerRows: List<HeaderRow>? = null) {
+    private val providerKeyMutex = Mutex()
+
+    suspend fun saveProvider(p: ProviderConfig, key: String?, headerRows: List<HeaderRow>? = null, keyName: String? = null) = providerKeyMutex.withLock {
         val k = key?.trim().orEmpty()
         val previous = repo.current().providers.firstOrNull { it.id == p.id }
-        val plan = headerRows?.let { planHeaders(p.id, it, previous) }
+        val keyPlan = if (k.isEmpty()) null else planAddProviderKey(p, keyName.orEmpty(), k)
+        val headers = headerRows?.let { planHeaders(p.id, it, previous) }
         withContext(Dispatchers.IO) {
-            if (k.isNotEmpty()) secrets.write(p.secretName, k)
-            plan?.write?.forEach { (name, value) -> secrets.write(name, value) }
-            plan?.clear?.forEach { secrets.clear(it) }
+            keyPlan?.write?.forEach { (name, value) -> secrets.write(name, value) }
+            headers?.write?.forEach { (name, value) -> secrets.write(name, value) }
+            headers?.clear?.forEach { secrets.clear(it) }
         }
-        repo.saveProvider(p.copy(hasKey = p.hasKey || k.isNotEmpty(), headers = plan?.headers ?: p.headers))
+        repo.saveProvider((keyPlan?.config ?: p).copy(headers = headers?.headers ?: p.headers))
     }
+
+    /** Add and immediately activate a named key without starting another provider runtime. */
+    suspend fun addProviderKey(providerId: String, name: String, key: String): Boolean = providerKeyMutex.withLock {
+        val current = repo.current().providers.firstOrNull { it.id == providerId } ?: return@withLock false
+        if (key.isBlank()) return@withLock false
+        val plan = planAddProviderKey(current, name, key)
+        withContext(Dispatchers.IO) { plan.write.forEach { (slot, value) -> secrets.write(slot, value) } }
+        repo.saveProvider(plan.config)
+        true
+    }
+
+    fun selectProviderKey(p: ProviderConfig, keyId: String) = viewModelScope.launch {
+        providerKeyMutex.withLock { repo.updateProvider(p.id) { planSelectProviderKey(it, keyId).config } }
+    }
+
+    /** One DataStore update chooses the surviving active key; only then is the deleted secret erased. */
+    fun deleteProviderKey(p: ProviderConfig, keyId: String) = viewModelScope.launch {
+        providerKeyMutex.withLock {
+            val current = repo.current().providers.firstOrNull { it.id == p.id } ?: return@withLock
+            val plan = planDeleteProviderKey(current, keyId)
+            if (plan.config == current) return@withLock
+            repo.saveProvider(plan.config)
+            withContext(Dispatchers.IO) { plan.clear.forEach { secrets.clear(it) } }
+        }
+    }
+
     fun deleteProvider(p: ProviderConfig) = viewModelScope.launch {
-        withContext(Dispatchers.IO) { secrets.clear(p.secretName); p.headers.filter { it.secret }.forEach { secrets.clear(p.headerSecretName(it.name)) } }
-        repo.deleteProvider(p.id)
+        providerKeyMutex.withLock {
+            val current = repo.current().providers.firstOrNull { it.id == p.id } ?: p
+            repo.deleteProvider(current.id)
+            withContext(Dispatchers.IO) {
+                providerSecretNames(current).forEach { secrets.clear(it) }
+            }
+        }
     }
     /** Headers of the app's own requests to a provider (listing, connection test): the editor's rows or [p]'s stored ones. */
     private fun requestHeaders(existing: ProviderConfig?, rows: List<HeaderRow>?, sessionHeader: String?): Map<String, String> =
         appRequestHeaders(resolveHeaderRows(rows ?: headerRowsOf(existing), existing) { secrets.read(it) }, sessionHeader, appUserAgent(io.github.jackwener.dsh.BuildConfig.VERSION_NAME))
     fun setProviderEnabled(p: ProviderConfig, on: Boolean) = viewModelScope.launch { repo.saveProvider(p.copy(enabled = on)) }
     /** `GET {baseUrl}/models` with [key] (or the stored key of [existing]); also the connection test. */
-    suspend fun fetchModels(baseUrl: String, key: String?, existing: ProviderConfig?, headerRows: List<HeaderRow>? = null, sessionHeader: String? = existing?.sessionHeader): Result<io.github.jackwener.dsh.core.provider.FetchedModels<io.github.jackwener.dsh.core.provider.RemoteModel>> = withContext(Dispatchers.IO) {
-        val k = key?.trim()?.takeIf { it.isNotEmpty() } ?: existing?.takeIf { it.hasKey }?.let { secrets.read(it.secretName) }
+    suspend fun fetchModels(baseUrl: String, key: String?, existing: ProviderConfig?, headerRows: List<HeaderRow>? = null, sessionHeader: String? = existing?.sessionHeader,
+        interfaceType: String = existing?.interfaceType ?: OPENAI_CHAT_COMPLETIONS): Result<io.github.jackwener.dsh.core.provider.FetchedModels<io.github.jackwener.dsh.core.provider.RemoteModel>> = withContext(Dispatchers.IO) {
+        val k = key?.trim()?.takeIf { it.isNotEmpty() } ?: existing?.takeIf { it.hasAnyKey }?.let { secrets.read(it.activeSecretName) }
         val headers = requestHeaders(existing, headerRows, sessionHeader)
-        io.github.jackwener.dsh.core.provider.fetchModelsResolving(baseUrl, k) { u, kk -> io.github.jackwener.dsh.core.provider.fetchModels(u, kk, headers) }
+        io.github.jackwener.dsh.core.provider.fetchModelsResolving(baseUrl, k) { u, kk -> io.github.jackwener.dsh.core.provider.fetchModels(u, kk, headers, interfaceType) }
     }
     private fun keyFor(existing: ProviderConfig?, typed: String?): String? =
-        typed?.trim()?.takeIf { it.isNotEmpty() } ?: existing?.takeIf { it.hasKey }?.let { secrets.read(it.secretName) }
+        typed?.trim()?.takeIf { it.isNotEmpty() } ?: existing?.takeIf { it.hasAnyKey }?.let { secrets.read(it.activeSecretName) }
 
     /** 测试并保存: real chat requests with a tool, [candidates] in order (ModelVerify.kt). [onTesting] runs on an IO thread. */
     suspend fun verifyModels(baseUrl: String, key: String?, existing: ProviderConfig?, candidates: List<String>, onTesting: (String) -> Unit,
-        headerRows: List<HeaderRow>? = null, sessionHeader: String? = existing?.sessionHeader): VerifyOutcome =
+        headerRows: List<HeaderRow>? = null, sessionHeader: String? = existing?.sessionHeader,
+        interfaceType: String = existing?.interfaceType ?: OPENAI_CHAT_COMPLETIONS): VerifyOutcome =
         withContext(Dispatchers.IO) {
             val k = keyFor(existing, key)
             // A fresh session id per probe: each test call stands alone (appRequestHeaders).
-            verifyCandidates(candidates, onTesting = onTesting) { probeModel(baseUrl, k, it, requestHeaders(existing, headerRows, sessionHeader)) }
+            verifyCandidates(candidates, onTesting = onTesting) { probeModel(baseUrl, k, it, requestHeaders(existing, headerRows, sessionHeader), interfaceType) }
         }
 
     /** Saves a tested provider and, when [main] is set, makes that model the main model. */
-    suspend fun saveTested(p: ProviderConfig, key: String?, main: String?, headerRows: List<HeaderRow>? = null) {
-        saveProvider(p, key, headerRows)
+    suspend fun saveTested(p: ProviderConfig, key: String?, main: String?, headerRows: List<HeaderRow>? = null, keyName: String? = null) {
+        saveProvider(p, key, headerRows, keyName)
         if (main != null) repo.setModel(p.id, main)
     }
 
@@ -149,7 +192,7 @@ class SettingsViewModel @Inject constructor(
         if (modelCheck.value?.busy == true) return@launch
         if (select && model in p.verified) { modelCheck.value = null; repo.setModel(p.id, model); return@launch }
         modelCheck.value = ModelCheck(p.id, model, busy = true)
-        val f = withContext(Dispatchers.IO) { probeModel(p.baseUrl, keyFor(p, null), model, requestHeaders(p, null, p.sessionHeader)) }
+        val f = withContext(Dispatchers.IO) { probeModel(p.baseUrl, keyFor(p, null), model, requestHeaders(p, null, p.sessionHeader), p.interfaceType) }
         repo.updateProvider(p.id) { cur -> cur.copy(verified = if (f == null) (cur.verified + model).distinct() else cur.verified - model) }
         modelCheck.value = when {
             f == null -> {

@@ -210,7 +210,7 @@ class ModelVerifyTest {
 
     @Before fun startServer() {
         server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
-        server.createContext("/v1/chat/completions") { ex ->
+        fun register(path: String) = server.createContext(path) { ex ->
             val body = ex.requestBody.readBytes().decodeToString()
             requests += ex.requestHeaders.entries.associate { it.key.lowercase() to it.value.joinToString(",") } to body
             val model = Json.parseToJsonElement(body).jsonObject["model"]!!.jsonPrimitive.content
@@ -218,6 +218,15 @@ class ModelVerifyTest {
             val bytes = text.toByteArray()
             ex.responseHeaders.add("content-type", type)
             ex.sendResponseHeaders(status, bytes.size.toLong())
+            ex.responseBody.use { it.write(bytes) }
+        }
+        register("/v1/chat/completions")
+        register("/v1/messages")
+        server.createContext("/v1/models") { ex ->
+            requests += ex.requestHeaders.entries.associate { it.key.lowercase() to it.value.joinToString(",") } to ""
+            val bytes = """{"data":[{"id":"claude-test"}]}""".toByteArray()
+            ex.responseHeaders.add("content-type", "application/json")
+            ex.sendResponseHeaders(200, bytes.size.toLong())
             ex.responseBody.use { it.write(bytes) }
         }
         server.start()
@@ -282,4 +291,38 @@ class ModelVerifyTest {
         assertIs<VerifyFailure.Network>(f)
         assertFalse(f!!.modelSpecific)
     }
+    @Test fun anthropicProbeUsesNativeMessagesAndToolUse() {
+        val toolUse = """{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"dsh_connection_check","input":{}}}"""
+        answers["claude-test"] = Triple(200, "text/event-stream", sse(toolUse))
+        assertNull(probeModel(base, "sk-ant", "claude-test", interfaceType = ANTHROPIC_MESSAGES))
+        val (headers, body) = requests.single()
+        assertEquals("sk-ant", headers["x-api-key"])
+        assertEquals("2023-06-01", headers["anthropic-version"])
+        assertFalse(headers.containsKey("authorization"))
+        val o = Json.parseToJsonElement(body) as JsonObject
+        assertTrue(o.containsKey("system"))
+        assertTrue(o["tools"].toString().contains("input_schema"))
+        assertFalse(o.containsKey("stream_options"))
+        assertTrue(o["tool_choice"].toString().contains("\"type\":\"tool\""))
+    }
+
+    @Test fun anthropicAnswerShapesAreParsed() {
+        assertNull(readProbeAnswer("""{"type":"message","content":[{"type":"tool_use","id":"t","name":"dsh_connection_check","input":{}}]}""".lineSequence()))
+        val text = readProbeAnswer("""
+            data: {"type":"content_block_delta","delta":{"type":"text_delta","text":"I cannot "}}
+            data: {"type":"content_block_delta","delta":{"type":"text_delta","text":"call it."}}
+            data: {"type":"message_stop"}
+        """.trimIndent().lineSequence())
+        assertEquals(VerifyFailure.NoToolCall("I cannot call it."), text)
+    }
+
+    @Test fun anthropicModelListingUsesNativeAuthentication() {
+        val models = fetchModels(base, "sk-ant", interfaceType = ANTHROPIC_MESSAGES).getOrThrow()
+        assertEquals(listOf("claude-test"), models.map { it.id })
+        val headers = requests.single().first
+        assertEquals("sk-ant", headers["x-api-key"])
+        assertEquals("2023-06-01", headers["anthropic-version"])
+        assertFalse(headers.containsKey("authorization"))
+    }
+
 }

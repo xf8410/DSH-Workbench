@@ -3,8 +3,10 @@ package io.github.jackwener.dsh.core.provider
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlinx.serialization.json.Json
 
 class ProvidersTest {
     private val kimi = ProviderConfig("kimi", "kimi", "Kimi", "https://api.moonshot.cn/v1/", listOf("kimi-k3"), hasKey = true)
@@ -248,4 +250,87 @@ class ProvidersTest {
         assertTrue(parseTokenInput("128k").isFailure)
         assertTrue(parseTokenInput("0").isFailure)
     }
+    @Test fun legacySingleKeyDecodesWithoutMigration() {
+        val old = """{"id":"kimi","preset":"kimi","name":"Kimi","baseUrl":"https://api.moonshot.cn/v1","models":["k"],"hasKey":true}"""
+        val p = Json { ignoreUnknownKeys = true }.decodeFromString(ProviderConfig.serializer(), old)
+        assertEquals(OPENAI_CHAT_COMPLETIONS, p.interfaceType)
+        assertEquals(listOf(ProviderKey(LEGACY_PROVIDER_KEY, "默认 Key")), p.keyEntries)
+        assertEquals(LEGACY_PROVIDER_KEY, p.resolvedActiveKeyId)
+        assertEquals("provider-kimi", p.activeSecretName)
+    }
+
+    @Test fun keyMetadataRoundTripNeverContainsSecretValues() {
+        val added = planAddProviderKey(custom, "主账号", "sk-plaintext-secret", "one").config
+        val encoded = Json { encodeDefaults = true }.encodeToString(ProviderConfig.serializer(), added)
+        assertFalse(encoded.contains("sk-plaintext-secret"))
+        assertTrue(encoded.contains("主账号"))
+        val decoded = Json.decodeFromString(ProviderConfig.serializer(), encoded)
+        assertEquals(added, decoded)
+        assertEquals("provider-custom-key-one", decoded.activeSecretName)
+    }
+
+    @Test fun addSelectAndDeleteKeysHaveDeterministicFallbacks() {
+        val first = planAddProviderKey(custom, "One", "s1", "one").config
+        val second = planAddProviderKey(first, "Two", "s2", "two").config
+        assertEquals("two", second.resolvedActiveKeyId)
+        assertEquals(listOf("one", "two"), second.keyEntries.map { it.id })
+
+        val selected = planSelectProviderKey(second, "one").config
+        assertEquals("one", selected.resolvedActiveKeyId)
+        assertEquals(second, planSelectProviderKey(second, "missing").config)
+
+        // Non-active deletion preserves the active key and removes only its own secret.
+        val nonActive = planDeleteProviderKey(selected, "two")
+        assertEquals("one", nonActive.config.resolvedActiveKeyId)
+        assertEquals(listOf("provider-custom-key-two"), nonActive.clear)
+        // Active deletion selects the first survivor in the same returned config.
+        val active = planDeleteProviderKey(second, "two")
+        assertEquals("one", active.config.resolvedActiveKeyId)
+        assertEquals(listOf("provider-custom-key-two"), active.clear)
+        val last = planDeleteProviderKey(nonActive.config, "one")
+        assertFalse(last.config.hasAnyKey)
+        assertNull(last.config.resolvedActiveKeyId)
+        assertEquals(listOf("provider-custom-key-one"), last.clear)
+        assertEquals(last.config, planDeleteProviderKey(last.config, "missing").config)
+    }
+
+    @Test fun legacyKeySurvivesAddingAndCanBeDeletedSafely() {
+        val withNew = planAddProviderKey(kimi, "New", "s2", "new").config
+        assertEquals(listOf(LEGACY_PROVIDER_KEY, "new"), withNew.keyEntries.map { it.id })
+        assertEquals("provider-kimi-key-new", withNew.activeSecretName)
+        val removed = planDeleteProviderKey(withNew, "new")
+        assertEquals(LEGACY_PROVIDER_KEY, removed.config.resolvedActiveKeyId)
+        assertEquals("provider-kimi", removed.config.activeSecretName)
+        val empty = planDeleteProviderKey(removed.config, LEGACY_PROVIDER_KEY)
+        assertFalse(empty.config.hasAnyKey)
+        assertEquals(listOf("provider-kimi"), empty.clear)
+    }
+
+    @Test fun engineReceivesOnlyTheActiveKey() {
+        val p = planAddProviderKey(kimi, "New", "new-secret", "new").config
+        val values = mapOf("provider-kimi" to "old-secret", "provider-kimi-key-new" to "new-secret")
+        val env = activeProviderKeys(listOf(p, custom), values::get)
+        assertEquals(mapOf("DSH_ANDROID_KEY_KIMI" to "new-secret"), env)
+        val old = activeProviderKeys(listOf(planSelectProviderKey(p, LEGACY_PROVIDER_KEY).config), values::get)
+        assertEquals(mapOf("DSH_ANDROID_KEY_KIMI" to "old-secret"), old)
+    }
+
+    @Test fun anthropicProfileUsesNativeMessagesWithoutOpenAiUsageOption() {
+        val p = presetOf("anthropic")!!
+        assertEquals(ANTHROPIC_MESSAGES, p.interfaceType)
+        val cfg = ProviderConfig("anthropic", p.id, p.name, p.baseUrl, p.models, hasKey = true, interfaceType = p.interfaceType)
+        val yml = renderProfilePatch(listOf(cfg), webSearch = true)
+        assertTrue(yml.contains("\"interfaceType\":\"anthropic-messages\""))
+        assertFalse(yml.contains("includeUsage"))
+        assertTrue(yml.contains("\"apiKeyEnv\":\"DSH_ANDROID_KEY_ANTHROPIC\""))
+        assertNotNull(presetOf("deepseek"))
+        assertNotNull(presetOf("groq"))
+    }
+
+    @Test fun providerDeletionCoversLegacyMultiKeyAndSecretHeaders() {
+        val multi = planAddProviderKey(kimi, "New", "secret", "new").config.copy(
+            headers = listOf(ProviderHeader("X-Api-Key", secret = true), ProviderHeader("X-Team", "blue")))
+        assertEquals(listOf("provider-kimi", "provider-kimi-key-new", "provider-kimi-h-x-api-key"), providerSecretNames(multi))
+    }
+
 }

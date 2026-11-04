@@ -9,6 +9,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.addJsonObject
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
@@ -210,8 +211,11 @@ fun rankCandidates(listed: List<RemoteModel>, preset: ProviderPreset?, main: Str
 const val HARNESS_USER_AGENT = "deepseek-harness (+https://github.com/deepseek-ai/deepseek-harness)"
 const val PROBE_TOOL = "dsh_connection_check"
 
-/** The probe's request body: one no-argument tool, and (when [forceTool]) a tool_choice naming it. */
-fun probeBody(model: String, forceTool: Boolean): String = buildJsonObject {
+/** The probe's request body in the same wire protocol the engine will use. */
+fun probeBody(model: String, forceTool: Boolean, interfaceType: String = OPENAI_CHAT_COMPLETIONS): String =
+    if (interfaceType == ANTHROPIC_MESSAGES) anthropicProbeBody(model, forceTool) else openAiProbeBody(model, forceTool)
+
+private fun openAiProbeBody(model: String, forceTool: Boolean): String = buildJsonObject {
     put("model", model)
     put("stream", true)
     putJsonObject("stream_options") { put("include_usage", true) }
@@ -234,14 +238,31 @@ fun probeBody(model: String, forceTool: Boolean): String = buildJsonObject {
     if (forceTool) putJsonObject("tool_choice") { put("type", "function"); putJsonObject("function") { put("name", PROBE_TOOL) } }
 }.toString()
 
+private fun anthropicProbeBody(model: String, forceTool: Boolean): String = buildJsonObject {
+    put("model", model)
+    put("stream", true)
+    put("max_tokens", 1024)
+    put("system", "This is a connection check. Call the $PROBE_TOOL tool once. Do not reply with text.")
+    putJsonArray("messages") { addJsonObject { put("role", "user"); put("content", "Call $PROBE_TOOL now.") } }
+    putJsonArray("tools") {
+        addJsonObject {
+            put("name", PROBE_TOOL)
+            put("description", "Confirms that tool calls work. Takes no arguments.")
+            putJsonObject("input_schema") { put("type", "object"); putJsonObject("properties") {}; putJsonArray("required") {} }
+        }
+    }
+    if (forceTool) putJsonObject("tool_choice") { put("type", "tool"); put("name", PROBE_TOOL) }
+}.toString()
+
 /**
  * One real chat request. Returns null when the answer contains a tool call, else why not.
  * Runs on the caller's thread (call from Dispatchers.IO). The read timeout is generous: a local
  * server (Ollama, LM Studio) may load the model before the first byte.
  */
 fun probeToolCall(baseUrl: String, key: String?, model: String, forceTool: Boolean = true, connectTimeoutMs: Int = 10_000, readTimeoutMs: Int = 90_000,
-    headers: Map<String, String> = emptyMap()): VerifyFailure? = try {
-    val c = URL(baseUrl.trim().trimEnd('/') + "/chat/completions").openConnection() as HttpURLConnection
+    headers: Map<String, String> = emptyMap(), interfaceType: String = OPENAI_CHAT_COMPLETIONS): VerifyFailure? = try {
+    val path = if (interfaceType == ANTHROPIC_MESSAGES) "/messages" else "/chat/completions"
+    val c = URL(baseUrl.trim().trimEnd('/') + path).openConnection() as HttpURLConnection
     try {
         c.connectTimeout = connectTimeoutMs; c.readTimeout = readTimeoutMs
         c.requestMethod = "POST"; c.doOutput = true
@@ -250,8 +271,12 @@ fun probeToolCall(baseUrl: String, key: String?, model: String, forceTool: Boole
         c.setRequestProperty("user-agent", HARNESS_USER_AGENT)
         // The provider's extra headers, session header and app User-Agent (appRequestHeaders), as the engine sends them.
         headers.forEach { (k, v) -> c.setRequestProperty(k, v) }
-        if (!key.isNullOrBlank()) c.setRequestProperty("authorization", "Bearer ${key.trim()}")
-        c.outputStream.use { it.write(probeBody(model, forceTool).toByteArray()) }
+        if (interfaceType == ANTHROPIC_MESSAGES) c.setRequestProperty("anthropic-version", "2023-06-01")
+        if (!key.isNullOrBlank()) {
+            if (interfaceType == ANTHROPIC_MESSAGES) c.setRequestProperty("x-api-key", key.trim())
+            else c.setRequestProperty("authorization", "Bearer ${key.trim()}")
+        }
+        c.outputStream.use { it.write(probeBody(model, forceTool, interfaceType).toByteArray()) }
         val code = c.responseCode
         if (code !in 200..299) {
             val body = c.errorStream?.use { it.readBytes().decodeToString().take(64_000) }.orEmpty()
@@ -281,6 +306,20 @@ fun readProbeAnswer(lines: Sequence<String>): VerifyFailure? {
             val calls = msg["tool_calls"] as? JsonArray
             if (!calls.isNullOrEmpty() || (msg["function_call"] as? JsonObject) != null) return PASS
             (msg["content"] as? JsonPrimitive)?.takeIf { it !is JsonNull }?.content?.let { if (reply.length < 300) reply.append(it) }
+        }
+        // Anthropic Messages: content_block_start announces a tool_use block; non-streaming replies
+        // carry the same block in content. Text deltas are retained for the no-tool-call diagnostic.
+        (o["content"] as? JsonArray)?.forEach { item ->
+            val block = item as? JsonObject ?: return@forEach
+            if (block["type"]?.jsonPrimitive?.content == "tool_use") return PASS
+            if (block["type"]?.jsonPrimitive?.content == "text") (block["text"] as? JsonPrimitive)?.content?.let { if (reply.length < 300) reply.append(it) }
+        }
+        (o["content_block"] as? JsonObject)?.let { block ->
+            if (block["type"]?.jsonPrimitive?.content == "tool_use") return PASS
+            if (block["type"]?.jsonPrimitive?.content == "text") (block["text"] as? JsonPrimitive)?.content?.let { if (reply.length < 300) reply.append(it) }
+        }
+        (o["delta"] as? JsonObject)?.let { delta ->
+            if (delta["type"]?.jsonPrimitive?.content == "text_delta") (delta["text"] as? JsonPrimitive)?.content?.let { if (reply.length < 300) reply.append(it) }
         }
         return null
     }
@@ -313,8 +352,8 @@ private fun errorStatus(o: JsonObject): Int {
  * [probeToolCall], and once more without `tool_choice` when the server rejects that field: the
  * engine never sends it, so a model that calls the tool on its own still works in chats.
  */
-fun probeModel(baseUrl: String, key: String?, model: String, headers: Map<String, String> = emptyMap(),
-    probe: (Boolean) -> VerifyFailure? = { force -> probeToolCall(baseUrl, key, model, force, headers = headers) }): VerifyFailure? {
+fun probeModel(baseUrl: String, key: String?, model: String, headers: Map<String, String> = emptyMap(), interfaceType: String = OPENAI_CHAT_COMPLETIONS,
+    probe: (Boolean) -> VerifyFailure? = { force -> probeToolCall(baseUrl, key, model, force, headers = headers, interfaceType = interfaceType) }): VerifyFailure? {
     val first = probe(true) ?: return null
     val msg = when (first) {
         is VerifyFailure.ToolsUnsupported -> first.message

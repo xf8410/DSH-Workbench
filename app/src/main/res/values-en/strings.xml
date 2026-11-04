@@ -688,7 +688,7 @@
     <string name="web_blocked_desc">Google does not allow signing in from a page inside an app. Sign in with your browser instead; DSH opens again when you are done.</string>
     <string name="web_no_browser">No browser available. Signing in inside the app instead.</string>
     <string name="prov_group">Third-party providers</string>
-    <string name="prov_group_desc">OpenAI-compatible endpoints. API keys are encrypted on this device and only handed to the engine to call the model.</string>
+    <string name="prov_group_desc">OpenAI-compatible and native Anthropic endpoints. API keys are encrypted on this device and only handed to the engine to call the model.</string>
     <string name="prov_add">Add provider</string>
     <string name="prov_choose">Choose a provider</string>
     <string name="prov_title">Provider</string>
@@ -696,11 +696,16 @@
     <string name="prov_models_count">%1$d models</string>
     <string name="prov_name">Name</string>
     <string name="prov_base_url">Base URL</string>
-    <string name="prov_base_url_hint">OpenAI-compatible, usually ending in /v1</string>
+    <string name="prov_base_url_hint">Provider endpoint; OpenAI-compatible APIs usually end in /v1</string>
     <string name="prov_http_warning">http is unencrypted: the API key and conversations can be seen by others on the same network. Use it only on your own LAN.</string>
     <string name="prov_local_warning">This is the phone\'s own address. For a server on your computer, enter the computer\'s LAN IP, e.g. http://192.168.1.5:port/v1</string>
     <string name="prov_key_optional">API Key (optional)</string>
     <string name="prov_key_saved">Saved; leave empty to keep it</string>
+    <string name="prov_key_active">Active</string>
+    <string name="prov_key_delete">Delete this key</string>
+    <string name="prov_key_name_placeholder">Key name (e.g. Main account)</string>
+    <string name="prov_key_new">Enter a new key; adding activates it</string>
+    <string name="prov_key_add">Add key</string>
     <string name="prov_get_key">Get an API key</string>
     <string name="prov_fetch">Fetch models</string>
     <string name="prov_fetching">Connecting…</string>

@@ -21,11 +21,11 @@ import java.net.URI
 import java.net.URL
 
 /**
- * Third-party model providers (OpenAI-compatible Chat Completions endpoints), served in the engine
+ * Third-party model providers (OpenAI-compatible and native Anthropic endpoints), served in the engine
  * by the vendored `@snnh/dsh-llm-service-lite` row. See docs/ENGINE-CONTRACT.md §1.1.
  *
  * Presets: base URLs follow magpie's provider table (github.com/yetone/magpie,
- * internal/provider/presets.go, MIT), restricted to each vendor's OpenAI-compatible endpoint.
+ * internal/provider/presets.go, MIT), plus the directly supported native Anthropic endpoint.
  * Default model ids are only a starting point; "获取模型列表" asks the endpoint's `/models`.
  * Adding a preset is one line.
  */
@@ -48,6 +48,8 @@ data class ProviderPreset(
     val localHint: Int? = null,
     /** Header the provider wants a per-conversation id in (prefilled in the editor; see [ProviderConfig.sessionHeader]). */
     val sessionHeader: String? = null,
+    /** Wire protocol used by llm-service-lite and by the app's own connection test. */
+    val interfaceType: String = OPENAI_CHAT_COMPLETIONS,
 )
 
 /*
@@ -58,10 +60,16 @@ data class ProviderPreset(
  * MiniMax platform.minimax.cn/docs (api.minimax.cn; api.minimaxi.com still answers), Ollama
  * docs.ollama.com/api/openai-compatibility, LM Studio lmstudio.ai/docs/developer/openai-compat.
  */
+const val OPENAI_CHAT_COMPLETIONS = "openai-chat-completions"
+const val ANTHROPIC_MESSAGES = "anthropic-messages"
+const val OPENAI_RESPONSES = "openai-responses"
+
 val PRESETS = listOf(
     ProviderPreset("openai", "OpenAI", "https://api.openai.com/v1", listOf("gpt-5"), keysUrl = "https://platform.openai.com/api-keys", family = listOf("gpt-", "o1", "o3", "o4", "chatgpt")),
-    ProviderPreset("anthropic", "Anthropic Claude", "https://api.anthropic.com/v1", listOf("claude-sonnet-5", "claude-opus-5"), keysUrl = "https://console.anthropic.com/settings/keys", family = listOf("claude")),
+    ProviderPreset("anthropic", "Anthropic Claude", "https://api.anthropic.com/v1", listOf("claude-sonnet-5", "claude-opus-5"), keysUrl = "https://console.anthropic.com/settings/keys", family = listOf("claude"), interfaceType = ANTHROPIC_MESSAGES),
     ProviderPreset("gemini", "Google Gemini", "https://generativelanguage.googleapis.com/v1beta/openai", listOf("gemini-3.5-flash"), keysUrl = "https://aistudio.google.com/apikey", family = listOf("gemini")),
+    ProviderPreset("deepseek", "DeepSeek", "https://api.deepseek.com/v1", listOf("deepseek-chat", "deepseek-reasoner"), keysUrl = "https://platform.deepseek.com/api_keys", family = listOf("deepseek")),
+    ProviderPreset("groq", "Groq", "https://api.groq.com/openai/v1", keysUrl = "https://console.groq.com/keys", family = listOf("llama", "qwen", "openai/")),
     ProviderPreset("xai", "xAI Grok", "https://api.x.ai/v1", listOf("grok-4"), keysUrl = "https://console.x.ai", family = listOf("grok")),
     ProviderPreset("openrouter", "OpenRouter", "https://openrouter.ai/api/v1", listOf("openrouter/auto"), keysUrl = "https://openrouter.ai/keys"),
     ProviderPreset("kimi", "Kimi (Moonshot)", "https://api.moonshot.cn/v1", listOf("kimi-k3"), keysUrl = "https://platform.kimi.com/console/api-keys", family = listOf("kimi", "moonshot")),
@@ -86,7 +94,7 @@ const val OPENCODE_SESSION_HEADER = "x-opencode-session"
 
 fun presetOf(id: String?): ProviderPreset? = PRESETS.firstOrNull { it.id == id }
 
-/** One configured provider = one engine route (`id`), all its models on Chat Completions. */
+/** One configured provider = one engine route (`id`), with one active key and one wire protocol. */
 @Serializable
 data class ProviderConfig(
     /** Route id: the preset id, `-2`, `-3`… for repeats. Never a DeepSeek route name. */
@@ -96,7 +104,7 @@ data class ProviderConfig(
     val baseUrl: String,
     val models: List<String>,
     val enabled: Boolean = true,
-    /** A key is stored for it in SecretStore (the value itself never leaves Keystore-encrypted storage except as env). */
+    /** Backward-compatible key presence flag; new entries are listed in [keys], values stay in SecretStore. */
     val hasKey: Boolean = false,
     /** User-set context window for every model of this route (null = per model / detected / default). */
     val contextWindow: Long? = null,
@@ -113,15 +121,73 @@ data class ProviderConfig(
      * one-way hash of the session id, the same for every request of a conversation (js patch 18).
      */
     val sessionHeader: String? = null,
+    /** Saved key metadata only. Secret values stay in SecretStore and are never serialized here. */
+    val keys: List<ProviderKey> = emptyList(),
+    /** The one key exposed to the engine. Null selects the first entry (and decodes old configs). */
+    val activeKeyId: String? = null,
+    /** Defaults to OpenAI Chat Completions so configurations written by older versions keep working. */
+    val interfaceType: String = OPENAI_CHAT_COMPLETIONS,
 ) {
     /** `apiKeyEnv` the engine resolves per request; set in the `:engine` environment only. */
     val keyEnv: String get() = keyEnvOf(id)
+    /** Original single-key slot, retained for migration and as the legacy key's storage name. */
     val secretName: String get() = "provider-$id"
+    /** Old configurations expose their original slot as one virtual key without a data migration. */
+    val keyEntries: List<ProviderKey> get() = if (keys.isNotEmpty()) keys else if (hasKey) listOf(ProviderKey(LEGACY_PROVIDER_KEY, "默认 Key")) else emptyList()
+    val hasAnyKey: Boolean get() = keyEntries.isNotEmpty()
+    val resolvedActiveKeyId: String? get() = keyEntries.firstOrNull { it.id == activeKeyId }?.id ?: keyEntries.firstOrNull()?.id
+    val activeSecretName: String get() = secretNameFor(resolvedActiveKeyId)
+    fun secretNameFor(keyId: String?): String = if (keyId == null || keyId == LEGACY_PROVIDER_KEY) secretName else "provider-$id-key-$keyId"
     /** SecretStore name of a secret header's value. */
     fun headerSecretName(header: String) = "provider-$id-h-" + header.lowercase().filter { it.isLetterOrDigit() || it == '-' || it == '_' }
     /** Engine environment variable a secret header's value travels in (`headerEnv` in the patch layer). */
     fun headerEnv(header: String) = headerEnvOf(id, header)
 }
+
+const val LEGACY_PROVIDER_KEY = "legacy"
+
+@Serializable
+data class ProviderKey(val id: String, val name: String)
+
+/** One atomic metadata update plus the SecretStore writes/calls that accompany it. */
+data class ProviderKeyPlan(
+    val config: ProviderConfig,
+    val write: Map<String, String> = emptyMap(),
+    val clear: List<String> = emptyList(),
+)
+
+/** Add and activate a key. A legacy single key remains selectable instead of being overwritten. */
+fun planAddProviderKey(p: ProviderConfig, name: String, value: String, keyId: String = java.util.UUID.randomUUID().toString()): ProviderKeyPlan {
+    require(value.isNotBlank()) { "API key must not be blank" }
+    val entry = ProviderKey(keyId, name.trim().ifEmpty { "Key ${p.keyEntries.size + 1}" })
+    val config = p.copy(keys = p.keyEntries + entry, activeKeyId = entry.id, hasKey = true)
+    return ProviderKeyPlan(config, mapOf(config.secretNameFor(entry.id) to value.trim()))
+}
+
+/** Select an existing key; an unknown id is a safe no-op. */
+fun planSelectProviderKey(p: ProviderConfig, keyId: String): ProviderKeyPlan =
+    if (p.keyEntries.any { it.id == keyId }) ProviderKeyPlan(p.copy(activeKeyId = keyId, hasKey = true)) else ProviderKeyPlan(p)
+
+/**
+ * Delete a key and choose the next active id in the same config value. Deleting the active key
+ * selects the first survivor; deleting the last one leaves no active id; unknown ids do nothing.
+ */
+fun planDeleteProviderKey(p: ProviderConfig, keyId: String): ProviderKeyPlan {
+    val entries = p.keyEntries
+    if (entries.none { it.id == keyId }) return ProviderKeyPlan(p)
+    val remaining = entries.filterNot { it.id == keyId }
+    val active = remaining.firstOrNull { it.id == p.resolvedActiveKeyId }?.id ?: remaining.firstOrNull()?.id
+    val config = p.copy(keys = remaining, activeKeyId = active, hasKey = remaining.isNotEmpty())
+    return ProviderKeyPlan(config, clear = listOf(p.secretNameFor(keyId)))
+}
+
+/** Every secret slot owned by a route, including the legacy slot, for complete deletion cleanup. */
+fun providerSecretNames(p: ProviderConfig): List<String> =
+    (listOf(p.secretName) + p.keyEntries.map { p.secretNameFor(it.id) } + p.headers.filter { it.secret }.map { p.headerSecretName(it.name) }).distinct()
+
+/** Resolve only the active key of every enabled route. No route ever exports all its keys. */
+fun activeProviderKeys(providers: List<ProviderConfig>, readSecret: (String) -> String?): Map<String, String> =
+    providers.filter { it.enabled && it.hasAnyKey }.mapNotNull { p -> readSecret(p.activeSecretName)?.let { p.keyEnv to it } }.toMap()
 
 /** One extra request header. [value] is empty for a [secret] one (the value lives in SecretStore). */
 @Serializable
@@ -358,9 +424,9 @@ fun renderProfilePatch(providers: List<ProviderConfig>, webSearch: Boolean, user
                 active.forEach { p ->
                     putJsonObject(p.id) {
                         put("displayName", p.name)
-                        put("interfaceType", "openai-chat-completions")
+                        put("interfaceType", p.interfaceType)
                         put("baseURL", p.baseUrl.trim().trimEnd('/'))
-                        if (p.hasKey) put("apiKeyEnv", p.keyEnv)
+                        if (p.hasAnyKey) put("apiKeyEnv", p.keyEnv)
                         // js patch 18: static headers here, secret ones by env name only, the session header, the UA token.
                         val plain = p.headers.filter { !it.secret && isUsableHeaderName(it.name) }
                         if (plain.isNotEmpty()) putJsonObject("headers") { plain.forEach { put(it.name, it.value) } }
@@ -368,7 +434,7 @@ fun renderProfilePatch(providers: List<ProviderConfig>, webSearch: Boolean, user
                         if (secret.isNotEmpty()) putJsonObject("headerEnv") { secret.forEach { put(it.name, p.headerEnv(it.name)) } }
                         p.sessionHeader?.trim()?.takeIf { isUsableHeaderName(it) }?.let { put("sessionHeader", it) }
                         if (userAgent != null) put("userAgent", userAgent)
-                        put("includeUsage", true)
+                        if (p.interfaceType == OPENAI_CHAT_COMPLETIONS) put("includeUsage", true)
                         putJsonArray("models") {
                             p.models.forEach { m ->
                                 val l = p.limitsOf(m)
@@ -429,17 +495,22 @@ class HttpStatusException(val status: Int, val body: String) : Exception("HTTP $
  * Doubles as the connection test. Runs on the caller's thread (call from Dispatchers.IO).
  * https, or http for a user's LAN gateway (network_security_config permits cleartext).
  */
-fun fetchModels(baseUrl: String, key: String?, headers: Map<String, String> = emptyMap()): Result<List<RemoteModel>> = runCatching {
+fun fetchModels(baseUrl: String, key: String?, headers: Map<String, String> = emptyMap(), interfaceType: String = OPENAI_CHAT_COMPLETIONS): Result<List<RemoteModel>> = runCatching {
     val url = URL(baseUrl.trim().trimEnd('/') + "/models")
     val c = url.openConnection() as HttpURLConnection
     try {
         c.connectTimeout = 10_000; c.readTimeout = 15_000
         headers.forEach { (k, v) -> c.setRequestProperty(k, v) }
         c.setRequestProperty("Accept", "application/json")
+        if (interfaceType == ANTHROPIC_MESSAGES) c.setRequestProperty("anthropic-version", "2023-06-01")
         if (!key.isNullOrBlank()) {
-            c.setRequestProperty("Authorization", "Bearer $key")
-            // Anthropic's listing reads x-api-key (its OpenAI-compatible layer takes the bearer).
-            if (url.host.endsWith("anthropic.com")) { c.setRequestProperty("x-api-key", key); c.setRequestProperty("anthropic-version", "2023-06-01") }
+            if (interfaceType == ANTHROPIC_MESSAGES) {
+                c.setRequestProperty("x-api-key", key)
+            } else {
+                c.setRequestProperty("Authorization", "Bearer $key")
+                // Anthropic's OpenAI-compatible layer takes the bearer; its native listing reads x-api-key.
+                if (url.host.endsWith("anthropic.com")) { c.setRequestProperty("x-api-key", key); c.setRequestProperty("anthropic-version", "2023-06-01") }
+            }
         }
         val code = c.responseCode
         val body = (if (code in 200..299) c.inputStream else c.errorStream)?.use { it.readBytes().decodeToString().take(4_000_000) }.orEmpty()

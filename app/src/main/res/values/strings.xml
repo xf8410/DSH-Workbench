@@ -688,7 +688,7 @@
     <string name="web_blocked_desc">Google 不允许在应用内的网页中登录。改用浏览器登录，完成后会自动回到 DSH。</string>
     <string name="web_no_browser">没有可用的浏览器，已改回在应用内登录。</string>
     <string name="prov_group">第三方服务商</string>
-    <string name="prov_group_desc">OpenAI 兼容接口。API Key 加密保存在本机，只在调用模型时交给引擎。</string>
+    <string name="prov_group_desc">OpenAI 兼容与 Anthropic 原生接口。API Key 加密保存在本机，只在调用模型时交给引擎。</string>
     <string name="prov_add">添加服务商</string>
     <string name="prov_choose">选择服务商</string>
     <string name="prov_title">服务商</string>
@@ -696,11 +696,16 @@
     <string name="prov_models_count">%1$d 个模型</string>
     <string name="prov_name">名称</string>
     <string name="prov_base_url">接口地址（Base URL）</string>
-    <string name="prov_base_url_hint">OpenAI 兼容地址，通常以 /v1 结尾</string>
+    <string name="prov_base_url_hint">供应商接口地址，OpenAI 兼容接口通常以 /v1 结尾</string>
     <string name="prov_http_warning">http 为明文传输，API key 和对话内容可能被同一网络中的人看到，仅建议在自己的局域网内使用</string>
     <string name="prov_local_warning">这是手机自己的地址。服务装在电脑上的话，请填电脑的局域网 IP，例如 http://192.168.1.5:端口/v1</string>
     <string name="prov_key_optional">API Key（可选）</string>
     <string name="prov_key_saved">已保存，留空则保持不变</string>
+    <string name="prov_key_active">当前使用</string>
+    <string name="prov_key_delete">删除此 Key</string>
+    <string name="prov_key_name_placeholder">Key 名称（例如：主账号）</string>
+    <string name="prov_key_new">输入新 Key；添加后立即切换</string>
+    <string name="prov_key_add">添加 Key</string>
     <string name="prov_get_key">获取 API Key</string>
     <string name="prov_fetch">获取模型列表</string>
     <string name="prov_fetching">正在连接…</string>

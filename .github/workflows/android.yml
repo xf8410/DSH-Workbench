@@ -1,0 +1,57 @@
+name: Android build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Fetch verified native runtime
+        run: bash native/prebuilt.sh fetch
+
+      - name: Build JavaScript engine
+        env:
+          OUT_DIR: ${{ github.workspace }}/toolchains/out/engine
+        run: bash js/build-engine.sh
+
+      - name: Test and assemble debug APK
+        run: >-
+          bash gradlew :engine:test :app:testDebugUnitTest :app:assembleDebug
+          -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine
+          --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: DSH-Workbench-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

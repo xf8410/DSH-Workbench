@@ -685,7 +685,7 @@
     <string name="web_blocked_desc">Google не разрешает входить со страницы внутри приложения. Войди через браузер — после входа DSH откроется снова.</string>
     <string name="web_no_browser">Нет доступного браузера. Вход продолжится внутри приложения.</string>
     <string name="prov_group">Сторонние провайдеры</string>
-    <string name="prov_group_desc">Интерфейс, совместимый с OpenAI. API Key хранится на устройстве в зашифрованном виде и передаётся движку только при вызове модели.</string>
+    <string name="prov_group_desc">Интерфейсы OpenAI и Anthropic. API Key хранится на устройстве в зашифрованном виде и передаётся движку только при вызове модели.</string>
     <string name="prov_add">Добавить провайдера</string>
     <string name="prov_choose">Выбрать провайдера</string>
     <string name="prov_title">Провайдер</string>
@@ -693,11 +693,16 @@
     <string name="prov_models_count">%1$d моделей</string>
     <string name="prov_name">Название</string>
     <string name="prov_base_url">Адрес интерфейса (Base URL)</string>
-    <string name="prov_base_url_hint">Адрес, совместимый с OpenAI; обычно заканчивается на /v1</string>
+    <string name="prov_base_url_hint">Адрес API; интерфейсы OpenAI обычно заканчиваются на /v1</string>
     <string name="prov_http_warning">http — передача без шифрования: API key и содержимое диалога могут увидеть другие в той же сети. Используй только в своей локальной сети</string>
     <string name="prov_local_warning">Это адрес самого телефона. Если сервис запущен на компьютере, укажи локальный IP компьютера, например http://192.168.1.5:порт/v1</string>
     <string name="prov_key_optional">API Key (необязательно)</string>
     <string name="prov_key_saved">Сохранён; оставь пустым, чтобы не менять</string>
+    <string name="prov_key_active">Используется</string>
+    <string name="prov_key_delete">Удалить этот ключ</string>
+    <string name="prov_key_name_placeholder">Название ключа (например, основной)</string>
+    <string name="prov_key_new">Введи новый ключ; после добавления он станет активным</string>
+    <string name="prov_key_add">Добавить ключ</string>
     <string name="prov_get_key">Получить API Key</string>
     <string name="prov_fetch">Получить список моделей</string>
     <string name="prov_fetching">Подключение…</string>

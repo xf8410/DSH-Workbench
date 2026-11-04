@@ -17,7 +17,7 @@ import javax.inject.Singleton
 /**
  * Secret storage: AES-GCM with a non-exportable Android Keystore key, files in noBackupFilesDir
  * (excluded from backups). The unnamed slot is the DeepSeek API key; named slots hold third-party
- * provider keys (`provider-<routeId>`), passed to the engine only as environment variables.
+ * provider keys (`provider-<routeId>` and `provider-<routeId>-key-<keyId>`), passed to the engine only as environment variables.
  */
 @Singleton
 class SecretStore @Inject constructor(@ApplicationContext context: Context) {

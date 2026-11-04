@@ -219,6 +219,7 @@ private fun ProviderEditor(vm: SettingsViewModel, existing: ProviderConfig?, pre
     var name by rememberSaveable { mutableStateOf(existing?.name ?: defaultName) }
     var baseUrl by rememberSaveable { mutableStateOf(existing?.baseUrl ?: preset.baseUrl) }
     var key by rememberSaveable { mutableStateOf("") }
+    var keyName by rememberSaveable { mutableStateOf("") }
     val selected = remember { mutableStateListOf<String>().apply { addAll(existing?.models ?: preset.models) } }
     val offered = remember { mutableStateListOf<String>().apply { addAll(existing?.models ?: preset.models) } }
     var typed by rememberSaveable { mutableStateOf("") }
@@ -261,8 +262,8 @@ private fun ProviderEditor(vm: SettingsViewModel, existing: ProviderConfig?, pre
     var result by remember { mutableStateOf<Pair<Boolean, String>?>(null) }
     // A provider added here and saved by an earlier attempt (all models failed): later attempts update it.
     var savedId by rememberSaveable { mutableStateOf<String?>(null) }
-    val current = existing ?: s.providers.firstOrNull { it.id == savedId }
-    val needsKey = !preset.keyOptional && current?.hasKey != true
+    val current = s.providers.firstOrNull { it.id == (existing?.id ?: savedId) } ?: existing
+    val needsKey = !preset.keyOptional && current?.hasAnyKey != true
     // 高级设置: extra request headers and the per-conversation session header (js patch 18).
     val headerRows = remember { mutableStateListOf<HeaderRow>().apply { addAll(headerRowsOf(existing)) } }
     var sessionHeader by rememberSaveable { mutableStateOf(if (existing != null) existing.sessionHeader.orEmpty() else preset.sessionHeader.orEmpty()) }
@@ -294,7 +295,7 @@ private fun ProviderEditor(vm: SettingsViewModel, existing: ProviderConfig?, pre
     suspend fun testAndSave() {
         result = null
         testing = context.getString(R.string.prov_testing_list)
-        val listing = vm.fetchModels(baseUrl, key, current, headerRows.toList(), sessionHeaderOrNull())
+        val listing = vm.fetchModels(baseUrl, key, current, headerRows.toList(), sessionHeaderOrNull(), current?.interfaceType ?: preset.interfaceType)
         listing.onSuccess(::applyListing)
         listing.exceptionOrNull()?.let { t ->
             val f = VerifyErrors.ofThrowable(t)
@@ -313,7 +314,7 @@ private fun ProviderEditor(vm: SettingsViewModel, existing: ProviderConfig?, pre
             testing = null; result = false to context.getString(if (listed == null) R.string.prov_test_need_model else R.string.prov_test_no_chat_model); return
         }
         val base = baseUrl.trim().trimEnd('/')
-        val outcome = vm.verifyModels(base, key, current, candidates, { m -> testing = context.getString(R.string.prov_testing_model, m) }, headerRows.toList(), sessionHeaderOrNull())
+        val outcome = vm.verifyModels(base, key, current, candidates, { m -> testing = context.getString(R.string.prov_testing_model, m) }, headerRows.toList(), sessionHeaderOrNull(), current?.interfaceType ?: preset.interfaceType)
         testing = null
         val plan = planSave(outcome, checked, current?.verified.orEmpty(), makeMain = existing == null || s.choice.provider?.id == current?.id)
         if (plan.save) {
@@ -323,10 +324,13 @@ private fun ProviderEditor(vm: SettingsViewModel, existing: ProviderConfig?, pre
             val models = offered.filter { it in plan.models }
             val limits = models.associateWith { stored(it) }.filterValues { !it.isEmpty }
             vm.saveTested(ProviderConfig(id, preset.id, name.trim().ifEmpty { defaultName }, base, models,
-                enabled = current?.enabled ?: true, hasKey = current?.hasKey ?: false,
+                enabled = current?.enabled ?: true, hasKey = current?.hasAnyKey ?: false,
                 contextWindow = tokensOrNull(ctxText), maxTokens = tokensOrNull(maxText)?.toIntSat(), limits = limits, verified = plan.verified,
-                sessionHeader = sessionHeaderOrNull()), key, plan.main, headerRows.toList())
+                sessionHeader = sessionHeaderOrNull(), keys = current?.keys.orEmpty(), activeKeyId = current?.activeKeyId,
+                interfaceType = current?.interfaceType ?: preset.interfaceType), key, plan.main, headerRows.toList(), keyName)
             savedId = id
+            key = ""
+            keyName = ""
         }
         result = (outcome is VerifyOutcome.Passed) to describeOutcome(context, outcome, becameMain = plan.main != null)
     }
@@ -344,7 +348,26 @@ private fun ProviderEditor(vm: SettingsViewModel, existing: ProviderConfig?, pre
             if (NetDiagnose.isOnDeviceAddress(baseUrl)) Text(stringResource(R.string.prov_local_warning), style = DshType.xxs12, color = c.amber)
             preset.localHint?.let { Text(stringResource(it), style = DshType.xxs12, color = c.labelTertiary) }
             Text(stringResource(if (preset.keyOptional) R.string.prov_key_optional else R.string.api_key_label), style = DshType.xs13m, color = c.labelSecondary)
-            DInput(key, { key = it }, placeholder = if (existing?.hasKey == true) stringResource(R.string.prov_key_saved) else "sk-…", secret = true, keyboardType = KeyboardType.Password)
+            current?.keyEntries.orEmpty().forEach { entry ->
+                val active = current?.resolvedActiveKeyId == entry.id
+                Row(Modifier.fillMaxWidth().clip(Radius.sm).clickable { current?.let { vm.selectProviderKey(it, entry.id) } }.padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(Modifier.weight(1f)) {
+                        Text(entry.name, style = DshType.xs13m, color = c.labelPrimary)
+                        if (active) Text(stringResource(R.string.prov_key_active), style = DshType.xxs12, color = c.link)
+                    }
+                    if (active) DIcon(R.drawable.dsw_check_outline, size = 16.dp, tint = c.link)
+                    IconBtn(R.drawable.dsw_trash_outline, { current?.let { vm.deleteProviderKey(it, entry.id) } }, size = 32.dp, iconSize = 14.dp,
+                        tint = c.error, contentDescription = stringResource(R.string.prov_key_delete))
+                }
+            }
+            DInput(keyName, { keyName = it }, placeholder = stringResource(R.string.prov_key_name_placeholder))
+            DInput(key, { key = it }, placeholder = if (current?.hasAnyKey == true) stringResource(R.string.prov_key_new) else "sk-…", secret = true, keyboardType = KeyboardType.Password)
+            if (current != null) DButton(stringResource(R.string.prov_key_add), {
+                scope.launch {
+                    if (vm.addProviderKey(current.id, keyName, key)) { key = ""; keyName = "" }
+                }
+            }, variant = BtnVariant.Outline, size = BtnSize.Sm, enabled = key.isNotBlank())
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 val keysUrl = preset.keysUrl
                 if (keysUrl != null) Text(stringResource(R.string.prov_get_key), Modifier.weight(1f).clip(Radius.sm).clickable {
@@ -354,7 +377,7 @@ private fun ProviderEditor(vm: SettingsViewModel, existing: ProviderConfig?, pre
                     if (!isHttpUrl(baseUrl)) { error = R.string.prov_err_url; return@DButton }
                     fetchState = "busy"
                     scope.launch {
-                        vm.fetchModels(baseUrl, key, current, headerRows.toList(), sessionHeaderOrNull()).onSuccess(::applyListing).onFailure { t ->
+                        vm.fetchModels(baseUrl, key, current, headerRows.toList(), sessionHeaderOrNull(), current?.interfaceType ?: preset.interfaceType).onSuccess(::applyListing).onFailure { t ->
                             fetchOk = false
                             // Same wording as a failed chat turn (Stream.kt ErrorRow): cause, hint, raw detail.
                             fetchNet = NetDiagnose.ofException(t)

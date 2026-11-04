@@ -156,7 +156,7 @@ class EngineManager @Inject constructor(
     /** Provider keys and secret header values, plus the extensions' environment (plugin registries, MCP header secrets): env var name → value. */
     private fun providerKeys(st: io.github.jackwener.dsh.core.data.Settings): Map<String, String> {
         val enabled = st.providers.filter { it.enabled }
-        val keys = enabled.filter { it.hasKey }.mapNotNull { p -> secrets.read(p.secretName)?.let { p.keyEnv to it } }
+        val keys = io.github.jackwener.dsh.core.provider.activeProviderKeys(enabled, secrets::read).toList()
         val headers = enabled.flatMap { p -> p.headers.filter { it.secret }.mapNotNull { h -> secrets.read(p.headerSecretName(h.name))?.let { p.headerEnv(h.name) to it } } }
         return (keys + headers).toMap() + io.github.jackwener.dsh.core.extensions.ExtensionsEngineInputs.env(st.pluginRegistry, st.pluginRegistryCustom, st.mcpServers, secrets::read)
     }
