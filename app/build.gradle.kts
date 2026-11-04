@@ -99,7 +99,8 @@ val fetchShizuku = tasks.register<Exec>("fetchShizuku") {
     val out = file(thirdPartyOut)
     inputs.file(script)
     outputs.dir(out.resolve("assets/shizuku"))
-    commandLine(script.absolutePath, out.absolutePath)
+    // Git archives and API-created commits may not preserve the executable bit.
+    commandLine("bash", script.absolutePath, out.absolutePath)
 }
 if (providers.gradleProperty("dsh.fetchShizuku").orElse("true").get().toBoolean()) {
     tasks.named("preBuild") { dependsOn(fetchShizuku) }
