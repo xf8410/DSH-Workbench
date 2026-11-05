@@ -32,6 +32,8 @@ sealed interface Route
 @Serializable data object PlatformWebRoute : Route
 
 @Serializable data object AutomationRoute : Route
+/** Hualuo's repository/tool/observation workbench; DSH remains the only app and model runtime. */
+@Serializable data object WorkbenchRoute : Route
 /** A rule; id as a string (AutomationViewModel reads it from the SavedStateHandle). */
 @Serializable data class RuleRoute(val id: String) : Route
 

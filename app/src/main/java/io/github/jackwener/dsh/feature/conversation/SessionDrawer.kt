@@ -68,6 +68,7 @@ fun SessionDrawer(
     onNew: () -> Unit,
     onOpen: (String) -> Unit,
     onAutomation: () -> Unit,
+    onWorkbench: () -> Unit,
     /** Opens Settings, optionally at a section (SettingsSection name). */
     onSettings: (String?) -> Unit,
     onClose: () -> Unit,
@@ -102,6 +103,7 @@ fun SessionDrawer(
         }
         PanelEntry(R.drawable.dsw_clock_outline, stringResource(R.string.automation), onAutomation)
         PanelEntry(R.drawable.dsw_shield_outline, stringResource(R.string.drawer_permissions)) { onSettings("Phone") }
+        PanelEntry(R.drawable.dsw_branch_outline, stringResource(R.string.drawer_workbench), onWorkbench)
         Row(Modifier.fillMaxWidth().heightIn(min = 40.dp).padding(start = 8.dp, top = 2.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(R.string.sessions), Modifier.weight(1f), style = DshType.xs13m, color = c.labelTertiary)
             IconBtn(R.drawable.dsw_search_outline, { searching = !searching; if (!searching) query = "" }, size = 40.dp, iconSize = 14.dp, tint = c.labelTertiary,

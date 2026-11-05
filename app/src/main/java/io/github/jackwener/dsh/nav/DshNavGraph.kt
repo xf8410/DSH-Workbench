@@ -38,6 +38,7 @@ import io.github.jackwener.dsh.feature.settings.SettingsPage
 import io.github.jackwener.dsh.feature.settings.SettingsSection
 import io.github.jackwener.dsh.feature.settings.SettingsSectionScreen
 import io.github.jackwener.dsh.feature.settings.shellAccessOf
+import io.github.jackwener.dsh.feature.workbench.WorkbenchScreen
 
 /**
  * Every page of the app as a destination; home is the fixed start. Pages get Back
@@ -46,7 +47,14 @@ import io.github.jackwener.dsh.feature.settings.shellAccessOf
  */
 fun NavGraphBuilder.dshGraph(nav: NavHostController, home: () -> HomeViewModel) {
     val open: (Route) -> Unit = { nav.navigate(it) }
-    composable<HomeRoute> { HomeScreen(home(), onSettings = { nav.openSettings(it) }, onAutomation = { nav.navigate(AutomationRoute) }) }
+    composable<HomeRoute> {
+        HomeScreen(
+            home(),
+            onSettings = { nav.openSettings(it) },
+            onAutomation = { nav.navigate(AutomationRoute) },
+            onWorkbench = { nav.navigate(WorkbenchRoute) },
+        )
+    }
     composable<OnboardingRoute> { e -> OnboardingPage(nav, e, keyStep = false) }
     composable<OnboardingKeyRoute> { e -> OnboardingPage(nav, e, keyStep = true) }
     composable<EnhanceRoute> { e -> EnhanceStep(onDone = { nav.up(e) }) }
@@ -60,6 +68,17 @@ fun NavGraphBuilder.dshGraph(nav: NavHostController, home: () -> HomeViewModel) 
         AutomationScreen(onBack = { nav.up(e) }, onNew = { prefill -> home().newSession(prefill); nav.toHome() }, onOpenRule = { open(RuleRoute(it.toString())) })
     }
     composable<RuleRoute> { e -> RuleDetailScreen(onBack = { nav.up(e) }, onOpenSession = { sid -> home().open(sid); nav.toHome() }) }
+    composable<WorkbenchRoute> { e ->
+        WorkbenchScreen(
+            onBack = { nav.up(e) },
+            onChat = { nav.toHome() },
+            onTasks = { nav.navigate(AutomationRoute) },
+            onModels = {
+                nav.navigate(SettingsRoute)
+                nav.navigate(SectionRoute(SettingsSection.Model))
+            },
+        )
+    }
     navigation<SettingsGraph>(startDestination = SettingsRoute) {
         composable<SettingsRoute> { e -> InSettings(nav, e) { SettingsIndexScreen(onBack = { nav.up(e) }, open = open) } }
         composable<SectionRoute> { e ->

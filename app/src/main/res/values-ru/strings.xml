@@ -31,6 +31,7 @@
     <string name="new_session">Новая сессия</string>
     <string name="sessions">Сессии</string>
     <string name="automation">Автоматизация</string>
+    <string name="drawer_workbench">Работа с репозиторием</string>
     <string name="settings">Настройки</string>
     <string name="collapse_sidebar">Свернуть боковую панель</string>
     <string name="open_sidebar">Открыть боковую панель</string>

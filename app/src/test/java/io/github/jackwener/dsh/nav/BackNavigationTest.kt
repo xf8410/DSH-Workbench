@@ -41,7 +41,7 @@ class BackNavigationTest {
     }
 
     private val routeClasses = listOf(HomeRoute::class, OnboardingRoute::class, OnboardingKeyRoute::class, EnhanceRoute::class, PlatformWebRoute::class,
-        AutomationRoute::class, RuleRoute::class, SettingsRoute::class, SectionRoute::class, ProviderRoute::class, ModeRoute::class, PluginRoute::class,
+        AutomationRoute::class, RuleRoute::class, WorkbenchRoute::class, SettingsRoute::class, SectionRoute::class, ProviderRoute::class, ModeRoute::class, PluginRoute::class,
         MarketEntryRoute::class, IndexesRoute::class, McpRoute::class, AppNotesRoute::class, AppNotesGroupRoute::class, NotifAppsRoute::class)
 
     private fun routeOf(e: NavBackStackEntry): Any = e.toRoute(routeClasses.first { e.destination.hasRoute(it) })
@@ -57,6 +57,10 @@ class BackNavigationTest {
     private val hierarchy: List<List<Route>> = buildList {
         add(home + AutomationRoute)
         add(home + AutomationRoute + RuleRoute("7"))
+        add(home + WorkbenchRoute)
+        add(home + WorkbenchRoute + AutomationRoute)
+        add(home + WorkbenchRoute + SettingsRoute)
+        add(home + WorkbenchRoute + SettingsRoute + section(SettingsSection.Model))
         add(settings)
         SettingsSection.entries.forEach { add(settings + section(it)) }
         val model = settings + section(SettingsSection.Model)
