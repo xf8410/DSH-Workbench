@@ -4,9 +4,11 @@ import com.hualuo.engine.api.UrlConnTransport
 import com.hualuo.engine.observe.ObserveClient
 import com.hualuo.engine.observe.ObserveState
 import com.hualuo.engine.observe.UmaTool
+import com.hualuo.engine.toolcalls.GitHubCreateRepoTool
 import com.hualuo.engine.toolcalls.GitHubPrTool
 import com.hualuo.engine.toolcalls.GitHubToolFamily
 import com.hualuo.engine.toolcalls.GitHubWriteTool
+import com.hualuo.engine.toolcalls.GitHubUploadTool
 import com.hualuo.engine.toolcalls.PrConfirmer
 import com.hualuo.engine.toolcalls.ToolRegistry
 import com.hualuo.engine.toolcalls.ToolResultTrimmer
@@ -46,6 +48,11 @@ class HualuoTools @Inject constructor(
         GitHubWriteTool.register(this, loadToken, defaultRepo, com.hualuo.engine.github.GitHubRepoClient(), WriteConfirmer { true })
         GitHubPrTool.register(this, loadToken, defaultRepo, com.hualuo.engine.github.GitHubPrClient(), PrConfirmer { true })
     }
+    private val githubTransfer = ToolRegistry().apply {
+        // 建仓与传文件：DSH 的非读风险审批在引擎侧，走到这里说明已经授权过。
+        GitHubCreateRepoTool.register(this, loadToken)
+        GitHubUploadTool.register(this, loadToken, defaultRepo)
+    }
     private val observeState = ObserveState()
     private val observeClient = ObserveClient(OBSERVE_URL, UrlConnTransport())
     private val uma = ToolRegistry().apply {
@@ -54,16 +61,12 @@ class HualuoTools @Inject constructor(
     private val routes: Map<String, ToolRegistry> = buildMap {
         github.specs().forEach { put(it.name, github) }
         githubWrite.specs().forEach { put(it.name, githubWrite) }
+        githubTransfer.specs().forEach { put(it.name, githubTransfer) }
         uma.specs().filter { it.name in UMA_WHITELIST }.forEach { put(it.name, uma) }
     }
 
     override val tools: List<Tool> = routes.map { (name, registry) ->
-        val spec = when (registry) {
-            github -> github.specs().single { it.name == name }
-            githubWrite -> githubWrite.specs().single { it.name == name }
-            else -> uma.specs().single { it.name == name }
-        }
-        adapt(spec, registry)
+        adapt(registry.specs().single { it.name == name }, registry)
     } + authTools()
 
     private fun adapt(spec: ToolSpec, registry: ToolRegistry): Tool {
@@ -74,6 +77,7 @@ class HualuoTools @Inject constructor(
         val risk = when (spec.name) {
             "github_merge_pull_request" -> Risk.dangerous
             "github_update_file", "github_create_pull_request" -> Risk.write
+            "github_create_repo", "github_upload_files" -> Risk.write
             else -> Risk.read
         }
         return object : Tool(spec.name, ToolGroup.System, risk, false, dshDescription(spec.description), {
