@@ -14,9 +14,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-and-apk:
+  build-apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -54,15 +54,6 @@ jobs:
             -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
             --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-engine.log"
 
-      - name: App unit tests
-        shell: bash
-        run: |
-          set -o pipefail
-          bash gradlew :app:testDebugUnitTest \
-            -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
-            -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
-            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-app-tests.log"
-
       - name: Assemble debug APK
         shell: bash
         run: |
@@ -72,13 +63,13 @@ jobs:
             -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
             --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-assemble.log"
 
-      - name: Record failure notes
+      - name: Record build failure notes
         if: failure()
         shell: bash
         run: |
           mkdir -p ci
           {
-            echo "# CI failure：run ${{ github.run_id }} sha ${{ github.sha }}"
+            echo "# build-apk failure：run ${{ github.run_id }} sha ${{ github.sha }}"
             for log in "$RUNNER_TEMP"/gradle-*.log; do
               [ -f "$log" ] || continue
               echo "## $(basename "$log")"
@@ -88,12 +79,12 @@ jobs:
               echo '```'
               tail -c 900 "$log" || true
             done
-          } > ci/last-failure.md
+          } > ci/last-build-failure.md
           git config user.name "dsh-ci"
           git config user.email "dsh-ci@users.noreply.github.com"
           git switch -c ci-notes
-          git add ci/last-failure.md
-          git commit -m "ci: record failure of ${{ github.sha }}" || true
+          git add ci/last-build-failure.md
+          git commit -m "ci: record build failure of ${{ github.sha }}" || true
           git push -f origin ci-notes || true
 
       - name: Verify APK runtime
@@ -125,3 +116,64 @@ jobs:
           name: DSH-Workbench-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+  app-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Fetch verified native runtime
+        env:
+          JNI_DIR: ${{ github.workspace }}/toolchains/out/jniLibs
+        run: bash native/prebuilt.sh fetch
+
+      - name: Build JavaScript engine
+        env:
+          OUT_DIR: ${{ github.workspace }}/toolchains/out/engine
+        run: bash js/build-engine.sh
+
+      - name: App unit tests
+        timeout-minutes: 25
+        shell: bash
+        run: |
+          set -o pipefail
+          bash gradlew :app:testDebugUnitTest \
+            -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
+            -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-app-tests.log"
+
+      - name: Record app test failure notes
+        if: failure()
+        shell: bash
+        run: |
+          mkdir -p ci
+          {
+            echo "# app-tests failure：run ${{ github.run_id }} sha ${{ github.sha }}"
+            echo '```'
+            grep -aE '^(e: |error:|FAILURE:|> Task .*FAILED)|FAILED$|AssertionError|Expected:|Caused by|> Task :app:test' "$RUNNER_TEMP/gradle-app-tests.log" \
+              | tail -n 10 | cut -c1-130 || true
+            echo '```'
+            tail -c 1400 "$RUNNER_TEMP/gradle-app-tests.log" || true
+          } > ci/last-failure.md
+          git config user.name "dsh-ci"
+          git config user.email "dsh-ci@users.noreply.github.com"
+          git switch -c ci-notes
+          git add ci/last-failure.md
+          git commit -m "ci: record app-test failure of ${{ github.sha }}" || true
+          git push -f origin ci-notes || true
