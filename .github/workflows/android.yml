@@ -35,6 +35,13 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Fetch fixed signing keystore
+        shell: bash
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/xf8410/hualuo-repo-tool/main/signing/release.keystore -o "$RUNNER_TEMP/release.keystore"
+          test -s "$RUNNER_TEMP/release.keystore"
+          sha256sum "$RUNNER_TEMP/release.keystore"
+
       - name: Fetch verified native runtime
         env:
           JNI_DIR: ${{ github.workspace }}/toolchains/out/jniLibs
@@ -54,13 +61,17 @@ jobs:
             -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
             --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-engine.log"
 
-      - name: Assemble debug APK
+      - name: Assemble release APK (fixed signature)
         shell: bash
         run: |
           set -o pipefail
-          bash gradlew :app:assembleDebug \
+          bash gradlew :app:assembleRelease \
             -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
             -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
+            -Pdsh.signing.storeFile="$RUNNER_TEMP/release.keystore" \
+            -Pdsh.signing.storePassword=hualuo-override-install-2026 \
+            -Pdsh.signing.keyAlias=hualuo \
+            -Pdsh.signing.keyPassword=hualuo-override-install-2026 \
             --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-assemble.log"
 
       - name: Record build failure notes
@@ -89,7 +100,7 @@ jobs:
 
       - name: Verify APK runtime
         run: |
-          apk=app/build/outputs/apk/debug/app-debug.apk
+          apk=app/build/outputs/apk/release/app-release.apk
           test -f "$apk"
           unzip -t "$apk" >/dev/null
           entries="$(unzip -Z1 "$apk")"
@@ -110,11 +121,37 @@ jobs:
           unzip -p "$apk" assets/engine.zip > "$RUNNER_TEMP/engine.zip"
           unzip -t "$RUNNER_TEMP/engine.zip" >/dev/null
 
+      - name: Record build info
+        if: success()
+        shell: bash
+        run: |
+          apk=app/build/outputs/apk/release/app-release.apk
+          mkdir -p ci
+          {
+            echo "# build ok：run ${{ github.run_id }} sha ${{ github.sha }}"
+            echo '```'
+            ls -l "$apk"
+            APKSIGNER="$(command -v apksigner || true)"
+            if [ -z "$APKSIGNER" ]; then APKSIGNER="$(ls "$ANDROID_SDK_ROOT"/build-tools/*/apksigner 2>/dev/null | tail -n 1)"; fi
+            if [ -n "$APKSIGNER" ] && [ -x "$APKSIGNER" ]; then
+              "$APKSIGNER" verify --print-certs "$apk" || true
+            else
+              echo "apksigner not found"
+            fi
+            echo '```'
+          } > ci/last-build.md
+          git config user.name "dsh-ci"
+          git config user.email "dsh-ci@users.noreply.github.com"
+          git switch -c ci-build
+          git add ci/last-build.md
+          git commit -m "ci: record build of ${{ github.sha }}" || true
+          git push -f origin ci-build || true
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: DSH-Workbench-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: DSH-Workbench-release-apk
+          path: app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
 
   app-tests:
