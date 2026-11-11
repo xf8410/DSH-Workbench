@@ -23,6 +23,8 @@ class HualuoToolsTest {
         assertEquals(Risk.write, tools.getValue("github_update_file").descriptor.risk)
         assertEquals(Risk.write, tools.getValue("github_create_pull_request").descriptor.risk)
         assertEquals(Risk.dangerous, tools.getValue("github_merge_pull_request").descriptor.risk)
+        assertEquals(Risk.write, tools.getValue("github_create_repo").descriptor.risk)
+        assertEquals(Risk.write, tools.getValue("github_upload_files").descriptor.risk)
         assertFalse(tools.getValue("github_update_file").description.contains("App 会弹确认卡"))
     }
 
