@@ -16,7 +16,7 @@ concurrency:
 jobs:
   test-and-apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -45,14 +45,32 @@ jobs:
           OUT_DIR: ${{ github.workspace }}/toolchains/out/engine
         run: bash js/build-engine.sh
 
-      - name: Test and assemble debug APK
+      - name: Engine tests
         shell: bash
         run: |
           set -o pipefail
-          bash gradlew :engine:test :app:testDebugUnitTest :app:assembleDebug \
+          bash gradlew :engine:test \
             -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
             -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
-            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-engine.log"
+
+      - name: App unit tests
+        shell: bash
+        run: |
+          set -o pipefail
+          bash gradlew :app:testDebugUnitTest \
+            -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
+            -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-app-tests.log"
+
+      - name: Assemble debug APK
+        shell: bash
+        run: |
+          set -o pipefail
+          bash gradlew :app:assembleDebug \
+            -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
+            -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-assemble.log"
 
       - name: Record failure notes
         if: failure()
@@ -61,13 +79,15 @@ jobs:
           mkdir -p ci
           {
             echo "# CI failure：run ${{ github.run_id }} sha ${{ github.sha }}"
-            echo '```'
-            grep -aE '^(e: |error:|FAILURE:|> Task .*FAILED)|FAILED$|AssertionError|Expected:|Caused by' "$RUNNER_TEMP/gradle.log" \
-              | tail -n 12 | cut -c1-140 || true
-            echo '```'
-            echo 'tail：'
-            echo '```'
-            tail -c 1200 "$RUNNER_TEMP/gradle.log" || true
+            for log in "$RUNNER_TEMP"/gradle-*.log; do
+              [ -f "$log" ] || continue
+              echo "## $(basename "$log")"
+              echo '```'
+              grep -aE '^(e: |error:|FAILURE:|> Task .*FAILED)|FAILED$|AssertionError|Expected:|Caused by' "$log" \
+                | tail -n 8 | cut -c1-130 || true
+              echo '```'
+              tail -c 900 "$log" || true
+            done
           } > ci/last-failure.md
           git config user.name "dsh-ci"
           git config user.email "dsh-ci@users.noreply.github.com"
