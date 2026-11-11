@@ -20,6 +20,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -49,6 +51,15 @@ internal fun defaultWorkbenchArgs(name: String, repo: String): JsonObject = buil
             put("path", "")
         }
         "uma_get_snapshot", "uma_get_changes" -> put("max_chars", 12_000)
+        "github_create_repo" -> {
+            put("name", "new-repository")
+            put("private", true)
+        }
+        "github_upload_files" -> {
+            put("repo", repo)
+            put("prefix", "courier/")
+            put("files", buildJsonArray { add("/sdcard/Download/example.apk") })
+        }
         else -> if (name.startsWith("github_")) put("repo", repo)
     }
 }
