@@ -47,7 +47,9 @@ Connection: close
 
 - 读取：仓库列表、目录、文件、代码搜索、分支、提交、Actions runs/jobs/log。
 - 写入：整文件新建或更新（sha 防覆盖冲突）、创建 PR、按 expected head sha 合并 PR。
-- 风险：读取为 read；写文件和建 PR 为 write；合并 PR 为 dangerous。全部由 DSH 现有风险审批链处理，不伪造花落确认卡。
+- 建仓：`github_create_repo`（默认私有；名字被占用/没权限/没令牌都明确报错）。
+- 传文件：`github_upload_files`（APK/软件包全格式流式上传；大文件自动分卷 + manifest 断点续传；成功/失败逐条报账）。
+- 风险：读取为 read；写文件、建 PR、建仓与传文件为 write；合并 PR 为 dangerous。全部由 DSH 现有风险审批链处理，不伪造花落确认卡。
 - 密钥：`github_set_token` 仅在用户明确提供令牌时写入 `SecretStore` 的 `github-token` 命名槽；底层为 Android Keystore AES-GCM。`github_auth_status` 只返回是否已保存，绝不返回令牌；`github_clear_token` 删除该槽。
 
 ### 未注册的花落模块
