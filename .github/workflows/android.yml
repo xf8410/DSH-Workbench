@@ -147,6 +147,19 @@ jobs:
           git commit -m "ci: record build of ${{ github.sha }}" || true
           git push -f origin ci-build || true
 
+      - name: Publish APK to prerelease
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/dsh-workbench.apk"
+          gh release view workbench-latest >/dev/null 2>&1 || gh release create workbench-latest \
+            --prerelease \
+            --title "CI 构建的安装包（固定签名）" \
+            --notes "main 每次构建覆盖此资产：dsh-workbench.apk。安装包是 release 版，固定签名（CN=Hualuo RepoTool），以后可直接覆盖升级。"
+          gh release upload workbench-latest "$RUNNER_TEMP/dsh-workbench.apk" --clobber
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
