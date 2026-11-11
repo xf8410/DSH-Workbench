@@ -26,7 +26,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "io.github.jackwener.dsh"
+        // 与手机上已装的 0.4.1（旧签名，无法覆盖）并存：换包名安装，旧 App 和数据原样保留。
+        applicationId = "io.github.jackwener.dsh.wb"
         minSdk = 29
         targetSdk = 36
         versionCode = appVersion.getProperty("versionCode").toInt()
