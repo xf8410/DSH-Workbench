@@ -1,8 +1,10 @@
 package io.github.jackwener.dsh.feature.workbench
 
 import io.github.jackwener.dsh.core.model.Risk
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -38,6 +40,20 @@ class WorkbenchViewModelTest {
         val search = defaultWorkbenchArgs("github_search_code", "someone/project")
         assertEquals("someone/project", search["repo"]?.jsonPrimitive?.contentOrNull)
         assertEquals("CapabilityHub", search["keyword"]?.jsonPrimitive?.contentOrNull)
+    }
+
+    @Test fun createRepoAndUploadDefaultsAreReadyToEdit() {
+        val create = defaultWorkbenchArgs("github_create_repo", "someone/project")
+        assertEquals("new-repository", create["name"]?.jsonPrimitive?.contentOrNull)
+        assertEquals(true, create["private"]?.jsonPrimitive?.booleanOrNull)
+
+        val upload = defaultWorkbenchArgs("github_upload_files", "someone/project")
+        assertEquals("someone/project", upload["repo"]?.jsonPrimitive?.contentOrNull)
+        assertEquals("courier/", upload["prefix"]?.jsonPrimitive?.contentOrNull)
+        assertEquals(
+            "/sdcard/Download/example.apk",
+            upload["files"]?.jsonArray?.firstOrNull()?.jsonPrimitive?.contentOrNull,
+        )
     }
 
     @Test fun observationDefaultsBoundTheReturnedText() {
