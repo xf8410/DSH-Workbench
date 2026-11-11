@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: android-${{ github.ref }}
@@ -46,11 +46,35 @@ jobs:
         run: bash js/build-engine.sh
 
       - name: Test and assemble debug APK
-        run: >-
-          bash gradlew :engine:test :app:testDebugUnitTest :app:assembleDebug
-          -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs
-          -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine
-          --stacktrace
+        shell: bash
+        run: |
+          set -o pipefail
+          bash gradlew :engine:test :app:testDebugUnitTest :app:assembleDebug \
+            -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
+            -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"
+
+      - name: Record failure notes
+        if: failure()
+        shell: bash
+        run: |
+          mkdir -p ci
+          {
+            echo "# CI failure：run ${{ github.run_id }} sha ${{ github.sha }}"
+            echo '```'
+            grep -aE '^(e: |error:|FAILURE:|> Task .*FAILED)|FAILED$|AssertionError|Expected:|Caused by' "$RUNNER_TEMP/gradle.log" \
+              | tail -n 12 | cut -c1-140 || true
+            echo '```'
+            echo 'tail：'
+            echo '```'
+            tail -c 1200 "$RUNNER_TEMP/gradle.log" || true
+          } > ci/last-failure.md
+          git config user.name "dsh-ci"
+          git config user.email "dsh-ci@users.noreply.github.com"
+          git switch -c ci-notes
+          git add ci/last-failure.md
+          git commit -m "ci: record failure of ${{ github.sha }}" || true
+          git push -f origin ci-notes || true
 
       - name: Verify APK runtime
         run: |
