@@ -11,7 +11,7 @@
  * @module @dsh-android/plugin-memory
  */
 import { defineTool } from "@deepseek-ai/dsh-tools";
-import { createUserMessage } from "@deepseek-ai/dsh-llm";
+import { createSystemMessage } from "@deepseek-ai/dsh-llm";
 import {
   deleteSaved,
   listSaved,
@@ -267,21 +267,16 @@ function apply(ctx) {
       return decision;
     }
     injected.add(agent);
-    const message = createUserMessage({
-      content: [
-        {
-          type: "text",
-          text: [
-            "<active_memory>",
-            "以下是用户长期保存的活跃记忆，每轮都可见，请当作已知背景，不要逐条复述：",
-            "",
-            active.content,
-            "</active_memory>",
-          ].join("\n"),
-        },
-      ],
-      source: { kind: "system", name: "android-memory" },
-    });
+    // 用系统消息注入：活跃记忆是「始终可见的背景」，不冒充用户发言。
+    const message = createSystemMessage(
+      [
+        "<active_memory>",
+        "以下是用户长期保存的活跃记忆，每轮都可见，请当作已知背景，不要逐条复述：",
+        "",
+        active.content,
+        "</active_memory>",
+      ].join("\n"),
+    );
     return { ...decision, messages: [...decision.messages, message] };
   });
 }
