@@ -35,12 +35,11 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Fetch fixed signing keystore
+      - name: Check fixed signing keystore
         shell: bash
         run: |
-          curl -fsSL https://raw.githubusercontent.com/xf8410/hualuo-repo-tool/main/signing/release.keystore -o "$RUNNER_TEMP/release.keystore"
-          test -s "$RUNNER_TEMP/release.keystore"
-          sha256sum "$RUNNER_TEMP/release.keystore"
+          test -s signing/release.keystore
+          sha256sum signing/release.keystore
 
       - name: Fetch verified native runtime
         env:
@@ -68,10 +67,6 @@ jobs:
           bash gradlew :app:assembleRelease \
             -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
             -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
-            -Pdsh.signing.storeFile="$RUNNER_TEMP/release.keystore" \
-            -Pdsh.signing.storePassword=hualuo-override-install-2026 \
-            -Pdsh.signing.keyAlias=hualuo \
-            -Pdsh.signing.keyPassword=hualuo-override-install-2026 \
             --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-assemble.log"
 
       - name: Record build failure notes

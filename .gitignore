@@ -12,3 +12,5 @@ node_modules/
 secrets/
 app/schemas/
 /toolchains
+# 固定签名：内置 keystore 必须进仓库，否则每次构建签名不同、安装要卸载
+!signing/release.keystore

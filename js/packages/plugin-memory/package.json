@@ -1,0 +1,17 @@
+{
+  "name": "@dsh-android/plugin-memory",
+  "version": "0.1.0",
+  "description": "DSH-Android 记忆模块与跨对话读取：活跃记忆（每轮注入）+ 已保存记忆（可搜索 CRUD）+ 历史对话检索（读取 $DSH_HOME/sessions 内的会话日志）。",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": ["index.js", "store.js", "conversations.js", "package.json"],
+  "engines": {
+    "dsh": "0.2.1-rc.5"
+  }
+}

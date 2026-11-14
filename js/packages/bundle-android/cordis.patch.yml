@@ -48,6 +48,11 @@
     - id: android-extensions
       name: '@dsh-android/plugin-extensions'
 
+    # 记忆模块 + 跨对话读取（活跃记忆注入、已保存记忆检索、历史会话检索）。
+    # 数据在 $DSH_HOME/memory 与 $DSH_HOME/sessions，全部本机读写。
+    - id: android-memory
+      name: '@dsh-android/plugin-memory'
+
 # rc.5's official DeepSeek routes follow the account's `/models` listing and wait up to
 # 5 s for it on the first connect: a network round trip on every cold start. Wait 1 ms:
 # the first connect uses the built-in catalog, the listing loads in the background and

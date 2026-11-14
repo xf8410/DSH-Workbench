@@ -38,16 +38,19 @@ android {
         buildConfigField("long", "SHIZUKU_VERSION_CODE", "${shizukuPin("VERSION_CODE")}L")
     }
 
-    // Release signing comes from Gradle properties (e.g. ~/.gradle/gradle.properties or -P), never from the repo:
-    // dsh.signing.storeFile, dsh.signing.storePassword, dsh.signing.keyAlias, dsh.signing.keyPassword.
-    // Without them a release build falls back to the debug key.
+    // Release signing: an explicit keystore wins, otherwise the keystore committed at
+    // signing/release.keystore is used, so local, CI and fork builds all produce the same
+    // signature and installing over a previous APK never needs an uninstall.
+    // Rotate with -Pdsh.signing.* (or ~/.gradle/gradle.properties).
     val signingProp = { k: String -> providers.gradleProperty("dsh.signing.$k").orNull }
+    val repoKeystore = rootProject.file("signing/release.keystore")
+    val keystoreFile: File? = signingProp("storeFile")?.let { file(it) } ?: repoKeystore.takeIf { it.isFile }
     signingConfigs {
-        if (signingProp("storeFile") != null) create("release") {
-            storeFile = file(signingProp("storeFile")!!)
-            storePassword = signingProp("storePassword")
-            keyAlias = signingProp("keyAlias")
-            keyPassword = signingProp("keyPassword")
+        if (keystoreFile != null) create("release") {
+            storeFile = keystoreFile
+            storePassword = signingProp("storePassword") ?: "hualuo-override-install-2026"
+            keyAlias = signingProp("keyAlias") ?: "hualuo"
+            keyPassword = signingProp("keyPassword") ?: "hualuo-override-install-2026"
             // minSdk 29 makes AGP drop v1 (JAR) signing, but some vendor installers, file managers and app stores
             // only look for META-INF signature files and reject the APK as unsigned. Ship v1+v2+v3.
             enableV1Signing = true

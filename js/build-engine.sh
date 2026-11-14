@@ -42,7 +42,7 @@ cp "$JS_DIR/engine/package.json" "$JS_DIR/engine/package-lock.json" "$STAGE/"
 # js/packages/<dir> → node_modules/<package name>: our @dsh-android packages plus the vendored
 # third-party LLM adapter @snnh/dsh-llm-service-lite (MIT; see its package.json "//vendored").
 log "adding @dsh-android packages + vendored @snnh/dsh-llm-service-lite"
-OUR_PKGS=(bundle-android plugin-device plugin-guard plugin-mode plugin-account plugin-extensions llm-service-lite)
+OUR_PKGS=(bundle-android plugin-device plugin-guard plugin-mode plugin-account plugin-extensions plugin-memory llm-service-lite)
 for pkg in "${OUR_PKGS[@]}"; do
   node -e '
     const [src, nm, stagePkg] = process.argv.slice(1)
