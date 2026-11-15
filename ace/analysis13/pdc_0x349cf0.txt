@@ -1,0 +1,29 @@
+// callconv: x0 arm64 (x0, x1, x2, x3, x4, x5, x6, x7, stack);
+void fcn.00349cf0 (char *arg1, int64_t arg2) {
+    loc_0x00349cf0:
+        // XREFS(45)
+        x8 = 0x4f3000
+        w8 = [x8 + 0xe20] // x23
+        if (!w8) goto 0x349d00 // unlikely
+        goto loc_0x00349cfc;
+    loc_0x00349d00:
+        // CODE XREF from fcn.00349cf0 @ 0x349cf8(x)
+        goto fcn.00348698 // fcn.00348698(0x11dc77, 0x11dc77)
+        // chop
+        
+    loc_0x00348698:
+        // CALL XREF from fcn.003491b8 @ 0x34952c(x)
+        // CODE XREF from fcn.00349cf0 @ 0x349d00(x)
+        [sp - 0x30]! = x21
+        [sp + 0x10] = (x20, 2)
+        [sp + 0x20] = (x29, 2)
+        x29 = sp + 0x20
+        x21 = 0x511000
+        x8 = [x21 + 0x388]
+        w19 = w1      // arg2 // x1
+        x20 = x0      // arg1 // x1
+        if (x8) goto 0x3486d4 // unlikely
+        goto loc_0x003486bc;
+        return x0;
+}
+

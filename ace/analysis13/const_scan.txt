@@ -1,0 +1,15 @@
+=== 常见哈希初始常量扫描（小端字节序）===
+md5_a  pattern=01234567  rodata_hits=3
+md5_b  pattern=89abcdef  rodata_hits=1
+md5_k0  pattern=78a46ad7  rodata_hits=0
+md5_k1  pattern=56b7c7e8  rodata_hits=0
+sha256_h0  pattern=67e6096a  rodata_hits=1
+sha256_h1  pattern=85ae67bb  rodata_hits=1
+sha1_h0  pattern=01234567  rodata_hits=3
+crc32_poly  pattern=edb88320  rodata_hits=0
+
+=== grep 直接搜二进制 ===
+  01234567 -> 8148038
+  89abcdef -> 8148046
+  78a46ad7 -> not_found
+  67e6096a -> 8150356

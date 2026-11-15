@@ -1,0 +1,459 @@
+
+ace/tp2.so:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000349cf0 <GetTssExportFunc2@@TERSAFE+0x28020c>:
+  349cf0:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349cf4:	ldr	w8, [x8, #3616]
+  349cf8:	cbz	w8, 349d00 <GetTssExportFunc2@@TERSAFE+0x28021c>
+  349cfc:	b	c3790 <access@plt>
+  349d00:	b	348698 <GetTssExportFunc2@@TERSAFE+0x27ebb4>
+  349d04:	b	c4020 <usleep@plt>
+  349d08:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349d0c:	ldr	w8, [x8, #3616]
+  349d10:	cbz	w8, 349d18 <GetTssExportFunc2@@TERSAFE+0x280234>
+  349d14:	b	c3d60 <sleep@plt>
+  349d18:	b	348760 <GetTssExportFunc2@@TERSAFE+0x27ec7c>
+  349d1c:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349d20:	ldr	w8, [x8, #3616]
+  349d24:	cbz	w8, 349d2c <GetTssExportFunc2@@TERSAFE+0x280248>
+  349d28:	b	c36e0 <select@plt>
+  349d2c:	b	3487cc <GetTssExportFunc2@@TERSAFE+0x27ece8>
+  349d30:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349d34:	ldr	w8, [x8, #3616]
+  349d38:	cbz	w8, 349d40 <GetTssExportFunc2@@TERSAFE+0x28025c>
+  349d3c:	b	c4170 <fstat@plt>
+  349d40:	b	3488c0 <GetTssExportFunc2@@TERSAFE+0x27eddc>
+  349d44:	stp	x22, x21, [sp, #-48]!
+  349d48:	stp	x20, x19, [sp, #16]
+  349d4c:	stp	x29, x30, [sp, #32]
+  349d50:	add	x29, sp, #0x20
+  349d54:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349d58:	ldr	w8, [x8, #3616]
+  349d5c:	mov	w19, w2
+  349d60:	mov	w20, w1
+  349d64:	mov	x21, x0
+  349d68:	cbz	w8, 349d88 <GetTssExportFunc2@@TERSAFE+0x2802a4>
+  349d6c:	mov	w1, w20
+  349d70:	mov	w2, w19
+  349d74:	ldp	x29, x30, [sp, #32]
+  349d78:	ldp	x20, x19, [sp, #16]
+  349d7c:	mov	x0, x21
+  349d80:	ldp	x22, x21, [sp], #48
+  349d84:	b	c3bb0 <open@plt>
+  349d88:	adrp	x22, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  349d8c:	ldr	x8, [x22, #904]
+  349d90:	cbnz	x8, 349dac <GetTssExportFunc2@@TERSAFE+0x2802c8>
+  349d94:	bl	348338 <GetTssExportFunc2@@TERSAFE+0x27e854>
+  349d98:	adrp	x8, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+  349d9c:	ldr	x8, [x8, #3432]
+  349da0:	cmp	x0, #0x0
+  349da4:	csel	x8, x8, x0, eq	// eq = none
+  349da8:	str	x8, [x22, #904]
+  349dac:	mov	w0, #0x38                  	// #56
+  349db0:	mov	w1, #0xffffff9c            	// #-100
+  349db4:	mov	x2, x21
+  349db8:	mov	w3, w20
+  349dbc:	mov	w4, w19
+  349dc0:	blr	x8
+  349dc4:	ldp	x29, x30, [sp, #32]
+  349dc8:	ldp	x20, x19, [sp, #16]
+  349dcc:	ldp	x22, x21, [sp], #48
+  349dd0:	ret
+  349dd4:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349dd8:	ldr	w8, [x8, #3616]
+  349ddc:	cbz	w8, 349de4 <GetTssExportFunc2@@TERSAFE+0x280300>
+  349de0:	b	c39e0 <close@plt>
+  349de4:	b	348b44 <GetTssExportFunc2@@TERSAFE+0x27f060>
+  349de8:	str	x21, [sp, #-48]!
+  349dec:	stp	x20, x19, [sp, #16]
+  349df0:	stp	x29, x30, [sp, #32]
+  349df4:	add	x29, sp, #0x20
+  349df8:	mov	x6, x5
+  349dfc:	tbnz	x5, #63, 349e48 <GetTssExportFunc2@@TERSAFE+0x280364>
+  349e00:	add	x8, x1, #0xfff
+  349e04:	and	x8, x8, #0xfffffffffffff000
+  349e08:	mov	x19, x1
+  349e0c:	cmp	x8, x1
+  349e10:	b.cc	349e54 <GetTssExportFunc2@@TERSAFE+0x280370>  // b.lo, b.ul, b.last
+  349e14:	tbnz	x8, #63, 349e54 <GetTssExportFunc2@@TERSAFE+0x280370>
+  349e18:	adrp	x8, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  349e1c:	ldr	x8, [x8, #904]
+  349e20:	mov	w5, w4
+  349e24:	mov	w21, w3
+  349e28:	mov	w3, w2
+  349e2c:	mov	x1, x0
+  349e30:	cbz	x8, 349e78 <GetTssExportFunc2@@TERSAFE+0x280394>
+  349e34:	mov	w0, #0xde                  	// #222
+  349e38:	mov	x2, x19
+  349e3c:	mov	w4, w21
+  349e40:	blr	x8
+  349e44:	b	349e88 <GetTssExportFunc2@@TERSAFE+0x2803a4>
+  349e48:	bl	c3b50 <__errno@plt>
+  349e4c:	mov	w8, #0x16                  	// #22
+  349e50:	b	349e5c <GetTssExportFunc2@@TERSAFE+0x280378>
+  349e54:	bl	c3b50 <__errno@plt>
+  349e58:	mov	w8, #0xc                   	// #12
+  349e5c:	str	w8, [x0]
+  349e60:	mov	x20, #0xffffffffffffffff    	// #-1
+  349e64:	mov	x0, x20
+  349e68:	ldp	x29, x30, [sp, #32]
+  349e6c:	ldp	x20, x19, [sp, #16]
+  349e70:	ldr	x21, [sp], #48
+  349e74:	ret
+  349e78:	mov	w0, #0xde                  	// #222
+  349e7c:	mov	x2, x19
+  349e80:	mov	w4, w21
+  349e84:	bl	34b310 <GetTssExportFunc2@@TERSAFE+0x28182c>
+  349e88:	mov	x20, x0
+  349e8c:	cmn	x0, #0x1
+  349e90:	b.eq	349e64 <GetTssExportFunc2@@TERSAFE+0x280380>  // b.none
+  349e94:	mov	w8, #0x122                 	// #290
+  349e98:	movk	w8, #0x2, lsl #16
+  349e9c:	and	w8, w21, w8
+  349ea0:	cmp	w8, #0x22
+  349ea4:	b.ne	349e64 <GetTssExportFunc2@@TERSAFE+0x280380>  // b.any
+  349ea8:	adrp	x21, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  349eac:	ldrb	w8, [x21, #944]
+  349eb0:	tbnz	w8, #0, 349e64 <GetTssExportFunc2@@TERSAFE+0x280380>
+  349eb4:	mov	w2, #0xc                   	// #12
+  349eb8:	mov	x0, x20
+  349ebc:	mov	x1, x19
+  349ec0:	bl	c4340 <madvise@plt>
+  349ec4:	cmn	w0, #0x1
+  349ec8:	b.ne	349e64 <GetTssExportFunc2@@TERSAFE+0x280380>  // b.any
+  349ecc:	bl	c3b50 <__errno@plt>
+  349ed0:	ldr	w8, [x0]
+  349ed4:	cmp	w8, #0x16
+  349ed8:	b.ne	349e64 <GetTssExportFunc2@@TERSAFE+0x280380>  // b.any
+  349edc:	mov	w8, #0x1                   	// #1
+  349ee0:	strb	w8, [x21, #944]
+  349ee4:	b	349e64 <GetTssExportFunc2@@TERSAFE+0x280380>
+  349ee8:	b	c4340 <madvise@plt>
+  349eec:	str	x21, [sp, #-48]!
+  349ef0:	stp	x20, x19, [sp, #16]
+  349ef4:	stp	x29, x30, [sp, #32]
+  349ef8:	add	x29, sp, #0x20
+  349efc:	adrp	x21, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  349f00:	ldr	x8, [x21, #904]
+  349f04:	mov	x19, x1
+  349f08:	mov	x20, x0
+  349f0c:	cbnz	x8, 349f28 <GetTssExportFunc2@@TERSAFE+0x280444>
+  349f10:	bl	348338 <GetTssExportFunc2@@TERSAFE+0x27e854>
+  349f14:	adrp	x8, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+  349f18:	ldr	x8, [x8, #3432]
+  349f1c:	cmp	x0, #0x0
+  349f20:	csel	x8, x8, x0, eq	// eq = none
+  349f24:	str	x8, [x21, #904]
+  349f28:	mov	w0, #0xd7                  	// #215
+  349f2c:	mov	x1, x20
+  349f30:	mov	x2, x19
+  349f34:	blr	x8
+  349f38:	ldp	x29, x30, [sp, #32]
+  349f3c:	ldp	x20, x19, [sp, #16]
+  349f40:	ldr	x21, [sp], #48
+  349f44:	ret
+  349f48:	stp	x22, x21, [sp, #-48]!
+  349f4c:	stp	x20, x19, [sp, #16]
+  349f50:	stp	x29, x30, [sp, #32]
+  349f54:	add	x29, sp, #0x20
+  349f58:	adrp	x22, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  349f5c:	ldr	x8, [x22, #904]
+  349f60:	mov	x19, x2
+  349f64:	mov	x20, x1
+  349f68:	mov	x21, x0
+  349f6c:	cbnz	x8, 349f88 <GetTssExportFunc2@@TERSAFE+0x2804a4>
+  349f70:	bl	348338 <GetTssExportFunc2@@TERSAFE+0x27e854>
+  349f74:	adrp	x8, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+  349f78:	ldr	x8, [x8, #3432]
+  349f7c:	cmp	x0, #0x0
+  349f80:	csel	x8, x8, x0, eq	// eq = none
+  349f84:	str	x8, [x22, #904]
+  349f88:	mov	w0, #0xe8                  	// #232
+  349f8c:	mov	x1, x21
+  349f90:	mov	x2, x20
+  349f94:	mov	x3, x19
+  349f98:	blr	x8
+  349f9c:	ldp	x29, x30, [sp, #32]
+  349fa0:	ldp	x20, x19, [sp, #16]
+  349fa4:	ldp	x22, x21, [sp], #48
+  349fa8:	ret
+  349fac:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349fb0:	ldr	w8, [x8, #3616]
+  349fb4:	cbz	w8, 349fbc <GetTssExportFunc2@@TERSAFE+0x2804d8>
+  349fb8:	b	c35c0 <mmap@plt>
+  349fbc:	b	349de8 <GetTssExportFunc2@@TERSAFE+0x280304>
+  349fc0:	str	x21, [sp, #-48]!
+  349fc4:	stp	x20, x19, [sp, #16]
+  349fc8:	stp	x29, x30, [sp, #32]
+  349fcc:	add	x29, sp, #0x20
+  349fd0:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  349fd4:	ldr	w8, [x8, #3616]
+  349fd8:	mov	x19, x1
+  349fdc:	mov	x20, x0
+  349fe0:	cbz	w8, 349ffc <GetTssExportFunc2@@TERSAFE+0x280518>
+  349fe4:	mov	x0, x20
+  349fe8:	mov	x1, x19
+  349fec:	ldp	x29, x30, [sp, #32]
+  349ff0:	ldp	x20, x19, [sp, #16]
+  349ff4:	ldr	x21, [sp], #48
+  349ff8:	b	c3fb0 <munmap@plt>
+  349ffc:	adrp	x21, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  34a000:	ldr	x8, [x21, #904]
+  34a004:	cbnz	x8, 34a020 <GetTssExportFunc2@@TERSAFE+0x28053c>
+  34a008:	bl	348338 <GetTssExportFunc2@@TERSAFE+0x27e854>
+  34a00c:	adrp	x8, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+  34a010:	ldr	x8, [x8, #3432]
+  34a014:	cmp	x0, #0x0
+  34a018:	csel	x8, x8, x0, eq	// eq = none
+  34a01c:	str	x8, [x21, #904]
+  34a020:	mov	w0, #0xd7                  	// #215
+  34a024:	mov	x1, x20
+  34a028:	mov	x2, x19
+  34a02c:	blr	x8
+  34a030:	ldp	x29, x30, [sp, #32]
+  34a034:	ldp	x20, x19, [sp, #16]
+  34a038:	ldr	x21, [sp], #48
+  34a03c:	ret
+  34a040:	b	c4340 <madvise@plt>
+  34a044:	stp	x22, x21, [sp, #-48]!
+  34a048:	stp	x20, x19, [sp, #16]
+  34a04c:	stp	x29, x30, [sp, #32]
+  34a050:	add	x29, sp, #0x20
+  34a054:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  34a058:	ldr	w8, [x8, #3616]
+  34a05c:	mov	x19, x2
+  34a060:	mov	x20, x1
+  34a064:	mov	x21, x0
+  34a068:	cbz	w8, 34a088 <GetTssExportFunc2@@TERSAFE+0x2805a4>
+  34a06c:	mov	x1, x20
+  34a070:	mov	x2, x19
+  34a074:	ldp	x29, x30, [sp, #32]
+  34a078:	ldp	x20, x19, [sp, #16]
+  34a07c:	mov	x0, x21
+  34a080:	ldp	x22, x21, [sp], #48
+  34a084:	b	c38a0 <mincore@plt>
+  34a088:	adrp	x22, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  34a08c:	ldr	x8, [x22, #904]
+  34a090:	cbnz	x8, 34a0ac <GetTssExportFunc2@@TERSAFE+0x2805c8>
+  34a094:	bl	348338 <GetTssExportFunc2@@TERSAFE+0x27e854>
+  34a098:	adrp	x8, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+  34a09c:	ldr	x8, [x8, #3432]
+  34a0a0:	cmp	x0, #0x0
+  34a0a4:	csel	x8, x8, x0, eq	// eq = none
+  34a0a8:	str	x8, [x22, #904]
+  34a0ac:	mov	w0, #0xe8                  	// #232
+  34a0b0:	mov	x1, x21
+  34a0b4:	mov	x2, x20
+  34a0b8:	mov	x3, x19
+  34a0bc:	blr	x8
+  34a0c0:	ldp	x29, x30, [sp, #32]
+  34a0c4:	ldp	x20, x19, [sp, #16]
+  34a0c8:	ldp	x22, x21, [sp], #48
+  34a0cc:	ret
+  34a0d0:	mov	w1, wzr
+  34a0d4:	b	34a0d8 <GetTssExportFunc2@@TERSAFE+0x2805f4>
+  34a0d8:	str	x21, [sp, #-48]!
+  34a0dc:	stp	x20, x19, [sp, #16]
+  34a0e0:	stp	x29, x30, [sp, #32]
+  34a0e4:	add	x29, sp, #0x20
+  34a0e8:	cbz	x0, 34a198 <GetTssExportFunc2@@TERSAFE+0x2806b4>
+  34a0ec:	ldrb	w8, [x0]
+  34a0f0:	mov	x20, x0
+  34a0f4:	cbz	w8, 34a198 <GetTssExportFunc2@@TERSAFE+0x2806b4>
+  34a0f8:	mov	w0, #0x1090                	// #4240
+  34a0fc:	mov	w21, w1
+  34a100:	bl	c37f0 <malloc@plt>
+  34a104:	mov	x19, x0
+  34a108:	cbz	x0, 34a19c <GetTssExportFunc2@@TERSAFE+0x2806b8>
+  34a10c:	mov	w2, #0x1090                	// #4240
+  34a110:	mov	x0, x19
+  34a114:	mov	w1, wzr
+  34a118:	bl	c3de0 <memset@plt>
+  34a11c:	adrp	x8, 4f3000 <g_AllTssExportFunc@@TERSAFE+0x3dea8>
+  34a120:	ldr	w8, [x8, #3616]
+  34a124:	cbz	w8, 34a12c <GetTssExportFunc2@@TERSAFE+0x280648>
+  34a128:	tbz	w21, #0, 34a178 <GetTssExportFunc2@@TERSAFE+0x280694>
+  34a12c:	adrp	x21, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  34a130:	ldr	x8, [x21, #904]
+  34a134:	cbnz	x8, 34a150 <GetTssExportFunc2@@TERSAFE+0x28066c>
+  34a138:	bl	348338 <GetTssExportFunc2@@TERSAFE+0x27e854>
+  34a13c:	adrp	x8, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+  34a140:	ldr	x8, [x8, #3432]
+  34a144:	cmp	x0, #0x0
+  34a148:	csel	x8, x8, x0, eq	// eq = none
+  34a14c:	str	x8, [x21, #904]
+  34a150:	mov	w3, #0x4000                	// #16384
+  34a154:	mov	w0, #0x38                  	// #56
+  34a158:	mov	w1, #0xffffff9c            	// #-100
+  34a15c:	movk	w3, #0x8, lsl #16
+  34a160:	mov	x2, x20
+  34a164:	mov	w4, wzr
+  34a168:	blr	x8
+  34a16c:	tbnz	w0, #31, 34a178 <GetTssExportFunc2@@TERSAFE+0x280694>
+  34a170:	str	w0, [x19]
+  34a174:	b	34a19c <GetTssExportFunc2@@TERSAFE+0x2806b8>
+  34a178:	mov	w8, #0x4                   	// #4
+  34a17c:	mov	x0, x20
+  34a180:	str	w8, [x19, #4]
+  34a184:	bl	c4490 <opendir@plt>
+  34a188:	str	x0, [x19, #4232]
+  34a18c:	cbnz	x0, 34a19c <GetTssExportFunc2@@TERSAFE+0x2806b8>
+  34a190:	mov	x0, x19
+  34a194:	bl	c3aa0 <free@plt>
+  34a198:	mov	x19, xzr
+  34a19c:	mov	x0, x19
+  34a1a0:	ldp	x29, x30, [sp, #32]
+  34a1a4:	ldp	x20, x19, [sp, #16]
+  34a1a8:	ldr	x21, [sp], #48
+  34a1ac:	ret
+  34a1b0:	str	x23, [sp, #-64]!
+  34a1b4:	stp	x22, x21, [sp, #16]
+  34a1b8:	stp	x20, x19, [sp, #32]
+  34a1bc:	stp	x29, x30, [sp, #48]
+  34a1c0:	add	x29, sp, #0x30
+  34a1c4:	cbz	x0, 34a298 <GetTssExportFunc2@@TERSAFE+0x2807b4>
+  34a1c8:	ldr	w8, [x0, #4]
+  34a1cc:	mov	x19, x0
+  34a1d0:	cmp	w8, #0x4
+  34a1d4:	b.ne	34a1f0 <GetTssExportFunc2@@TERSAFE+0x28070c>  // b.any
+  34a1d8:	ldr	x0, [x19, #4232]
+  34a1dc:	ldp	x29, x30, [sp, #48]
+  34a1e0:	ldp	x20, x19, [sp, #32]
+  34a1e4:	ldp	x22, x21, [sp, #16]
+  34a1e8:	ldr	x23, [sp], #64
+  34a1ec:	b	c3950 <readdir@plt>
+  34a1f0:	ldr	w0, [x19, #16]
+  34a1f4:	cmp	w0, #0x1
+  34a1f8:	b.lt	34a228 <GetTssExportFunc2@@TERSAFE+0x280744>  // b.tstop
+  34a1fc:	ldr	x20, [x19, #24]
+  34a200:	ldrh	w8, [x20, #16]
+  34a204:	mov	x1, xzr
+  34a208:	add	x9, x20, x8
+  34a20c:	str	x9, [x19, #24]
+  34a210:	cbz	w8, 34a29c <GetTssExportFunc2@@TERSAFE+0x2807b8>
+  34a214:	subs	w8, w0, w8
+  34a218:	b.lt	34a29c <GetTssExportFunc2@@TERSAFE+0x2807b8>  // b.tstop
+  34a21c:	mov	x1, x20
+  34a220:	str	w8, [x19, #16]
+  34a224:	b	34a29c <GetTssExportFunc2@@TERSAFE+0x2807b8>
+  34a228:	adrp	x23, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+  34a22c:	ldr	x23, [x23, #3432]
+  34a230:	add	x20, x19, #0x20
+  34a234:	adrp	x22, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  34a238:	ldr	x8, [x22, #904]
+  34a23c:	ldr	w21, [x19]
+  34a240:	cbnz	x8, 34a254 <GetTssExportFunc2@@TERSAFE+0x280770>
+  34a244:	bl	348338 <GetTssExportFunc2@@TERSAFE+0x27e854>
+  34a248:	cmp	x0, #0x0
+  34a24c:	csel	x8, x23, x0, eq	// eq = none
+  34a250:	str	x8, [x22, #904]
+  34a254:	mov	w0, #0x3d                  	// #61
+  34a258:	mov	w3, #0x1068                	// #4200
+  34a25c:	mov	w1, w21
+  34a260:	mov	x2, x20
+  34a264:	blr	x8
+  34a268:	cmn	w0, #0x1
+  34a26c:	b.ne	34a284 <GetTssExportFunc2@@TERSAFE+0x2807a0>  // b.any
+  34a270:	bl	c3b50 <__errno@plt>
+  34a274:	ldr	w8, [x0]
+  34a278:	cmp	w8, #0x4
+  34a27c:	b.eq	34a238 <GetTssExportFunc2@@TERSAFE+0x280754>  // b.none
+  34a280:	b	34a298 <GetTssExportFunc2@@TERSAFE+0x2807b4>
+  34a284:	cmp	w0, #0x1
+  34a288:	b.lt	34a298 <GetTssExportFunc2@@TERSAFE+0x2807b4>  // b.tstop
+  34a28c:	str	w0, [x19, #16]
+  34a290:	str	x20, [x19, #24]
+  34a294:	b	34a200 <GetTssExportFunc2@@TERSAFE+0x28071c>
+  34a298:	mov	x1, xzr
+  34a29c:	ldp	x29, x30, [sp, #48]
+  34a2a0:	ldp	x20, x19, [sp, #32]
+  34a2a4:	ldp	x22, x21, [sp, #16]
+  34a2a8:	mov	x0, x1
+  34a2ac:	ldr	x23, [sp], #64
+  34a2b0:	ret
+  34a2b4:	stp	x20, x19, [sp, #-32]!
+  34a2b8:	stp	x29, x30, [sp, #16]
+  34a2bc:	add	x29, sp, #0x10
+  34a2c0:	cbz	x0, 34a2e0 <GetTssExportFunc2@@TERSAFE+0x2807fc>
+  34a2c4:	ldr	w8, [x0, #4]
+  34a2c8:	mov	x19, x0
+  34a2cc:	cmp	w8, #0x4
+  34a2d0:	b.ne	34a2f8 <GetTssExportFunc2@@TERSAFE+0x280814>  // b.any
+  34a2d4:	ldr	x0, [x19, #4232]
+  34a2d8:	bl	c3b90 <closedir@plt>
+  34a2dc:	b	34a300 <GetTssExportFunc2@@TERSAFE+0x28081c>
+  34a2e0:	bl	c3b50 <__errno@plt>
+  34a2e4:	mov	x8, x0
+  34a2e8:	mov	w9, #0x16                  	// #22
+  34a2ec:	mov	w0, #0xffffffff            	// #-1
+  34a2f0:	str	w9, [x8]
+  34a2f4:	b	34a310 <GetTssExportFunc2@@TERSAFE+0x28082c>
+  34a2f8:	ldr	w0, [x19]
+  34a2fc:	bl	348b44 <GetTssExportFunc2@@TERSAFE+0x27f060>
+  34a300:	mov	w20, w0
+  34a304:	mov	x0, x19
+  34a308:	bl	c3aa0 <free@plt>
+  34a30c:	mov	w0, w20
+  34a310:	ldp	x29, x30, [sp, #16]
+  34a314:	ldp	x20, x19, [sp], #32
+  34a318:	ret
+  34a31c:	cbz	x2, 34a340 <GetTssExportFunc2@@TERSAFE+0x28085c>
+  34a320:	ldrb	w8, [x0]
+  34a324:	ldrb	w9, [x1]
+  34a328:	subs	w8, w8, w9
+  34a32c:	b.ne	34a344 <GetTssExportFunc2@@TERSAFE+0x280860>  // b.any
+  34a330:	subs	x2, x2, #0x1
+  34a334:	add	x0, x0, #0x1
+  34a338:	add	x1, x1, #0x1
+  34a33c:	cbnz	x2, 34a320 <GetTssExportFunc2@@TERSAFE+0x28083c>
+  34a340:	mov	w8, wzr
+  34a344:	mov	w0, w8
+  34a348:	ret
+  34a34c:	ldrb	w9, [x0]
+  34a350:	ldrb	w8, [x1]
+  34a354:	subs	w8, w9, w8
+  34a358:	b.ne	34a36c <GetTssExportFunc2@@TERSAFE+0x280888>  // b.any
+  34a35c:	add	x1, x1, #0x1
+  34a360:	add	x0, x0, #0x1
+  34a364:	cbnz	w9, 34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  34a368:	mov	w8, wzr
+  34a36c:	mov	w0, w8
+  34a370:	ret
+  34a374:	mov	w8, #0xffffffff            	// #-1
+  34a378:	cbz	x0, 34a3ec <GetTssExportFunc2@@TERSAFE+0x280908>
+  34a37c:	cbz	x1, 34a3ec <GetTssExportFunc2@@TERSAFE+0x280908>
+  34a380:	subs	x8, x1, #0x1
+  34a384:	ldrb	w9, [x8, #1]!
+  34a388:	cbnz	w9, 34a384 <GetTssExportFunc2@@TERSAFE+0x2808a0>
+  34a38c:	subs	x9, x8, x1
+  34a390:	cmp	x9, x2
+  34a394:	b.cs	34a3bc <GetTssExportFunc2@@TERSAFE+0x2808d8>  // b.hs, b.nlast
+  34a398:	ldrb	w8, [x1]
+  34a39c:	strb	w8, [x0]
+  34a3a0:	cbz	w8, 34a3ec <GetTssExportFunc2@@TERSAFE+0x280908>
+  34a3a4:	add	x8, x0, #0x1
+  34a3a8:	add	x9, x1, #0x1
+  34a3ac:	ldrb	w10, [x9], #1
+  34a3b0:	strb	w10, [x8], #1
+  34a3b4:	cbnz	w10, 34a3ac <GetTssExportFunc2@@TERSAFE+0x2808c8>
+  34a3b8:	b	34a3e8 <GetTssExportFunc2@@TERSAFE+0x280904>
+  34a3bc:	add	x9, x1, x9
+  34a3c0:	subs	x9, x9, x2
+  34a3c4:	ldrb	w9, [x9, #1]
+  34a3c8:	strb	w9, [x0]
+  34a3cc:	cbz	w9, 34a3e8 <GetTssExportFunc2@@TERSAFE+0x280904>
+  34a3d0:	subs	x8, x8, x2
+  34a3d4:	add	x9, x0, #0x1
+  34a3d8:	add	x8, x8, #0x2
+  34a3dc:	ldrb	w10, [x8], #1
+  34a3e0:	strb	w10, [x9], #1
+  34a3e4:	cbnz	w10, 34a3dc <GetTssExportFunc2@@TERSAFE+0x2808f8>
+  34a3e8:	mov	w8, wzr
+  34a3ec:	mov	w0, w8
+  34a3f0:	ret
+  34a3f4:	subs	x8, x0, #0x1
+  34a3f8:	ldrb	w9, [x8, #1]!
+  34a3fc:	cbnz	w9, 34a3f8 <GetTssExportFunc2@@TERSAFE+0x280914>

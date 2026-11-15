@@ -1,0 +1,267 @@
+// callconv: x0 arm64 (x0, x1, x2, x3, x4, x5, x6, x7, stack);
+void fcn.0012c190 (int64_t arg1, int64_t arg2, int64_t arg3, uint32_t arg4, int64_t arg5, int64_t arg6, int64_t arg_a0h) {
+    loc_0x0012c190:
+        // CALL XREF from fcn.0012bdac @ 0x12be78(x)
+        sp -= 0xa0
+        [var_50h] = (x26, 2)
+        [var_60h] = (x24, 2)
+        [var_70h] = (x22, 2)
+        [var_80h] = (x20, 2)
+        [var_90h] = (x29, 2)
+        x29 = sp + 0x90
+        w9 = 0xb94
+        w11 = 0xf9ab
+        w8 = 0xb
+        w9 |= 0x103d << 16 // '=\x10'
+        w10 = 0x14
+        w11 |= 0xb1bc << 16
+        w8 = w9 | w8
+        w10 = w11 | w10
+        (a, b) = compare (x3, 0) // arg4 // x23
+        w8 ^= w9
+        w9 = w10 ^ w11
+        x26 = 0x4c4000
+        w8 = (eq)? w8 : w9
+        x26 += 0x1b0
+        ldr x8, [x26, w8, uxtw 3] // "h"
+        x19 = x0      // arg1
+        [x29 -0x44] = w10
+        [arg_a0hx48] = w11
+        w0 = -1       // x17
+        switch x8
+        // DATA XREF from fcn.0012c190 @ 0x12c1e4(r)
+        w8 = (byte) [x3] // arg4 // x14
+        w9 = 0xf5e7
+        w9 |= 0x9906 << 16
+        w10 = 0x8ea4
+        w10 |= 0xc0 << 16
+        w11 = w9 + 5
+        w9 = w11 ^ w9
+        w11 = w10 + 0x17
+        w12 = w11 ^ w10
+        (a, b) = compare (w8, 0) // x23
+        w8 = (eq)? w9 : w12
+        ldr x8, [x26, w8, uxtw 3]
+        x20 = x3      // arg4
+        [x29 -0x44] = w11
+        [arg_a0hx48] = w10
+        w0 = -1       // x17
+        switch x8
+        // DATA XREF from fcn.0012c190 @ 0x12c228(r)
+        w22 = w1      // arg2 // x1
+        w1 = 4        // (pstr 0x00010102) "K"
+        x0 = x20      // x3
+        w25 = w5      // arg6 // x5
+        w21 = w4      // arg5
+        w23 = w2      // arg3
+        fcn.00349cf0 () // fcn.00349cf0(0x1303e1b5ffff75fa, 0x4)
+        w8 = 0x1e94
+        w9 = 0x3ae7
+        w8 |= 0x44ea << 16
+        w9 |= 0x3a4a << 16 // 'J:'
+        w10 = w8 + 6
+        w11 = w9 + 5
+        w8 = w10 ^ w8
+        w10 = w11 ^ w9
+        (a, b) = compare (w0, 0) // x23 // x23
+        w8 = (eq)? w8 : w10
+        ldr x8, [x26, w8, uxtw 3]
+        [x29 -0x44] = w9
+        [arg_a0hx48] = w11
+        w0 = -1       // x17
+        switch x8
+        x0 = x19 + 0xd0 // int64_t arg1
+        x2 = sp + 0x28 // int64_t arg3
+        x1 = x20      // void *arg2 // x3
+        [arg_a0hx30] = (0, 2)
+        [var_28h] = 0
+        [arg_a0hx40] = 0
+        fcn.00372724 () // fcn.00372724(0x11dd47, 0x1303e1b5ffff75fa, 0x10077f88, 0x1303e1b5ffff75fa)
+        w8 = 0x5e0b   // '\v^'
+        w10 = 0xb911
+        w8 |= 0xc74f << 16
+        w9 = 0xa
+        w10 |= 0x4f2 << 16
+        w11 = w8 + 0xc
+        w9 = w10 | w9
+        w8 = w11 ^ w8
+        w11 = w9 ^ w10
+        (a, b) = compare (w0, 1) // x23
+        w8 = (hi)? w8 : w11
+        ldr x8, [x26, w8, uxtw 3]
+        [x29 -0x44] = w9
+        [arg_a0hx48] = w10
+        w0 = -1       // x17
+        switch x8
+        w8 = [var_2ch]
+        w9 = 0x83c2
+        w9 |= 0xe23c << 16
+        w10 = 0xf455
+        w10 |= 0x51cd << 16
+        w11 = w9 | 0x1c
+        w9 = w11 ^ w9
+        w11 = w10 | 0x20
+        w12 = w11 ^ w10
+        (a, b) = compare (w8, 0) // x23 // x23
+        w8 = (eq)? w9 : w12
+        ldr x8, [x26, w8, uxtw 3]
+        w0 = 0
+        [x29 -0x44] = w10
+        [arg_a0hx48] = w11
+        switch x8
+        x8 = sp + 0x28
+        x24 = x8 + 0xc
+        movi v0.2d, 0000000000000000
+        x1 = sp       // int64_t arg2
+        x0 = x24      // int64_t arg1
+        [arg_a0hx20] = (byte) 0
+        stp q0, q0, [sp]
+        fcn.003399b4 () // fcn.003399b4(0x10077f94, 0x10077f60, 0x10077f88, 0x1303e1b5ffff75fa, 0x100b7000300, 0x51dfff)
+        w8 = 0xd333
+        w9 = 0x9541
+        w8 |= 0x69d8 << 16
+        w9 |= 0xd770 << 16
+        w10 = w8 | 8
+        w11 = w9 + 0xd
+        w8 = w10 ^ w8
+        w10 = w11 ^ w9
+        (a, b) = compare (w25, 1)
+        w8 = (ne)? w8 : w10
+        ldr x8, [x26, w8, uxtw 3]
+        [x29 -0x44] = w9
+        [arg_a0hx48] = w11
+        switch x8
+        x2 = sp       // int64_t arg3
+        x0 = x19      // int64_t arg1
+        x1 = x20      // int64_t arg2 // x3
+        fcn.0012d954 () // fcn.0012d954(0x11dc77, 0x1303e1b5ffff75fa, 0x10077f60, 0x1303e1b5ffff75fa)
+        // DATA XREF from fcn.0012c190 @ 0x12c37c(r)
+        fcn.00382814 ()
+        w1 = 0x11
+        fcn.00383c38 () // fcn.00383c38(0x11dc77, 0x1303e1b500000011)
+        w8 = 0xe4ee
+        w9 = 0xd244
+        w8 |= 0xeb2f << 16
+        w9 |= 0xb3fa << 16
+        w10 = w8 + 6
+        w11 = w9 + 4
+        w8 = w10 ^ w8
+        w10 = w11 ^ w9
+        (a, b) = compare (w0, 0) // x23
+        w8 = (eq)? w8 : w10
+        ldr x8, [x26, w8, uxtw 3]
+        [x29 -0x44] = w11
+        [arg_a0hx48] = w9
+        switch x8
+        fcn.00382814 ()
+        w4 = [var_2ch]
+        x1 = 0x3c4000
+        x1 += 0xa95   // 0x3c4a95 // "!tcj,name:%s md5:%s,size:%d" // str._tcj_name:_s_md5:_s_size:_d
+        x3 = sp
+        x2 = x20      // x3
+        fcn.00382dc8 () // fcn.00382dc8(0x11dc77, 0x3c4a95, 0x1303e1b5ffff75fa, 0x10077f60, 0x10000000000, 0x51dfff, 0x100b7000300, 0x100149990f4, 0x0)
+        // DATA XREF from fcn.0012c190 @ 0x12c3d0(r)
+        w8 = 0x3712   // '\x127' // (pstr 0x00020002) "K"
+        w9 = 0x32c1   // "tof"
+        w8 |= 0x8921 << 16
+        w9 |= 0x2dc4 << 16
+        w10 = w8 + 2
+        w11 = w9 + 0x17
+        w8 = w10 ^ w8
+        w10 = w11 ^ w9
+        (a, b) = compare (w23, 0) // x23 // x23
+        w8 = (ne)? w8 : w10
+        ldr x8, [x26, w8, uxtw 3]
+        [x29 -0x44] = w11
+        [arg_a0hx48] = w9
+        switch x8
+        // DATA XREF from fcn.0012c190 @ 0x12c424(r)
+        // CODE XREF from fcn.0012c190 @ +0x2fc(r)
+        w8 = 0
+        goto 0x12c4a0
+        
+    loc_0x0012c4a0:
+        // CODE XREF from fcn.0012c190 @ 0x12c438(x)
+        w9 = [var_2ch]
+        (a, b) = compare (w23, 0) // x23
+        w10 = 0x6400000
+        w11 = (ne)? 1 : 0 // x23
+        (a, b) = compare (w9, w10) // x23
+        w9 = (hi)? 1 : 0
+        w9 = w11 & w9
+        x0 = x19 + 0x78 // int64_t arg1
+        w2 = 0x10
+        x1 = x24      // int64_t arg2
+        w25 = w8 | w9
+        fcn.00371c1c () // fcn.00371c1c(0x1e7bfda900000078, 0x3cf5da, 0x1e7bfda900000010)
+        w9 = 0xb2ce
+        w10 = 0xe4ec
+        w9 |= 0x318 << 16
+        w10 |= 0xe1da << 16
+        w8 = w0 | w25
+        w11 = w9 + 0xf
+        w12 = w10 | 1
+        w9 = w11 ^ w9
+        w11 = w12 ^ w10 // x23
+        (a, b) = compare (w8, 1) // x23
+        w8 = (ne)? w9 : w11 // x23
+        ldr x8, [x26, w8, uxtw 3] // x17
+        [x29 -0x44] = w12
+        [arg_a0hx48] = w10
+        switch x8     // x17
+        if (!w22) goto 0x12c568 // unlikely
+        goto loc_0x0012c510;
+        return x0;
+    loc_0x0012c510:
+        fcn.00382814 ()
+        w1 = 0x11
+        fcn.00383c38 () // fcn.00383c38(0x11dc77, 0x11)
+        w8 = 0x563
+        w9 = 0x7c4d   // 'M|'
+        w8 |= 0xf91f << 16
+        w9 |= 0xb46a << 16
+        w10 = w8 + 3
+        w11 = w9 + 6
+        w8 = w10 ^ w8
+        w10 = w11 ^ w9
+        (a, b) = compare (w0, 0) // x23
+        w8 = (eq)? w8 : w10
+        ldr x8, [x26, w8, uxtw 3] // x17
+        [x29 -0x44] = w9
+        [arg_a0hx48] = w11
+        switch x8     // x17
+        // DATA XREF from fcn.0012c190 @ 0x12c544(r)
+        fcn.00382814 ()
+        x1 = 0x3c4000
+        x1 += 0xab1   // 0x3c4ab1 // "|%s(+)." // str._s__.
+        x2 = x20      // tmp
+        fcn.00382dc8 () // fcn.00382dc8(0x11dc77, 0x3c4ab1, 0x11dc67, 0x1303e1b5ffff75fa, 0x100b7000300, 0x51dfff, 0x100b7000300, 0x100149990f4, 0x0)
+        
+    loc_0x0012c568:
+        // CODE XREF from fcn.0012c190 @ 0x12c50c(x)
+        x1 = sp       // int64_t arg2
+        x0 = x19      // int64_t arg1
+        fcn.0012da8c () // fcn.0012da8c(0x1e7bfda900000000, 0x10078000, 0x1e7bfda900000000)
+        // CODE XREFS from fcn.0012c190 @ +0x640(x), +0x6e8(x)
+        w0 = 0
+        goto 0x12c838
+        return x0;
+    loc_0x0012c568: // orphan
+         // CODE XREF from fcn.0012c190 @ 0x12c50c(x)
+         x1 = sp                  // int64_t arg2
+         x0 = x19                 // int64_t arg1
+         fcn.0012da8c ()          // fcn.0012da8c(0x1e7bfda900000000, 0x10078000, 0x1e7bfda900000000) // CODE XREFS from fcn.0012c190 @ +0x640(x), +0x6e8(x)
+         w0 = 0
+         
+    loc_0x0012c838: // orphan
+         // CODE XREFS from fcn.0012c190 @ 0x12c284(r), 0x12c2e0(r), 0x12c320(r), 0x12c578(x)
+         (x29, 2) = 3
+         (x20, 2) = 3
+         (x22, 2) = 3
+         (x24, 2) = 3
+         (x26, 2) = 3
+         sp += 0xa0
+
+        return x0;
+}
+
