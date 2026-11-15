@@ -21,81 +21,69 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round5 检测失败汇合点 0x301488
+      - name: round6 ApkAbort 与 abort 调用者
         run: |
-          mkdir -p out5
-          F=ace/tp2.so
-          [ -f "$F" ] || exit 0
-          r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pd 120 @ 0x301488" "$F" > /tmp/r5a.txt 2>/dev/null || true
-          echo "=== 0x301488 附近 ==="
-          cat /tmp/r5a.txt
-          cp /tmp/r5a.txt out5/detect_fail_0x301488.txt
-          split -l 120 -d -a 3 /tmp/r5a.txt out5/detf_
-
-      - name: round5 检测函数本体
-        run: |
+          mkdir -p out6
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           {
-            echo "########## fcn.00347f50 ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x347f50" "$F" 2>/dev/null
+            echo "=== ApkAbort / mrpcs_abort 字符串地址 ==="
+            r2 -q -e scr.color=false -c "izz~ApkAbort" "$F" 2>/dev/null
+            r2 -q -e scr.color=false -c "izz~mrpcs_abort" "$F" 2>/dev/null
             echo ""
-            echo "########## fcn.0030180c ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x30180c" "$F" 2>/dev/null
-          } > /tmp/r5b.txt
-          echo "总行数: $(wc -l < /tmp/r5b.txt)"
-          split -l 120 -d -a 3 /tmp/r5b.txt out5/det_
+          } > /tmp/r6.txt
 
-      - name: round5 早期检测函数
+          r2 -q -e scr.color=false -e asm.lines=false -c "
+            aaa;
+            echo === fcn.003bf1a0 ===;
+            pdf @ 0x3bf1a0;
+            echo === fcn.003bf3a4 ===;
+            pdf @ 0x3bf3a4;
+            echo === fcn.003bf438 ===;
+            pdf @ 0x3bf438;
+            echo === fcn.003bf54c ===;
+            pdf @ 0x3bf54c;
+            echo === fcn.0035021c (exit) ===;
+            pdf @ 0x35021c;
+            echo === fcn.00144d1c ===;
+            pdf @ 0x144d1c;
+            echo === fcn.003abcdc ===;
+            pdf @ 0x3abcdc;
+            echo === fcn.003adfe4 ===;
+            pdf @ 0x3adfe4;
+          " "$F" >> /tmp/r6.txt 2>/dev/null || true
+
+          echo "总行数: $(wc -l < /tmp/r6.txt)"
+          split -l 120 -d -a 3 /tmp/r6.txt out6/r6_
+
+      - name: round6 字符串与 abort 全局搜索
         run: |
           F=ace/tp2.so
-          [ -f "$F" ] || exit 0
           {
-            echo "########## fcn.0014e9c4 (检测1) ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x14e9c4" "$F" 2>/dev/null | head -150
+            echo "=== 反汇编中引用 abort/kill/_exit 的位置（objdump 侧） ==="
+            aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null | grep -nE "bl\s+(abort|kill|_exit|exit)@plt|b\s+(abort|kill|_exit|exit)@plt" | head -30
             echo ""
-            echo "########## fcn.000fb988 ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0xfb988" "$F" 2>/dev/null | head -80
-            echo ""
-            echo "########## fcn.000fdc6c (检测2) ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0xfdc6c" "$F" 2>/dev/null | head -150
-          } > /tmp/r5c.txt
-          echo "总行数: $(wc -l < /tmp/r5c.txt)"
-          split -l 120 -d -a 3 /tmp/r5c.txt out5/early_
-
-      - name: round5 退出路径
-        run: |
-          F=ace/tp2.so
-          [ -f "$F" ] || exit 0
-          {
-            echo "=== abort/exit/_exit/kill 的引用 ==="
-            for s in abort exit _exit kill raise pthread_kill tgkill; do
-              echo "--- $s ---"
-              r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.${s}" "$F" 2>/dev/null | head -12
-            done
-            echo ""
-            echo "=== exit/abort 附近的字符串 ==="
-            strings -n 6 "$F" | grep -iE "exit|abort|quit|terminate|stop game|检测|退出" | sort -u | head -20
-          } > /tmp/r5d.txt
-          cat /tmp/r5d.txt
-          cp /tmp/r5d.txt out5/exit_paths.txt
+            echo "=== 所有 ApkAbort 相关字符串（含上下文） ==="
+            strings -n 4 "$F" | grep -n -A2 -B2 "ApkAbort" | head -40
+          } > out6/abort_scan.txt
+          cat out6/abort_scan.txt
 
       - name: 清单
-        run: ls -l out5/ && du -sh out5/
+        run: ls -l out6/ && du -sh out6/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis5
-          path: out5/
+          name: ace-analysis6
+          path: out6/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis5
-          cp out5/* ace/analysis5/ 2>/dev/null || true
+          mkdir -p ace/analysis6
+          cp out6/* ace/analysis6/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis5
-          git commit -m "ace analysis5: detection failure path + early checks" || echo "nothing to commit"
+          git add ace/analysis6
+          git commit -m "ace analysis6: ApkAbort path + abort callers" || echo "nothing to commit"
           git push || echo "push skipped"
