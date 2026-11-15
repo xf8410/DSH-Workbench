@@ -1,0 +1,78 @@
+name: bb-build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'bb/trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 安装 SDK 组件
+        run: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools" 2>&1 | tail -5 || true
+
+      - name: clone 上游源码并摸结构
+        run: |
+          mkdir -p bb
+          git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git bb/src || exit 1
+          cd bb/src
+          echo "=== settings.gradle ==="
+          cat settings.gradle
+          echo "=== 关键文件 ==="
+          find . -name "BActivityThread.java" -o -name "BApplication.java" -o -name "AndroidManifest.xml" | head -20
+          echo "=== app/build.gradle 前 60 行 ==="
+          sed -n '1,60p' app/build.gradle 2>/dev/null || true
+
+      - name: 编译原版
+        run: |
+          cd bb/src
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug --no-daemon --stacktrace > ../build.log 2>&1 || true
+          echo "=== 尾部 80 行 ==="
+          tail -80 ../build.log
+          echo "=== 找 apk ==="
+          find . -name "*.apk" | head -10
+
+      - name: 收集
+        run: |
+          mkdir -p out
+          find bb/src -name "*.apk" -exec cp {} out/ \; 2>/dev/null || true
+          cp bb/build.log logs-build.log 2>/dev/null || true
+          ls -l out/ || true
+          du -sh out/ || true
+
+      - name: 上传
+        uses: actions/upload-artifact@v4
+        with:
+          name: bb-apk
+          path: out/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: 日志写回仓库
+        run: |
+          mkdir -p bb/logs
+          cp bb/build.log bb/logs/build.log 2>/dev/null || true
+          git config user.name "bb-bot"
+          git config user.email "bb-bot@users.noreply.github.com"
+          git add bb/logs || true
+          git commit -m "bb-build: compile log" || echo "nothing"
+          git push || echo "push skipped"
