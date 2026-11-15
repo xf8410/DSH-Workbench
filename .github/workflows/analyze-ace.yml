@@ -21,69 +21,62 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round6 ApkAbort 与 abort 调用者
+      - name: round7 ApkAbort xref
         run: |
-          mkdir -p out6
+          mkdir -p out7
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
-          {
-            echo "=== ApkAbort / mrpcs_abort 字符串地址 ==="
-            r2 -q -e scr.color=false -c "izz~ApkAbort" "$F" 2>/dev/null
-            r2 -q -e scr.color=false -c "izz~mrpcs_abort" "$F" 2>/dev/null
-            echo ""
-          } > /tmp/r6.txt
-
           r2 -q -e scr.color=false -e asm.lines=false -c "
             aaa;
-            echo === fcn.003bf1a0 ===;
-            pdf @ 0x3bf1a0;
+            echo === xref ApkAbort_CS_Cnt 0x3c8d58 ===;
+            axt @ 0x3c8d58;
+            echo === xref ApkAbort_CS_pctd 0x3c8d68 ===;
+            axt @ 0x3c8d68;
+            echo === xref mrpcs_abort.dat 0x3c3680 ===;
+            axt @ 0x3c3680;
+            echo === xref FakeIdByOpenId ===;
+            izz~FakeIdByOpenId;
+            echo === xref AndroidID ===;
+            izz~AndroidID;
+          " "$F" > /tmp/r7.txt 2>/dev/null || true
+          echo "总行数: $(wc -l < /tmp/r7.txt)"
+          cat /tmp/r7.txt
+          cp /tmp/r7.txt out7/apkabort_xref.txt
+
+      - name: round7 abort 包装函数
+        run: |
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          r2 -q -e scr.color=false -e asm.lines=false -c "
+            aaa;
             echo === fcn.003bf3a4 ===;
             pdf @ 0x3bf3a4;
             echo === fcn.003bf438 ===;
             pdf @ 0x3bf438;
             echo === fcn.003bf54c ===;
             pdf @ 0x3bf54c;
-            echo === fcn.0035021c (exit) ===;
-            pdf @ 0x35021c;
-            echo === fcn.00144d1c ===;
-            pdf @ 0x144d1c;
-            echo === fcn.003abcdc ===;
-            pdf @ 0x3abcdc;
-            echo === fcn.003adfe4 ===;
-            pdf @ 0x3adfe4;
-          " "$F" >> /tmp/r6.txt 2>/dev/null || true
-
-          echo "总行数: $(wc -l < /tmp/r6.txt)"
-          split -l 120 -d -a 3 /tmp/r6.txt out6/r6_
-
-      - name: round6 字符串与 abort 全局搜索
-        run: |
-          F=ace/tp2.so
-          {
-            echo "=== 反汇编中引用 abort/kill/_exit 的位置（objdump 侧） ==="
-            aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null | grep -nE "bl\s+(abort|kill|_exit|exit)@plt|b\s+(abort|kill|_exit|exit)@plt" | head -30
-            echo ""
-            echo "=== 所有 ApkAbort 相关字符串（含上下文） ==="
-            strings -n 4 "$F" | grep -n -A2 -B2 "ApkAbort" | head -40
-          } > out6/abort_scan.txt
-          cat out6/abort_scan.txt
+            echo === fcn.00347f50 ===;
+            pdf @ 0x347f50;
+          " "$F" > /tmp/r7b.txt 2>/dev/null || true
+          echo "总行数: $(wc -l < /tmp/r7b.txt)"
+          split -l 120 -d -a 3 /tmp/r7b.txt out7/abw_
 
       - name: 清单
-        run: ls -l out6/ && du -sh out6/
+        run: ls -l out7/ && du -sh out7/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis6
-          path: out6/
+          name: ace-analysis7
+          path: out7/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis6
-          cp out6/* ace/analysis6/ 2>/dev/null || true
+          mkdir -p ace/analysis7
+          cp out7/* ace/analysis7/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis6
-          git commit -m "ace analysis6: ApkAbort path + abort callers" || echo "nothing to commit"
+          git add ace/analysis7
+          git commit -m "ace analysis7: ApkAbort xref + abort wrappers" || echo "nothing to commit"
           git push || echo "push skipped"
