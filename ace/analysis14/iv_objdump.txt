@@ -1,0 +1,27 @@
+=== 全 so 里引用 0x3e2f63 的指令（objdump 侧）===
+   c3eb8:	add	x16, x16, #0xf60
+   c3ec8:	add	x16, x16, #0xf68
+   cbfb4:	add	x10, x10, #0xf64
+  133930:	add	x21, x21, #0xf60
+  166378:	add	x0, x0, #0xf67
+  1695f4:	add	x20, x20, #0xf60
+  18b2cc:	add	x1, x1, #0xf67
+  1fae64:	add	x0, x8, #0xf60
+  1fae78:	add	x0, x8, #0xf60
+  1fb09c:	add	x0, x8, #0xf60
+  1fb3b8:	add	x0, x9, #0xf60
+  1fb3cc:	add	x0, x8, #0xf60
+  1fb434:	add	x0, x8, #0xf60
+  21ffe0:	add	x8, x8, #0xf60
+  259b5c:	add	x10, x10, #0xf64
+  2ab398:	add	x10, x10, #0xf60
+  2b17e4:	add	x8, x8, #0xf60
+  2e682c:	add	x20, x20, #0xf68
+  361e88:	add	x1, x1, #0xf64
+  37b3a8:	adrp	x9, 3e2000 <JNI_OnLoad@@TERSAFE+0x608f4>
+  37b3f4:	adrp	x8, 3e2000 <JNI_OnLoad@@TERSAFE+0x608f4>
+  37b3f8:	adrp	x9, 3e2000 <JNI_OnLoad@@TERSAFE+0x608f4>
+  37b444:	adrp	x8, 3e2000 <JNI_OnLoad@@TERSAFE+0x608f4>
+  39f968:	add	x23, x23, #0xf64
+  3ba9e0:	add	x19, x19, #0xf60
+  3baa34:	add	x19, x19, #0xf6a
