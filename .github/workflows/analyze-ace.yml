@@ -21,65 +21,65 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round23 .bss 填充函数
+      - name: round24 配置码 0xca3 处理函数
         run: |
-          mkdir -p out23
+          mkdir -p out24
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.00371380 ===;
-              pdf @ 0x371380;
-            " "$F" > /tmp/r23a.txt 2>/dev/null || true
-            wc -l /tmp/r23a.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r23a.txt out23/fill_
+              echo === fcn.003868f4 ===;
+              pdf @ 0x3868f4;
+            " "$F" > /tmp/r24a.txt 2>/dev/null || true
+            wc -l /tmp/r24a.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r24a.txt out24/ca3_
           fi
 
-      - name: round23 fcn.00380730
+      - name: round24 配置码 0xbc9 取值函数
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.00380730 ===;
-              pdf @ 0x380730;
-            " "$F" > /tmp/r23b.txt 2>/dev/null || true
-            wc -l /tmp/r23b.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r23b.txt out23/f2_
+              echo === fcn.003855a0 ===;
+              pdf @ 0x3855a0;
+            " "$F" > /tmp/r24b.txt 2>/dev/null || true
+            wc -l /tmp/r24b.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r24b.txt out24/bc9_
           fi
 
-      - name: round23 该函数的写入目标与来源
+      - name: round24 0xca3 分支追踪
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             {
-              echo "=== fcn.00371380 区间内 memcpy/字符串引用 ==="
+              echo "=== fcn.003868f4 区间内所有 bl 与立即数 ==="
               aarch64-linux-gnu-objdump -d --no-show-raw-insn \
-                --start-address=0x371380 --stop-address=0x372000 "$F" 2>/dev/null \
-                | grep -E "bl\s+|adrp\s+x[0-9]+, [0-9a-f]+" | head -60
-            } > out23/fill_ops.txt 2>&1
-            cat out23/fill_ops.txt
+                --start-address=0x3868f4 --stop-address=0x387100 "$F" 2>/dev/null \
+                | grep -E "bl\s+|mov\s+w[0-9]+, #0x|adrp" | head -80
+            } > out24/ca3_ops.txt 2>&1
+            cat out24/ca3_ops.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out23/ || true
-          du -sh out23/ || true
+          ls -l out24/ || true
+          du -sh out24/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis23
-          path: out23/
+          name: ace-analysis24
+          path: out24/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis23
-          cp out23/* ace/analysis23/ 2>/dev/null || true
+          mkdir -p ace/analysis24
+          cp out24/* ace/analysis24/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis23
-          git commit -m "ace analysis23: bss fill function" || echo "nothing to commit"
+          git add ace/analysis24
+          git commit -m "ace analysis24: config 0xca3 handler" || echo "nothing to commit"
           git push || echo "push skipped"
