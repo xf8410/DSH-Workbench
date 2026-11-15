@@ -20,55 +20,58 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
-          r2 -v | head -1
+          r2 -v || true
 
-      - name: round13 pdc 伪代码
+      - name: round13 md5 实现区段
         run: |
           mkdir -p out13
           F=ace/tp2.so
-          [ -f "$F" ] || exit 0
-          for a in 0x12c190 0x349cf0 0x12bdac; do
-            echo "=== pdc @ $a ==="
-            r2 -q -e scr.color=false -e asm.lines=false -e scr.html=false -A -c "pdc @ $a" "$F" 2>/dev/null > "out13/pdc_${a}.txt" || true
-            echo "  lines: $(wc -l < out13/pdc_${a}.txt)"
-          done
-          ls -l out13/
+          if [ -f "$F" ]; then
+            aarch64-linux-gnu-objdump -d --no-show-raw-insn \
+              --start-address=0x349cf0 --stop-address=0x34a400 "$F" \
+              > out13/md5_body.txt 2>/dev/null || true
+          fi
+          wc -l out13/md5_body.txt 2>/dev/null || true
 
-      - name: round13 md5 实现确认
+      - name: round13 哈希常量扫描
         run: |
           F=ace/tp2.so
-          [ -f "$F" ] || exit 0
-          {
-            echo "=== fcn.00349cf0 是否 md5（找 md5 常量）==="
-            aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x349cf0 --stop-address=0x34a400 "$F" 2>/dev/null | head -120
-          } > out13/md5_body.txt
-          cat out13/md5_body.txt
+          if [ -f "$F" ]; then
+            {
+              echo "=== 常见哈希初始常量扫描（小端字节序）==="
+              for pair in "md5_a:01234567" "md5_b:89abcdef" "md5_k0:78a46ad7" "md5_k1:56b7c7e8" "sha256_h0:67e6096a" "sha256_h1:85ae67bb" "sha1_h0:01234567" "crc32_poly:edb88320"; do
+                name=${pair%%:*}
+                hex=${pair##*:}
+                bin=$(printf "$hex" | xxd -r -p 2>/dev/null | od -An -tx1 | tr -d ' ')
+                pos=$(aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -c "$hex" || true)
+                echo "$name  pattern=$hex  rodata_hits=$pos"
+              done
+              echo ""
+              echo "=== grep 直接搜二进制 ==="
+              for hex in 01234567 89abcdef 78a46ad7 67e6096a; do
+                off=$(xxd -p "$F" 2>/dev/null | grep -bo "$hex" | head -1 | cut -d: -f1)
+                echo "  $hex -> ${off:-not_found}"
+              done
+            } > out13/const_scan.txt 2>&1
+          fi
+          cat out13/const_scan.txt 2>/dev/null || true
 
-      - name: round13 调换字节序/P盒常量搜索
+      - name: round13 用 r2 做伪代码（容错）
         run: |
           F=ace/tp2.so
-          {
-            echo "=== 搜索 MD5 初始常量 67452301 / efcdab89 ==="
-            # 小端存放: 01 23 45 67 / 89 ab cd ef
-            python3 - "$F" <<'PY'
-            import sys, re
-            data = open(sys.argv[1],'rb').read()
-            pats = {
-                "md5_init_67452301_le": bytes.fromhex("01234567"),
-                "md5_init_efcdab89_le": bytes.fromhex("89abcdef"),
-                "md5_k_table_first":   bytes.fromhex("78a46ad7"),  # d76aa478 LE
-                "sha256_h0":           bytes.fromhex("67e6096a"),  # 6a09e667 LE
-                "sha1_h0":             bytes.fromhex("01234567"),
-            }
-            for name, p in pats.items():
-                idx = data.find(p)
-                print(f"{name}: {'0x%x' % idx if idx >= 0 else 'not found'}")
-            PY
-          } > out13/const_scan.txt 2>&1
-          cat out13/const_scan.txt
+          if [ -f "$F" ]; then
+            for a in 0x12c190 0x349cf0; do
+              r2 -q -e scr.color=false -A -c "pdc @ $a" "$F" > "out13/pdc_${a}.txt" 2>/dev/null || true
+              n=$(wc -l < "out13/pdc_${a}.txt" 2>/dev/null || echo 0)
+              echo "$a -> $n lines"
+            done
+          fi
+          ls -l out13/ || true
 
       - name: 清单
-        run: ls -l out13/ && du -sh out13/
+        run: |
+          ls -l out13/ || true
+          du -sh out13/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
@@ -76,6 +79,7 @@ jobs:
           name: ace-analysis13
           path: out13/
           retention-days: 30
+          if-no-files-found: warn
 
       - name: 写回仓库
         run: |
@@ -84,5 +88,5 @@ jobs:
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
           git add ace/analysis13
-          git commit -m "ace analysis13: pdc pseudocode + md5 constant scan" || echo "nothing to commit"
+          git commit -m "ace analysis13: md5 body + hash constant scan" || echo "nothing to commit"
           git push || echo "push skipped"
