@@ -1,0 +1,117 @@
+0x000c5ca4      a50e0b94       bl fcn.00389738
+0x000c5ca8      e8150090       adrp x8, 0x381000
+0x000c5cac      08511191       add x8, x8, 0x454                       ; 0x381454
+                                                                       ; fcn.00381454
+0x000c5cb0      60a209a9       stp x0, x8, [x19, 0x98]
+0x000c5cb4      80868152       mov w0, 0xc34                           ; '4\f'
+0x000c5cb8      1d000b94       bl fcn.00385d2c
+0x000c5cbc      605600f9       str x0, [x19, 0xa8]
+0x000c5cc0      408d8152       mov w0, 0xc6a                           ; 'j\f'
+0x000c5cc4      9d0e0b94       bl fcn.00389738
+0x000c5cc8      e8150090       adrp x8, 0x381000
+0x000c5ccc      08311491       add x8, x8, 0x50c                       ; 0x38150c
+                                                                       ; fcn.0038150c
+0x000c5cd0      60220ba9       stp x0, x8, [x19, 0xb0]
+0x000c5cd4      80888152       mov w0, 0xc44                           ; 'D\f'
+0x000c5cd8      60040b94       bl fcn.00386e58
+0x000c5cdc      606200f9       str x0, [x19, 0xc0]
+0x000c5ce0      408d8152       mov w0, 0xc6a                           ; 'j\f'
+0x000c5ce4      950e0b94       bl fcn.00389738
+0x000c5ce8      e8150090       adrp x8, 0x381000
+0x000c5cec      08c11791       add x8, x8, 0x5f0                       ; 0x3815f0
+                                                                       ; fcn.003815f0
+0x000c5cf0      60a20ca9       stp x0, x8, [x19, 0xc8]
+0x000c5cf4      808a8152       mov w0, 0xc54                           ; 'T\f'
+0x000c5cf8      a7080b94       bl fcn.00387f94
+0x000c5cfc      606e00f9       str x0, [x19, 0xd8]
+0x000c5d00      608c8152       mov w0, 0xc63                           ; 'c\f'
+0x000c5d04      aa0c0b94       bl fcn.00388fac
+0x000c5d08      fd7b41a9       ldp x29, x30, [var_10h]
+0x000c5d0c      e8150090       adrp x8, 0x381000
+0x000c5d10      08411b91       add x8, x8, 0x6d0                       ; 0x3816d0
+                                                                       ; fcn.003816d0
+0x000c5d14      60220ea9       stp x0, x8, [x19, 0xe0]
+0x000c5d18      f30742f8       ldr x19, [sp], 0x20
+0x000c5d1c      c0035fd6       ret
+12: entry.fini1 ();
+0x000c5d20      201f00d0       adrp x0, 0x4ab000
+0x000c5d24      00c02d91       add x0, x0, 0xb70                       ; 0x4abb70 ; "p\xbbJ"
+0x000c5d28      5af8ff17       b sym.imp.__cxa_finalize
+; CODE XREF from entry.fini0 @ 0xc5d30(x)
+0x000c5d2c      c0035fd6       ret
+8: entry.fini0 ();
+0x000c5d30      ffffff17       b 0xc5d2c
+0x000c5d34      400000b4       cbz x0, 0xc5d3c
+0x000c5d38      00001fd6       br x0
+; CODE XREF from entry.fini0 @ +0x4(x)
+0x000c5d3c      c0035fd6       ret
+0x000c5d40      08000090       adrp x8, 0xc5000
+0x000c5d44      08d13491       add x8, x8, 0xd34
+0x000c5d48      221f00d0       adrp x2, 0x4ab000
+0x000c5d4c      42c02d91       add x2, x2, 0xb70
+0x000c5d50      e10300aa       mov x1, x0
+0x000c5d54      e00308aa       mov x0, x8
+0x000c5d58      72f6ff17       b sym.imp.__cxa_atexit
+  ; CALL XREFS from fcn.000e9ccc @ 0xe9d58(r), 0xe9d6c(x)
+8: fcn.000c5d5c (int64_t arg1);
+`- args(x0)
+0x000c5d5c      e0031f2a       mov w0, wzr                             ; arg1
+0x000c5d60      c0035fd6       ret
+  ; CALL XREF from fcn.0011992c @ 0x119960(x)
+  ; CALL XREF from fcn.00119c7c @ 0x119ca8(x)
+  ; CALL XREF from fcn.002fb608 @ 0x2fb7fc(x)
+16: fcn.000c5d64 ();
+0x000c5d64      811f0090       adrp x1, section..data                  ; 0x4b5000
+0x000c5d68      21400091       add x1, x1, 0x10                        ; 0x4b5010 ; "#T#E#R#S#I#G#START#"
+0x000c5d6c      02288052       mov w2, 0x140
+0x000c5d70      5cf9ff17       b sym.imp.memcpy
+72: sym.tss_unity_str (int64_t arg1, int64_t arg2, int64_t arg_50h);
+`- args(x0, x1, sp[0x50..0x50]) vars(4:sp[0x8..0x48])
+0x000c5d74      ff4301d1       sub sp, sp, 0x50
+0x000c5d78      f31b00f9       str x19, [var_30h]
+0x000c5d7c      fd7b04a9       stp x29, x30, [var_40h]
+0x000c5d80      fd030191       add x29, sp, 0x40
+0x000c5d84      400100b4       cbz x0, 0xc5dac
+0x000c5d88      e203012a       mov w2, w1                              ; arg2
+0x000c5d8c      e10300aa       mov x1, x0                              ; int64_t arg2
+0x000c5d90      e0230091       add x0, sp, 8                           ; int64_t arg1
+0x000c5d94      080c0094       bl fcn.000c8db4
+0x000c5d98      e0230091       add x0, sp, 8                           ; int64_t arg1
+0x000c5d9c      0f000094       bl fcn.000c5dd8
+0x000c5da0      e00740f9       ldr x0, [var_8h]
+0x000c5da4      400000b4       cbz x0, 0xc5dac
+0x000c5da8      d0900b94       bl fcn.003aa0e8
+; CODE XREFS from sym.tss_unity_str @ 0xc5d84(x), 0xc5da4(x)
+0x000c5dac      fd7b44a9       ldp x29, x30, [var_40h]
+0x000c5db0      f31b40f9       ldr x19, [var_30h]
+0x000c5db4      ff430191       add sp, sp, 0x50
+0x000c5db8      c0035fd6       ret
+0x000c5dbc      e80740f9       ldr x8, [sp, 8]
+0x000c5dc0      f30300aa       mov x19, x0
+0x000c5dc4      680000b4       cbz x8, 0xc5dd0
+0x000c5dc8      e00308aa       mov x0, x8
+0x000c5dcc      c7900b94       bl fcn.003aa0e8
+; CODE XREF from sym.tss_unity_str @ +0x50(x)
+0x000c5dd0      e00313aa       mov x0, x19
+0x000c5dd4      f2eb0b94       bl fcn.003c0d9c
+  ; CALL XREF from sym.tss_unity_str @ 0xc5d9c(x)
+860: fcn.000c5dd8 (int64_t arg1, int64_t arg_10h, int64_t arg_20h, int64_t arg_30h, int64_t arg_100h);
+`- args(x0, sp[0x10..0x100]) vars(4:sp[0x10..0xf8])
+0x000c5dd8      f30f1ef8       str x19, [sp, -0x20]!
+0x000c5ddc      fd7b01a9       stp x29, x30, [arg_100hx10]
+0x000c5de0      fd430091       add x29, sp, 0x10
+0x000c5de4      08a441a9       ldp x8, x9, [x0, 0x18]                  ; arg1
+0x000c5de8      1f0109eb       cmp x8, x9
+0x000c5dec      22030054       b.hs 0xc5e50
+0x000c5df0      090040f9       ldr x9, [x0]                            ; arg1
+0x000c5df4      0a050091       add x10, x8, 1
+0x000c5df8      0a0c00f9       str x10, [x0, 0x18]                     ; arg1
+0x000c5dfc      f30300aa       mov x19, x0                             ; arg1
+0x000c5e00      28696838       ldrb w8, [x9, x8]
+0x000c5e04      1f050071       cmp w8, 1
+0x000c5e08      41020054       b.ne 0xc5e50
+0x000c5e0c      e00313aa       mov x0, x19                             ; int64_t arg1
+0x000c5e10      470c0094       bl fcn.000c8f2c                         ; 0xc8f2c ; "\t\xa0A\xa9\n\x01\t\xeb_\x11"
+0x000c5e14      1f040031       cmn w0, 1
+0x000c5e18      c0010054       b.eq 0xc5e50
+0x000c5e1c      e103002a       mov w1, w0

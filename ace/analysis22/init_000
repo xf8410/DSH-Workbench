@@ -1,0 +1,120 @@
+=== 0xc5b00 附近（init48 主体）===
+0x000c5b00      e00314aa       mov x0, x20
+0x000c5b04      e20315aa       mov x2, x21
+0x000c5b08      06f7ff97       bl sym.imp.__cxa_atexit
+0x000c5b0c      73220090       adrp x19, 0x511000
+0x000c5b10      73820491       add x19, x19, 0x120
+0x000c5b14      e00313aa       mov x0, x19
+0x000c5b18      6ab20794       bl fcn.002b24c0
+0x000c5b1c      e00314aa       mov x0, x20
+0x000c5b20      e10313aa       mov x1, x19
+0x000c5b24      fd7b42a9       ldp x29, x30, [var_20h]
+0x000c5b28      f44f41a9       ldp x20, x19, [var_10h]
+0x000c5b2c      e20315aa       mov x2, x21
+0x000c5b30      f50743f8       ldr x21, [sp], 0x30
+0x000c5b34      fbf6ff17       b sym.imp.__cxa_atexit
+60: entry.init45 ();
+afv: vars(3:sp[0x8..0x20])
+0x000c5b38      f30f1ef8       str x19, [sp, -0x20]!
+0x000c5b3c      fd7b01a9       stp x29, x30, [var_10h]
+0x000c5b40      fd430091       add x29, sp, 0x10
+0x000c5b44      73220090       adrp x19, 0x511000
+0x000c5b48      73220591       add x19, x19, 0x148
+0x000c5b4c      e00313aa       mov x0, x19
+0x000c5b50      5cb20794       bl fcn.002b24c0
+0x000c5b54      601f00f0       adrp x0, dlclose                        ; 0x4b4000
+0x000c5b58      009443f9       ldr x0, [x0, 0x728]                     ; [0x2b252c:4]=0xa9bf7bfd ; fcn.002b252c
+0x000c5b5c      fd7b41a9       ldp x29, x30, [var_10h]
+0x000c5b60      221f00d0       adrp x2, 0x4ab000
+0x000c5b64      42c02d91       add x2, x2, 0xb70                       ; 0x4abb70 ; "p\xbbJ"
+0x000c5b68      e10313aa       mov x1, x19
+0x000c5b6c      f30742f8       ldr x19, [sp], 0x20
+0x000c5b70      ecf6ff17       b sym.imp.__cxa_atexit
+60: entry.init46 ();
+afv: vars(3:sp[0x8..0x20])
+0x000c5b74      f30f1ef8       str x19, [sp, -0x20]!
+0x000c5b78      fd7b01a9       stp x29, x30, [var_10h]
+0x000c5b7c      fd430091       add x29, sp, 0x10
+0x000c5b80      73220090       adrp x19, 0x511000
+0x000c5b84      73220c91       add x19, x19, 0x308
+0x000c5b88      e00313aa       mov x0, x19
+0x000c5b8c      18f50994       bl fcn.00342fec
+0x000c5b90      601f00f0       adrp x0, dlclose                        ; 0x4b4000
+0x000c5b94      007443f9       ldr x0, [x0, 0x6e8]                     ; [0x343068:4]=0xa9bf7bfd ; fcn.00343068
+0x000c5b98      fd7b41a9       ldp x29, x30, [var_10h]
+0x000c5b9c      221f00d0       adrp x2, 0x4ab000
+0x000c5ba0      42c02d91       add x2, x2, 0xb70                       ; 0x4abb70 ; "p\xbbJ"
+0x000c5ba4      e10313aa       mov x1, x19
+0x000c5ba8      f30742f8       ldr x19, [sp], 0x20
+0x000c5bac      ddf6ff17       b sym.imp.__cxa_atexit
+36: entry.init47 ();
+0x000c5bb0      61220090       adrp x1, 0x511000
+0x000c5bb4      201500f0       adrp x0, 0x36c000
+0x000c5bb8      221f00d0       adrp x2, 0x4ab000
+0x000c5bbc      21801291       add x1, x1, 0x4a0
+0x000c5bc0      00602691       add x0, x0, 0x998                       ; 0x36c998
+                                                                       ; fcn.0036c998
+0x000c5bc4      42c02d91       add x2, x2, 0xb70                       ; 0x4abb70 ; "p\xbbJ"
+0x000c5bc8      3f7c00a9       stp xzr, xzr, [x1]
+0x000c5bcc      3f0800f9       str xzr, [x1, 0x10]
+0x000c5bd0      d4f6ff17       b sym.imp.__cxa_atexit
+332: entry.init48 ();
+afv: vars(3:sp[0x8..0x20])
+0x000c5bd4      f30f1ef8       str x19, [sp, -0x20]!
+0x000c5bd8      fd7b01a9       stp x29, x30, [var_10h]
+0x000c5bdc      fd430091       add x29, sp, 0x10
+0x000c5be0      20798152       mov w0, 0xbc9
+0x000c5be4      6ffe0a94       bl fcn.003855a0
+0x000c5be8      732200f0       adrp x19, 0x514000
+0x000c5bec      73021791       add x19, x19, 0x5c0
+0x000c5bf0      600200f9       str x0, [x19]
+0x000c5bf4      e3ad0a94       bl fcn.00371380
+0x000c5bf8      c81500f0       adrp x8, 0x380000
+0x000c5bfc      08c11c91       add x8, x8, 0x730                       ; 0x380730
+                                                                       ; fcn.00380730
+0x000c5c00      60a200a9       stp x0, x8, [x19, 8]
+0x000c5c04      007a8152       mov w0, 0xbd0
+0x000c5c08      49000b94       bl fcn.00385d2c
+0x000c5c0c      600e00f9       str x0, [x19, 0x18]
+0x000c5c10      dead0a94       bl fcn.00371388
+0x000c5c14      c81500f0       adrp x8, 0x380000
+0x000c5c18      08312191       add x8, x8, 0x84c                       ; 0x38084c
+                                                                       ; fcn.0038084c
+0x000c5c1c      602202a9       stp x0, x8, [x19, 0x20]
+0x000c5c20      c07b8152       mov w0, 0xbde
+0x000c5c24      03040b94       bl fcn.00386c30
+0x000c5c28      601a00f9       str x0, [x19, 0x30]
+0x000c5c2c      d9ad0a94       bl fcn.00371390
+0x000c5c30      c81500f0       adrp x8, 0x380000
+0x000c5c34      08912f91       add x8, x8, 0xbe4                       ; 0x380be4
+                                                                       ; fcn.00380be4
+0x000c5c38      60a203a9       stp x0, x8, [x19, 0x38]
+0x000c5c3c      c07d8152       mov w0, 0xbee
+0x000c5c40      4b080b94       bl fcn.00387d6c
+0x000c5c44      602600f9       str x0, [x19, 0x48]
+0x000c5c48      d4ad0a94       bl fcn.00371398
+0x000c5c4c      e8150090       adrp x8, 0x381000
+0x000c5c50      08510191       add x8, x8, 0x54                        ; 0x381054
+                                                                       ; fcn.00381054
+0x000c5c54      602205a9       stp x0, x8, [x19, 0x50]
+0x000c5c58      c07f8152       mov w0, 0xbfe
+0x000c5c5c      8f0c0b94       bl fcn.00388e98
+0x000c5c60      603200f9       str x0, [x19, 0x60]
+0x000c5c64      cfad0a94       bl fcn.003713a0
+0x000c5c68      e8150090       adrp x8, 0x381000
+0x000c5c6c      08410491       add x8, x8, 0x110                       ; 0x381110
+                                                                       ; fcn.00381110
+0x000c5c70      60a206a9       stp x0, x8, [x19, 0x68]
+0x000c5c74      e0818152       mov w0, 0xc0f                           ; '\x0f\f'
+0x000c5c78      1d110b94       bl fcn.0038a0ec
+0x000c5c7c      603e00f9       str x0, [x19, 0x78]
+0x000c5c80      608e8152       mov w0, 0xc73                           ; 's\f'
+0x000c5c84      1a110b94       bl fcn.0038a0ec
+0x000c5c88      e8150090       adrp x8, 0x381000
+0x000c5c8c      08f10f91       add x8, x8, 0x3fc                       ; 0x3813fc
+                                                                       ; fcn.003813fc
+0x000c5c90      602208a9       stp x0, x8, [x19, 0x80]
+0x000c5c94      80848152       mov w0, 0xc24                           ; '$\f'
+0x000c5c98      dafb0a94       bl fcn.00384c00
+0x000c5c9c      604a00f9       str x0, [x19, 0x90]
+0x000c5ca0      408d8152       mov w0, 0xc6a                           ; 'j\f'
