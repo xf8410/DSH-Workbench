@@ -21,61 +21,65 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round22 init48 与 .bss 初始化
+      - name: round23 .bss 填充函数
         run: |
-          mkdir -p out22
+          mkdir -p out23
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === 0xc5b00 附近（init48 主体）===;
-              pd 200 @ 0xc5b00;
-            " "$F" > /tmp/r22a.txt 2>/dev/null || true
-            wc -l /tmp/r22a.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r22a.txt out22/init_
+              echo === fcn.00371380 ===;
+              pdf @ 0x371380;
+            " "$F" > /tmp/r23a.txt 2>/dev/null || true
+            wc -l /tmp/r23a.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r23a.txt out23/fill_
           fi
 
-      - name: round22 .init_array 内容
+      - name: round23 fcn.00380730
+        run: |
+          F=ace/tp2.so
+          if [ -f "$F" ]; then
+            r2 -q -e scr.color=false -e asm.lines=false -c "
+              aaa;
+              echo === fcn.00380730 ===;
+              pdf @ 0x380730;
+            " "$F" > /tmp/r23b.txt 2>/dev/null || true
+            wc -l /tmp/r23b.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r23b.txt out23/f2_
+          fi
+
+      - name: round23 该函数的写入目标与来源
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             {
-              echo "=== .init_array 条目（0x4ab9d8, 0x188 字节 = 49 项）==="
-              aarch64-linux-gnu-objdump -s -j .init_array "$F" 2>/dev/null | head -30
-            } > out22/init_array.txt 2>&1
-            cat out22/init_array.txt
-          fi
-
-      - name: round22 表 A 内容
-        run: |
-          F=ace/tp2.so
-          if [ -f "$F" ]; then
-            {
-              echo "=== 表 A 0x3e8645 起 384 字节 ==="
-              aarch64-linux-gnu-objdump -s --start-address=0x3e8645 --stop-address=0x3e87c5 "$F" 2>/dev/null
-            } > out22/tableA.txt 2>&1
-            cat out22/tableA.txt
+              echo "=== fcn.00371380 区间内 memcpy/字符串引用 ==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn \
+                --start-address=0x371380 --stop-address=0x372000 "$F" 2>/dev/null \
+                | grep -E "bl\s+|adrp\s+x[0-9]+, [0-9a-f]+" | head -60
+            } > out23/fill_ops.txt 2>&1
+            cat out23/fill_ops.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out22/ || true
-          du -sh out22/ || true
+          ls -l out23/ || true
+          du -sh out23/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis22
-          path: out22/
+          name: ace-analysis23
+          path: out23/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis22
-          cp out22/* ace/analysis22/ 2>/dev/null || true
+          mkdir -p ace/analysis23
+          cp out23/* ace/analysis23/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis22
-          git commit -m "ace analysis22: init48 body + init_array + table A" || echo "nothing to commit"
+          git add ace/analysis23
+          git commit -m "ace analysis23: bss fill function" || echo "nothing to commit"
           git push || echo "push skipped"
