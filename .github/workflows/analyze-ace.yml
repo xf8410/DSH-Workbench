@@ -22,71 +22,69 @@ jobs:
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
           r2 -v || true
 
-      - name: round13 md5 实现区段
+      - name: round14 MD5/SHA256 IV 引用
         run: |
-          mkdir -p out13
+          mkdir -p out14
           F=ace/tp2.so
           if [ -f "$F" ]; then
-            aarch64-linux-gnu-objdump -d --no-show-raw-insn \
-              --start-address=0x349cf0 --stop-address=0x34a400 "$F" \
-              > out13/md5_body.txt 2>/dev/null || true
+            r2 -q -e scr.color=false -e asm.lines=false -c "
+              aaa;
+              echo === refs to 0x3e2f63 (MD5 IV) ===;
+              axt @ 0x3e2f63;
+              echo === refs to 0x3e2f6b (MD5 IV+8) ===;
+              axt @ 0x3e2f6b;
+              echo === refs to 0x3e33aa (SHA256 h0) ===;
+              axt @ 0x3e33aa;
+            " "$F" > out14/iv_refs.txt 2>/dev/null || true
+            cat out14/iv_refs.txt
           fi
-          wc -l out13/md5_body.txt 2>/dev/null || true
 
-      - name: round13 哈希常量扫描
+      - name: round14 IV 附近内容确认
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             {
-              echo "=== 常见哈希初始常量扫描（小端字节序）==="
-              for pair in "md5_a:01234567" "md5_b:89abcdef" "md5_k0:78a46ad7" "md5_k1:56b7c7e8" "sha256_h0:67e6096a" "sha256_h1:85ae67bb" "sha1_h0:01234567" "crc32_poly:edb88320"; do
-                name=${pair%%:*}
-                hex=${pair##*:}
-                bin=$(printf "$hex" | xxd -r -p 2>/dev/null | od -An -tx1 | tr -d ' ')
-                pos=$(aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -c "$hex" || true)
-                echo "$name  pattern=$hex  rodata_hits=$pos"
-              done
+              echo "=== 0x3e2f40..0x3e2fa0 ==="
+              aarch64-linux-gnu-objdump -s --start-address=0x3e2f40 --stop-address=0x3e2fa0 "$F" 2>/dev/null
               echo ""
-              echo "=== grep 直接搜二进制 ==="
-              for hex in 01234567 89abcdef 78a46ad7 67e6096a; do
-                off=$(xxd -p "$F" 2>/dev/null | grep -bo "$hex" | head -1 | cut -d: -f1)
-                echo "  $hex -> ${off:-not_found}"
-              done
-            } > out13/const_scan.txt 2>&1
+              echo "=== 0x3e3380..0x3e3400 ==="
+              aarch64-linux-gnu-objdump -s --start-address=0x3e3380 --stop-address=0x3e3400 "$F" 2>/dev/null
+            } > out14/iv_dump.txt 2>&1
+            cat out14/iv_dump.txt
           fi
-          cat out13/const_scan.txt 2>/dev/null || true
 
-      - name: round13 用 r2 做伪代码（容错）
+      - name: round14 hash 函数候选
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
-            for a in 0x12c190 0x349cf0; do
-              r2 -q -e scr.color=false -A -c "pdc @ $a" "$F" > "out13/pdc_${a}.txt" 2>/dev/null || true
-              n=$(wc -l < "out13/pdc_${a}.txt" 2>/dev/null || echo 0)
-              echo "$a -> $n lines"
-            done
+            {
+              echo "=== 全 so 里引用 0x3e2f63 的指令（objdump 侧）==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null \
+                | grep -E "adrp\s+x[0-9]+, 3e2000|add\s+x[0-9]+, x[0-9]+, #0xf6[0-9a-f]" \
+                | head -30
+            } > out14/iv_objdump.txt 2>&1
+            cat out14/iv_objdump.txt
           fi
-          ls -l out13/ || true
 
       - name: 清单
         run: |
-          ls -l out13/ || true
-          du -sh out13/ || true
+          ls -l out14/ || true
+          du -sh out14/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis13
-          path: out13/
+          name: ace-analysis14
+          path: out14/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis13
-          cp out13/* ace/analysis13/ 2>/dev/null || true
+          mkdir -p ace/analysis14
+          cp out14/* ace/analysis14/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis13
-          git commit -m "ace analysis13: md5 body + hash constant scan" || echo "nothing to commit"
+          git add ace/analysis14
+          git commit -m "ace analysis14: MD5/SHA256 IV references" || echo "nothing to commit"
           git push || echo "push skipped"
