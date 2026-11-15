@@ -1,0 +1,5 @@
+=== fcn.00371380 ===
+  ; CALL XREF from entry.init48 @ 0xc5bf4(x)
+8: fcn.00371380 ();
+0x00371380      60948152       mov w0, 0xca3
+0x00371384      5c550014       b fcn.003868f4

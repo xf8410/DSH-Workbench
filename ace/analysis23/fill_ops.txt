@@ -1,0 +1,61 @@
+=== fcn.00371380 区间内 memcpy/字符串引用 ===
+  3713dc:	adrp	x19, 511000 <g_AllTssExportFunc@@TERSAFE+0x5bea8>
+  3713ec:	bl	3aa01c <JNI_OnLoad@@TERSAFE+0x28910>
+  371454:	bl	388934 <JNI_OnLoad@@TERSAFE+0x7228>
+  3714a4:	bl	3847bc <JNI_OnLoad@@TERSAFE+0x30b0>
+  371570:	bl	34a3f4 <GetTssExportFunc2@@TERSAFE+0x280910>
+  37161c:	bl	371674 <TssJavaMethod_SendCmd@@TERSAFE+0x731c>
+  37164c:	bl	371674 <TssJavaMethod_SendCmd@@TERSAFE+0x731c>
+  3716a0:	bl	34a3f4 <GetTssExportFunc2@@TERSAFE+0x280910>
+  3716b4:	adrp	x10, 3d8000 <JNI_OnLoad@@TERSAFE+0x568f4>
+  3716bc:	adrp	x11, 3d8000 <JNI_OnLoad@@TERSAFE+0x568f4>
+  3716cc:	adrp	x3, 3d8000 <JNI_OnLoad@@TERSAFE+0x568f4>
+  371714:	bl	c3de0 <memset@plt>
+  371718:	adrp	x2, 3d8000 <JNI_OnLoad@@TERSAFE+0x568f4>
+  37172c:	bl	34b0d4 <GetTssExportFunc2@@TERSAFE+0x2815f0>
+  371768:	bl	232fe0 <GetTssExportFunc2@@TERSAFE+0x1694fc>
+  3717e0:	bl	360fc4 <GetTssExportFunc2@@TERSAFE+0x2974e0>
+  371830:	bl	3718d4 <TssJavaMethod_SendCmd@@TERSAFE+0x757c>
+  371840:	bl	371d88 <TssJavaMethod_SendCmd@@TERSAFE+0x7a30>
+  3718a0:	bl	371df0 <TssJavaMethod_SendCmd@@TERSAFE+0x7a98>
+  3718b8:	bl	371a80 <TssJavaMethod_SendCmd@@TERSAFE+0x7728>
+  3718f4:	bl	371d88 <TssJavaMethod_SendCmd@@TERSAFE+0x7a30>
+  371908:	bl	c3de0 <memset@plt>
+  371914:	bl	3824d4 <JNI_OnLoad@@TERSAFE+0xdc8>
+  371920:	bl	33d7f8 <GetTssExportFunc2@@TERSAFE+0x273d14>
+  37192c:	bl	33d878 <GetTssExportFunc2@@TERSAFE+0x273d94>
+  371938:	bl	33dc08 <GetTssExportFunc2@@TERSAFE+0x274124>
+  371944:	bl	33dc2c <GetTssExportFunc2@@TERSAFE+0x274148>
+  37195c:	bl	33dfa0 <GetTssExportFunc2@@TERSAFE+0x2744bc>
+  371964:	bl	33e338 <GetTssExportFunc2@@TERSAFE+0x274854>
+  37197c:	bl	33e338 <GetTssExportFunc2@@TERSAFE+0x274854>
+  371994:	bl	33e388 <GetTssExportFunc2@@TERSAFE+0x2748a4>
+  3719ac:	bl	371df0 <TssJavaMethod_SendCmd@@TERSAFE+0x7a98>
+  3719e0:	bl	c43a0 <unlink@plt>
+  3719f4:	bl	33dff8 <GetTssExportFunc2@@TERSAFE+0x274514>
+  3719fc:	bl	33d808 <GetTssExportFunc2@@TERSAFE+0x273d24>
+  371a38:	bl	33dff8 <GetTssExportFunc2@@TERSAFE+0x274514>
+  371a40:	bl	33d808 <GetTssExportFunc2@@TERSAFE+0x273d24>
+  371a48:	bl	3c0d9c <JNI_OnLoad@@TERSAFE+0x3f690>
+  371aa4:	bl	c3de0 <memset@plt>
+  371ab0:	bl	3824d4 <JNI_OnLoad@@TERSAFE+0xdc8>
+  371ac8:	bl	c37f0 <malloc@plt>
+  371ad8:	bl	3aa0ac <JNI_OnLoad@@TERSAFE+0x289a0>
+  371af0:	bl	33d244 <GetTssExportFunc2@@TERSAFE+0x273760>
+  371b18:	bl	33dfa0 <GetTssExportFunc2@@TERSAFE+0x2744bc>
+  371b28:	bl	33e948 <GetTssExportFunc2@@TERSAFE+0x274e64>
+  371b34:	bl	33e948 <GetTssExportFunc2@@TERSAFE+0x274e64>
+  371b58:	bl	33e9b8 <GetTssExportFunc2@@TERSAFE+0x274ed4>
+  371bb8:	bl	33fd28 <GetTssExportFunc2@@TERSAFE+0x276244>
+  371bc8:	bl	33dff8 <GetTssExportFunc2@@TERSAFE+0x274514>
+  371bd0:	bl	33d1f0 <GetTssExportFunc2@@TERSAFE+0x27370c>
+  371c00:	bl	33dff8 <GetTssExportFunc2@@TERSAFE+0x274514>
+  371c10:	bl	33d1f0 <GetTssExportFunc2@@TERSAFE+0x27370c>
+  371c18:	bl	3c0d9c <JNI_OnLoad@@TERSAFE+0x3f690>
+  371c44:	bl	3718d4 <TssJavaMethod_SendCmd@@TERSAFE+0x757c>
+  371c54:	bl	371d88 <TssJavaMethod_SendCmd@@TERSAFE+0x7a30>
+  371cfc:	bl	c3de0 <memset@plt>
+  371d08:	bl	3824d4 <JNI_OnLoad@@TERSAFE+0xdc8>
+  371d18:	bl	349cf0 <GetTssExportFunc2@@TERSAFE+0x28020c>
+  371d24:	bl	c43a0 <unlink@plt>
+  371d48:	bl	3824d4 <JNI_OnLoad@@TERSAFE+0xdc8>

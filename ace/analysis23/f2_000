@@ -1,0 +1,78 @@
+=== fcn.00380730 ===
+  ; DATA XREF from entry.init48 @ 0xc5bfc(r)
+284: fcn.00380730 (int64_t arg1, int64_t arg2, int64_t arg_40h);
+`- args(x0, x2, sp[0x40..0x40]) vars(9:sp[0x8..0x40])
+0x00380730      ff0301d1       sub sp, sp, 0x40
+0x00380734      f65701a9       stp x22, x21, [var_10h]
+0x00380738      f44f02a9       stp x20, x19, [var_20h]
+0x0038073c      fd7b03a9       stp x29, x30, [var_30h]
+0x00380740      fdc30091       add x29, sp, 0x30
+0x00380744      a8090090       adrp x8, dlclose                        ; 0x4b4000
+0x00380748      08c143f9       ldr x8, [x8, 0x780]
+0x0038074c      f30302aa       mov x19, x2                             ; arg3
+0x00380750      f40300aa       mov x20, x0                             ; arg1
+0x00380754      080140f9       ldr x8, [x8]
+0x00380758      480100b4       cbz x8, 0x380780
+0x0038075c      033d40f9       ldr x3, [x8, 0x78]
+0x00380760      030100b4       cbz x3, 0x380780
+0x00380764      e00314aa       mov x0, x20
+0x00380768      e20313aa       mov x2, x19
+0x0038076c      fd7b43a9       ldp x29, x30, [var_30h]
+0x00380770      f44f42a9       ldp x20, x19, [var_20h]
+0x00380774      f65741a9       ldp x22, x21, [var_10h]
+0x00380778      ff030191       add sp, sp, 0x40
+0x0038077c      60001fd6       br x3
+; CODE XREFS from fcn.00380730 @ 0x380758(x), 0x380760(x)
+0x00380780      01a50094       bl fcn.003a9b84
+0x00380784      e10314aa       mov x1, x20
+0x00380788      0ea50094       bl fcn.003a9bc0
+0x0038078c      880240f9       ldr x8, [x20]
+0x00380790      e00314aa       mov x0, x20
+0x00380794      e10313aa       mov x1, x19
+0x00380798      087d40f9       ldr x8, [x8, 0xf8]
+0x0038079c      00013fd6       blr x8
+0x003807a0      f50300aa       mov x21, x0
+0x003807a4      40058152       mov w0, 0x82a
+0x003807a8      20270094       bl fcn.0038a428
+0x003807ac      f60300aa       mov x22, x0
+0x003807b0      80068152       mov w0, 0x834
+0x003807b4      f30e0094       bl fcn.00384380
+0x003807b8      880240f9       ldr x8, [x20]
+0x003807bc      e30300aa       mov x3, x0
+0x003807c0      e00314aa       mov x0, x20
+0x003807c4      e10315aa       mov x1, x21
+0x003807c8      087941f9       ldr x8, [x8, 0x2f0]
+0x003807cc      e20316aa       mov x2, x22
+0x003807d0      00013fd6       blr x8
+0x003807d4      880240f9       ldr x8, [x20]
+0x003807d8      f50300aa       mov x21, x0
+0x003807dc      e00314aa       mov x0, x20
+0x003807e0      089143f9       ldr x8, [x8, 0x720]
+0x003807e4      00013fd6       blr x8
+0x003807e8      1f1c0072       tst w0, 0xff
+0x003807ec      a0000054       b.eq 0x380800
+0x003807f0      880240f9       ldr x8, [x20]
+0x003807f4      e00314aa       mov x0, x20
+0x003807f8      084540f9       ldr x8, [x8, 0x88]
+0x003807fc      00013fd6       blr x8
+; CODE XREF from fcn.00380730 @ 0x3807ec(x)
+0x00380800      08028052       mov w8, 0x10
+0x00380804      e80300b9       str w8, [sp]
+0x00380808      880240f9       ldr x8, [x20]
+0x0038080c      e00314aa       mov x0, x20
+0x00380810      e10313aa       mov x1, x19
+0x00380814      e20315aa       mov x2, x21
+0x00380818      089141f9       ldr x8, [x8, 0x320]
+0x0038081c      00013fd6       blr x8
+0x00380820      08000090       adrp x8, 0x380000
+0x00380824      e00700b9       str w0, [var_0h_2]
+0x00380828      08b11b91       add x8, x8, 0x6ec                       ; 0x3806ec
+                                                                       ; fcn.003806ec
+0x0038082c      e0030091       mov x0, sp
+0x00380830      e80700f9       str x8, [var_0h_3]
+0x00380834      2f0df597       bl rsym.tss_sdk_init
+0x00380838      fd7b43a9       ldp x29, x30, [var_30h]
+0x0038083c      f44f42a9       ldp x20, x19, [var_20h]
+0x00380840      f65741a9       ldp x22, x21, [var_10h]
+0x00380844      ff030191       add sp, sp, 0x40
+0x00380848      c0035fd6       ret
