@@ -1,0 +1,151 @@
+=== 全 so 中 eor+ror/add 密集区域（MD5 轮函数特征）===
+
+ace/tp2.so:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+000000000037b000 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x79cc>:
+  37b000:	mov	w0, #0x336c                	// #13164
+  37b004:	bl	388824 <JNI_OnLoad@@TERSAFE+0x7118>
+  37b008:	str	x0, [sp, #128]
+  37b00c:	mov	w0, #0x338c                	// #13196
+  37b010:	bl	38aaa0 <JNI_OnLoad@@TERSAFE+0x9394>
+  37b014:	str	x0, [sp, #136]
+  37b018:	mov	w0, #0x33ac                	// #13228
+  37b01c:	bl	386178 <JNI_OnLoad@@TERSAFE+0x4a6c>
+  37b020:	str	x0, [sp, #144]
+  37b024:	mov	w0, #0x33cb                	// #13259
+  37b028:	bl	3882cc <JNI_OnLoad@@TERSAFE+0x6bc0>
+  37b02c:	str	x0, [sp, #152]
+  37b030:	mov	w0, #0x3458                	// #13400
+  37b034:	bl	384380 <JNI_OnLoad@@TERSAFE+0x2c74>
+  37b038:	str	x0, [sp, #160]
+  37b03c:	mov	w0, #0x340d                	// #13325
+  37b040:	bl	385e3c <JNI_OnLoad@@TERSAFE+0x4730>
+  37b044:	mov	w21, #0x8                   	// #8
+  37b048:	add	x22, sp, #0x60
+  37b04c:	str	x0, [sp, #168]
+  37b050:	movi	v0.2d, #0x0
+  37b054:	mov	x1, sp
+  37b058:	mov	x0, x20
+  37b05c:	str	xzr, [sp, #80]
+  37b060:	stp	q0, q0, [sp, #48]
+  37b064:	stp	q0, q0, [sp, #16]
+  37b068:	str	q0, [sp]
+  37b06c:	bl	37b0ac <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7a78>
+  37b070:	cbnz	w0, 37b080 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7a4c>
+  37b074:	mov	x1, sp
+  37b078:	mov	x0, x19
+  37b07c:	bl	37b56c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f38>
+  37b080:	cmp	x21, #0x50
+  37b084:	b.eq	37b094 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7a60>  // b.none
+  37b088:	ldr	x20, [x22, x21]
+  37b08c:	add	x21, x21, #0x8
+  37b090:	b	37b050 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7a1c>
+  37b094:	ldp	x29, x30, [sp, #208]
+  37b098:	ldp	x20, x19, [sp, #192]
+  37b09c:	ldp	x22, x21, [sp, #176]
+  37b0a0:	mov	w0, wzr
+  37b0a4:	add	sp, sp, #0xe0
+  37b0a8:	ret
+  37b0ac:	str	x21, [sp, #-48]!
+  37b0b0:	stp	x20, x19, [sp, #16]
+  37b0b4:	stp	x29, x30, [sp, #32]
+  37b0b8:	add	x29, sp, #0x20
+  37b0bc:	cbz	x0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b0c0:	mov	x19, x1
+  37b0c4:	mov	x20, x0
+  37b0c8:	mov	w0, #0xffffffff            	// #-1
+  37b0cc:	cbz	x1, 37b55c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f28>
+  37b0d0:	ldrb	w8, [x20]
+  37b0d4:	cbz	w8, 37b55c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f28>
+  37b0d8:	mov	w0, #0x3435                	// #13365
+  37b0dc:	bl	388934 <JNI_OnLoad@@TERSAFE+0x7228>
+  37b0e0:	mov	x1, x0
+  37b0e4:	mov	x0, x20
+  37b0e8:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b0ec:	cbz	w0, 37b230 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7bfc>
+  37b0f0:	mov	w0, #0x3316                	// #13078
+  37b0f4:	bl	389738 <JNI_OnLoad@@TERSAFE+0x802c>
+  37b0f8:	mov	x1, x0
+  37b0fc:	mov	x0, x20
+  37b100:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b104:	cbz	w0, 37b280 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7c4c>
+  37b108:	mov	w0, #0x3331                	// #13105
+  37b10c:	bl	3848cc <JNI_OnLoad@@TERSAFE+0x31c0>
+  37b110:	mov	x1, x0
+  37b114:	mov	x0, x20
+  37b118:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b11c:	cbz	w0, 37b2d0 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7c9c>
+  37b120:	mov	w0, #0x334d                	// #13133
+  37b124:	bl	3866cc <JNI_OnLoad@@TERSAFE+0x4fc0>
+  37b128:	mov	x1, x0
+  37b12c:	mov	x0, x20
+  37b130:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b134:	cbz	w0, 37b320 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7cec>
+  37b138:	mov	w0, #0x336c                	// #13164
+  37b13c:	bl	388824 <JNI_OnLoad@@TERSAFE+0x7118>
+  37b140:	mov	x1, x0
+  37b144:	mov	x0, x20
+  37b148:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b14c:	cbz	w0, 37b370 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7d3c>
+  37b150:	mov	w0, #0x338c                	// #13196
+  37b154:	bl	38aaa0 <JNI_OnLoad@@TERSAFE+0x9394>
+  37b158:	mov	x1, x0
+  37b15c:	mov	x0, x20
+  37b160:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b164:	cbz	w0, 37b3c0 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7d8c>
+  37b168:	mov	w0, #0x33ac                	// #13228
+  37b16c:	bl	386178 <JNI_OnLoad@@TERSAFE+0x4a6c>
+  37b170:	mov	x1, x0
+  37b174:	mov	x0, x20
+  37b178:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b17c:	cbz	w0, 37b410 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7ddc>
+  37b180:	mov	w0, #0x33cb                	// #13259
+  37b184:	bl	3882cc <JNI_OnLoad@@TERSAFE+0x6bc0>
+  37b188:	mov	x1, x0
+  37b18c:	mov	x0, x20
+  37b190:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b194:	cbz	w0, 37b460 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7e2c>
+  37b198:	mov	w0, #0x33ed                	// #13293
+  37b19c:	bl	38a764 <JNI_OnLoad@@TERSAFE+0x9058>
+  37b1a0:	mov	x1, x0
+  37b1a4:	mov	x0, x20
+  37b1a8:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b1ac:	cbz	w0, 37b4b0 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7e7c>
+  37b1b0:	mov	w0, #0x3458                	// #13400
+  37b1b4:	bl	384380 <JNI_OnLoad@@TERSAFE+0x2c74>
+  37b1b8:	mov	x1, x0
+  37b1bc:	mov	x0, x20
+  37b1c0:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b1c4:	cbz	w0, 37b500 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7ecc>
+  37b1c8:	mov	w0, #0x340d                	// #13325
+  37b1cc:	bl	385e3c <JNI_OnLoad@@TERSAFE+0x4730>
+  37b1d0:	mov	x1, x0
+  37b1d4:	mov	x0, x20
+  37b1d8:	bl	34a34c <GetTssExportFunc2@@TERSAFE+0x280868>
+  37b1dc:	cbnz	w0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b1e0:	bl	134850 <GetTssExportFunc2@@TERSAFE+0x6ad6c>
+  37b1e4:	mov	x21, x0
+  37b1e8:	mov	w0, #0x33fd                	// #13309
+  37b1ec:	bl	384d10 <JNI_OnLoad@@TERSAFE+0x3604>
+  37b1f0:	mov	x1, x0
+  37b1f4:	mov	w2, #0x1                   	// #1
+  37b1f8:	mov	x0, x21
+  37b1fc:	bl	134b08 <GetTssExportFunc2@@TERSAFE+0x6b024>
+  37b200:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b204:	mov	w2, #0x40                  	// #64
+  37b208:	mov	x0, x19
+  37b20c:	mov	x1, x20
+  37b210:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b214:	adrp	x8, 3e7000 <JNI_OnLoad@@TERSAFE+0x658f4>
+  37b218:	adrp	x9, 3e7000 <JNI_OnLoad@@TERSAFE+0x658f4>
+  37b21c:	mov	w0, wzr
+  37b220:	add	x8, x8, #0x7c
+  37b224:	add	x9, x9, #0x928
+  37b228:	mov	w10, #0x2e                  	// #46
+  37b22c:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b230:	bl	134850 <GetTssExportFunc2@@TERSAFE+0x6ad6c>
+  37b234:	mov	x21, x0
+  37b238:	mov	w0, #0x3435                	// #13365
