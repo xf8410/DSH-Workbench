@@ -1,0 +1,264 @@
+=== 0xc4e00..0xc5200 全量反汇编（含 0xc4f34）===
+
+ace/tp2.so:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+00000000000c4e00 <tss_unity_str@@TERSAFE-0xf74>:
+   c4e00:	bl	c4da4 <__memcpy_chk@plt+0x8b4>
+   c4e04:	ldp	x29, x30, [sp], #16
+   c4e08:	ret
+   c4e0c:	sub	sp, sp, #0x30
+   c4e10:	stp	x29, x30, [sp, #32]
+   c4e14:	add	x29, sp, #0x20
+   c4e18:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4e1c:	add	x8, x8, #0x5d0
+   c4e20:	adrp	x0, 1f2000 <GetTssExportFunc2@@TERSAFE+0x12851c>
+   c4e24:	add	x0, x0, #0x8c
+   c4e28:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4e2c:	add	x2, x2, #0xb70
+   c4e30:	stur	x0, [x29, #-8]
+   c4e34:	mov	x0, x8
+   c4e38:	str	x8, [sp, #16]
+   c4e3c:	str	x2, [sp, #8]
+   c4e40:	bl	1f201c <GetTssExportFunc2@@TERSAFE+0x128538>
+   c4e44:	ldur	x0, [x29, #-8]
+   c4e48:	ldr	x1, [sp, #16]
+   c4e4c:	ldr	x2, [sp, #8]
+   c4e50:	bl	c3720 <__cxa_atexit@plt>
+   c4e54:	ldp	x29, x30, [sp, #32]
+   c4e58:	add	sp, sp, #0x30
+   c4e5c:	ret
+   c4e60:	sub	sp, sp, #0x30
+   c4e64:	stp	x29, x30, [sp, #32]
+   c4e68:	add	x29, sp, #0x20
+   c4e6c:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4e70:	add	x8, x8, #0x5e8
+   c4e74:	adrp	x0, 1f2000 <GetTssExportFunc2@@TERSAFE+0x12851c>
+   c4e78:	add	x0, x0, #0x120
+   c4e7c:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4e80:	add	x2, x2, #0xb70
+   c4e84:	stur	x0, [x29, #-8]
+   c4e88:	mov	x0, x8
+   c4e8c:	str	x8, [sp, #16]
+   c4e90:	str	x2, [sp, #8]
+   c4e94:	bl	1f20b0 <GetTssExportFunc2@@TERSAFE+0x1285cc>
+   c4e98:	ldur	x0, [x29, #-8]
+   c4e9c:	ldr	x1, [sp, #16]
+   c4ea0:	ldr	x2, [sp, #8]
+   c4ea4:	bl	c3720 <__cxa_atexit@plt>
+   c4ea8:	ldp	x29, x30, [sp, #32]
+   c4eac:	add	sp, sp, #0x30
+   c4eb0:	ret
+   c4eb4:	sub	sp, sp, #0x30
+   c4eb8:	stp	x29, x30, [sp, #32]
+   c4ebc:	add	x29, sp, #0x20
+   c4ec0:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4ec4:	add	x8, x8, #0x600
+   c4ec8:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c4ecc:	ldr	x0, [x0, #1536]
+   c4ed0:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4ed4:	add	x2, x2, #0xb70
+   c4ed8:	stur	x0, [x29, #-8]
+   c4edc:	mov	x0, x8
+   c4ee0:	str	x8, [sp, #16]
+   c4ee4:	str	x2, [sp, #8]
+   c4ee8:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c4eec:	ldur	x0, [x29, #-8]
+   c4ef0:	ldr	x1, [sp, #16]
+   c4ef4:	ldr	x2, [sp, #8]
+   c4ef8:	bl	c3720 <__cxa_atexit@plt>
+   c4efc:	ldp	x29, x30, [sp, #32]
+   c4f00:	add	sp, sp, #0x30
+   c4f04:	ret
+   c4f08:	stp	x29, x30, [sp, #-16]!
+   c4f0c:	mov	x29, sp
+   c4f10:	bl	c4e0c <__memcpy_chk@plt+0x91c>
+   c4f14:	bl	c4e60 <__memcpy_chk@plt+0x970>
+   c4f18:	bl	c4eb4 <__memcpy_chk@plt+0x9c4>
+   c4f1c:	ldp	x29, x30, [sp], #16
+   c4f20:	ret
+   c4f24:	sub	sp, sp, #0x30
+   c4f28:	stp	x29, x30, [sp, #32]
+   c4f2c:	add	x29, sp, #0x20
+   c4f30:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4f34:	add	x8, x8, #0x6b0
+   c4f38:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c4f3c:	ldr	x0, [x0, #1536]
+   c4f40:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4f44:	add	x2, x2, #0xb70
+   c4f48:	stur	x0, [x29, #-8]
+   c4f4c:	mov	x0, x8
+   c4f50:	str	x8, [sp, #16]
+   c4f54:	str	x2, [sp, #8]
+   c4f58:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c4f5c:	ldur	x0, [x29, #-8]
+   c4f60:	ldr	x1, [sp, #16]
+   c4f64:	ldr	x2, [sp, #8]
+   c4f68:	bl	c3720 <__cxa_atexit@plt>
+   c4f6c:	ldp	x29, x30, [sp, #32]
+   c4f70:	add	sp, sp, #0x30
+   c4f74:	ret
+   c4f78:	stp	x29, x30, [sp, #-16]!
+   c4f7c:	mov	x29, sp
+   c4f80:	bl	c4f24 <__memcpy_chk@plt+0xa34>
+   c4f84:	ldp	x29, x30, [sp], #16
+   c4f88:	ret
+   c4f8c:	sub	sp, sp, #0x30
+   c4f90:	stp	x29, x30, [sp, #32]
+   c4f94:	add	x29, sp, #0x20
+   c4f98:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4f9c:	add	x8, x8, #0x6e0
+   c4fa0:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c4fa4:	ldr	x0, [x0, #1536]
+   c4fa8:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4fac:	add	x2, x2, #0xb70
+   c4fb0:	stur	x0, [x29, #-8]
+   c4fb4:	mov	x0, x8
+   c4fb8:	str	x8, [sp, #16]
+   c4fbc:	str	x2, [sp, #8]
+   c4fc0:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c4fc4:	ldur	x0, [x29, #-8]
+   c4fc8:	ldr	x1, [sp, #16]
+   c4fcc:	ldr	x2, [sp, #8]
+   c4fd0:	bl	c3720 <__cxa_atexit@plt>
+   c4fd4:	ldp	x29, x30, [sp, #32]
+   c4fd8:	add	sp, sp, #0x30
+   c4fdc:	ret
+   c4fe0:	stp	x29, x30, [sp, #-16]!
+   c4fe4:	mov	x29, sp
+   c4fe8:	bl	c4f8c <__memcpy_chk@plt+0xa9c>
+   c4fec:	ldp	x29, x30, [sp], #16
+   c4ff0:	ret
+   c4ff4:	sub	sp, sp, #0x30
+   c4ff8:	stp	x29, x30, [sp, #32]
+   c4ffc:	add	x29, sp, #0x20
+   c5000:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c5004:	add	x8, x8, #0x718
+   c5008:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c500c:	ldr	x0, [x0, #1536]
+   c5010:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c5014:	add	x2, x2, #0xb70
+   c5018:	stur	x0, [x29, #-8]
+   c501c:	mov	x0, x8
+   c5020:	str	x8, [sp, #16]
+   c5024:	str	x2, [sp, #8]
+   c5028:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c502c:	ldur	x0, [x29, #-8]
+   c5030:	ldr	x1, [sp, #16]
+   c5034:	ldr	x2, [sp, #8]
+   c5038:	bl	c3720 <__cxa_atexit@plt>
+   c503c:	ldp	x29, x30, [sp, #32]
+   c5040:	add	sp, sp, #0x30
+   c5044:	ret
+   c5048:	stp	x29, x30, [sp, #-16]!
+   c504c:	mov	x29, sp
+   c5050:	bl	c4ff4 <__memcpy_chk@plt+0xb04>
+   c5054:	ldp	x29, x30, [sp], #16
+   c5058:	ret
+   c505c:	sub	sp, sp, #0x30
+   c5060:	stp	x29, x30, [sp, #32]
+   c5064:	add	x29, sp, #0x20
+   c5068:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c506c:	add	x8, x8, #0x748
+   c5070:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c5074:	ldr	x0, [x0, #1536]
+   c5078:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c507c:	add	x2, x2, #0xb70
+   c5080:	stur	x0, [x29, #-8]
+   c5084:	mov	x0, x8
+   c5088:	str	x8, [sp, #16]
+   c508c:	str	x2, [sp, #8]
+   c5090:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c5094:	ldur	x0, [x29, #-8]
+   c5098:	ldr	x1, [sp, #16]
+   c509c:	ldr	x2, [sp, #8]
+   c50a0:	bl	c3720 <__cxa_atexit@plt>
+   c50a4:	ldp	x29, x30, [sp, #32]
+   c50a8:	add	sp, sp, #0x30
+   c50ac:	ret
+   c50b0:	stp	x29, x30, [sp, #-16]!
+   c50b4:	mov	x29, sp
+   c50b8:	bl	c505c <__memcpy_chk@plt+0xb6c>
+   c50bc:	ldp	x29, x30, [sp], #16
+   c50c0:	ret
+   c50c4:	sub	sp, sp, #0x30
+   c50c8:	stp	x29, x30, [sp, #32]
+   c50cc:	add	x29, sp, #0x20
+   c50d0:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c50d4:	add	x8, x8, #0x778
+   c50d8:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c50dc:	ldr	x0, [x0, #1536]
+   c50e0:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c50e4:	add	x2, x2, #0xb70
+   c50e8:	stur	x0, [x29, #-8]
+   c50ec:	mov	x0, x8
+   c50f0:	str	x8, [sp, #16]
+   c50f4:	str	x2, [sp, #8]
+   c50f8:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c50fc:	ldur	x0, [x29, #-8]
+   c5100:	ldr	x1, [sp, #16]
+   c5104:	ldr	x2, [sp, #8]
+   c5108:	bl	c3720 <__cxa_atexit@plt>
+   c510c:	ldp	x29, x30, [sp, #32]
+   c5110:	add	sp, sp, #0x30
+   c5114:	ret
+   c5118:	stp	x29, x30, [sp, #-16]!
+   c511c:	mov	x29, sp
+   c5120:	bl	c50c4 <__memcpy_chk@plt+0xbd4>
+   c5124:	ldp	x29, x30, [sp], #16
+   c5128:	ret
+   c512c:	sub	sp, sp, #0x30
+   c5130:	stp	x29, x30, [sp, #32]
+   c5134:	add	x29, sp, #0x20
+   c5138:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c513c:	add	x8, x8, #0x7a4
+   c5140:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c5144:	ldr	x0, [x0, #1536]
+   c5148:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c514c:	add	x2, x2, #0xb70
+   c5150:	stur	x0, [x29, #-8]
+   c5154:	mov	x0, x8
+   c5158:	str	x8, [sp, #16]
+   c515c:	str	x2, [sp, #8]
+   c5160:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c5164:	ldur	x0, [x29, #-8]
+   c5168:	ldr	x1, [sp, #16]
+   c516c:	ldr	x2, [sp, #8]
+   c5170:	bl	c3720 <__cxa_atexit@plt>
+   c5174:	ldp	x29, x30, [sp, #32]
+   c5178:	add	sp, sp, #0x30
+   c517c:	ret
+   c5180:	sub	sp, sp, #0x30
+   c5184:	stp	x29, x30, [sp, #32]
+   c5188:	add	x29, sp, #0x20
+   c518c:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c5190:	add	x8, x8, #0x7d0
+   c5194:	adrp	x0, 214000 <GetTssExportFunc2@@TERSAFE+0x14a51c>
+   c5198:	add	x0, x0, #0xe1c
+   c519c:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c51a0:	add	x2, x2, #0xb70
+   c51a4:	stur	x0, [x29, #-8]
+   c51a8:	mov	x0, x8
+   c51ac:	str	x8, [sp, #16]
+   c51b0:	str	x2, [sp, #8]
+   c51b4:	bl	214dac <GetTssExportFunc2@@TERSAFE+0x14b2c8>
+   c51b8:	ldur	x0, [x29, #-8]
+   c51bc:	ldr	x1, [sp, #16]
+   c51c0:	ldr	x2, [sp, #8]
+   c51c4:	bl	c3720 <__cxa_atexit@plt>
+   c51c8:	ldp	x29, x30, [sp, #32]
+   c51cc:	add	sp, sp, #0x30
+   c51d0:	ret
+   c51d4:	sub	sp, sp, #0x30
+   c51d8:	stp	x29, x30, [sp, #32]
+   c51dc:	add	x29, sp, #0x20
+   c51e0:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c51e4:	add	x8, x8, #0x7e8
+   c51e8:	adrp	x0, 216000 <GetTssExportFunc2@@TERSAFE+0x14c51c>
+   c51ec:	add	x0, x0, #0xdb0
+   c51f0:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c51f4:	add	x2, x2, #0xb70
+   c51f8:	stur	x0, [x29, #-8]
+   c51fc:	mov	x0, x8

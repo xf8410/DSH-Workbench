@@ -1,0 +1,61 @@
+=== 0xc4e00..0xc5200 的 adrp/add 立即数 ===
+   c4e00:	bl	c4da4 <__memcpy_chk@plt+0x8b4>
+   c4e18:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4e1c:	add	x8, x8, #0x5d0
+   c4e20:	adrp	x0, 1f2000 <GetTssExportFunc2@@TERSAFE+0x12851c>
+   c4e24:	add	x0, x0, #0x8c
+   c4e28:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4e2c:	add	x2, x2, #0xb70
+   c4e40:	bl	1f201c <GetTssExportFunc2@@TERSAFE+0x128538>
+   c4e50:	bl	c3720 <__cxa_atexit@plt>
+   c4e6c:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4e70:	add	x8, x8, #0x5e8
+   c4e74:	adrp	x0, 1f2000 <GetTssExportFunc2@@TERSAFE+0x12851c>
+   c4e78:	add	x0, x0, #0x120
+   c4e7c:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4e80:	add	x2, x2, #0xb70
+   c4e94:	bl	1f20b0 <GetTssExportFunc2@@TERSAFE+0x1285cc>
+   c4ea4:	bl	c3720 <__cxa_atexit@plt>
+   c4ec0:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4ec4:	add	x8, x8, #0x600
+   c4ec8:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c4ed0:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4ed4:	add	x2, x2, #0xb70
+   c4ee8:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c4ef8:	bl	c3720 <__cxa_atexit@plt>
+   c4f10:	bl	c4e0c <__memcpy_chk@plt+0x91c>
+   c4f14:	bl	c4e60 <__memcpy_chk@plt+0x970>
+   c4f18:	bl	c4eb4 <__memcpy_chk@plt+0x9c4>
+   c4f30:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4f34:	add	x8, x8, #0x6b0
+   c4f38:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c4f40:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4f44:	add	x2, x2, #0xb70
+   c4f58:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c4f68:	bl	c3720 <__cxa_atexit@plt>
+   c4f80:	bl	c4f24 <__memcpy_chk@plt+0xa34>
+   c4f98:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c4f9c:	add	x8, x8, #0x6e0
+   c4fa0:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c4fa8:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c4fac:	add	x2, x2, #0xb70
+   c4fc0:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c4fd0:	bl	c3720 <__cxa_atexit@plt>
+   c4fe8:	bl	c4f8c <__memcpy_chk@plt+0xa9c>
+   c5000:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c5004:	add	x8, x8, #0x718
+   c5008:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c5010:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c5014:	add	x2, x2, #0xb70
+   c5028:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c5038:	bl	c3720 <__cxa_atexit@plt>
+   c5050:	bl	c4ff4 <__memcpy_chk@plt+0xb04>
+   c5068:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
+   c506c:	add	x8, x8, #0x748
+   c5070:	adrp	x0, 4b4000 <JNI_OnLoad@@TERSAFE+0x1328f4>
+   c5078:	adrp	x2, 4ab000 <JNI_OnLoad@@TERSAFE+0x1298f4>
+   c507c:	add	x2, x2, #0xb70
+   c5090:	bl	195ca8 <GetTssExportFunc2@@TERSAFE+0xcc1c4>
+   c50a0:	bl	c3720 <__cxa_atexit@plt>
+   c50b8:	bl	c505c <__memcpy_chk@plt+0xb6c>
+   c50d0:	adrp	x8, 50d000 <g_AllTssExportFunc@@TERSAFE+0x57ea8>
