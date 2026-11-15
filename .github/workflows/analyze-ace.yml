@@ -21,64 +21,67 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round10 主校验 fcn.0036d5d4
+      - name: round11 tcj/vap 字符串地址与引用
         run: |
-          mkdir -p out10
+          mkdir -p out11
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          r2 -q -e scr.color=false -c "
+            izz~tcj
+            izz~vap
+            izz~crc
+            izz~code_size
+            izz~sig_custom
+            izz~cert_md5
+          " "$F" > out11/str_addrs.txt 2>/dev/null || true
+          cat out11/str_addrs.txt
+
+      - name: round11 按地址找引用
+        run: |
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          # 先提取 tcj / vap 的 vaddr
+          T=$(grep -oE "0x[0-9a-f]+" out11/str_addrs.txt | head -20 | tr '\n' ' ')
+          echo "候选地址: $T"
+          r2 -q -e scr.color=false -e asm.lines=false -c "
+            aaa;
+            $(for a in $T; do echo "echo === xref $a ===; axt @ $a;"; done)
+          " "$F" > out11/xrefs.txt 2>/dev/null || true
+          cat out11/xrefs.txt
+
+      - name: round11 按字符串直接找（argv 方式）
+        run: |
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           r2 -q -e scr.color=false -e asm.lines=false -c "
             aaa;
-            echo === fcn.0036d5d4 (主校验) ===;
-            pdf @ 0x36d5d4;
-            echo === fcn.0036d338 (备用校验) ===;
-            pdf @ 0x36d338;
-          " "$F" > /tmp/r10.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/r10.txt)"
-          split -l 120 -d -a 3 /tmp/r10.txt out10/r10_
-
-      - name: round10 字符串解析
-        run: |
-          F=ace/tp2.so
-          {
-            echo "=== 0x36df48 附近字符串 ==="
-            r2 -q -e scr.color=false -c "ps @ 0x36df48" "$F" 2>/dev/null
-            echo ""
-            echo "=== 0x3d89d6 附近字符串 ==="
-            r2 -q -e scr.color=false -c "ps @ 0x3d89d6" "$F" 2>/dev/null
-            echo ""
-            echo "=== 0x50c4d0 / 0x4b0a40 / 0x4b09b0 附近 ==="
-            for a in 0x50c4d0 0x4b0a40 0x4b09b0; do
-              echo "--- $a ---"
-              r2 -q -e scr.color=false -c "px 32 @ $a" "$F" 2>/dev/null
-            done
-          } > out10/strs10.txt
-          cat out10/strs10.txt
-
-      - name: round10 主校验引用的导入函数
-        run: |
-          F=ace/tp2.so
-          {
-            echo "=== fcn.0036d5d4 区间内调用 ==="
-            aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x36d5d4 --stop-address=0x36dab8 "$F" 2>/dev/null | grep -E "bl\s+" | head -60
-          } > out10/imports10.txt
-          cat out10/imports10.txt
+            echo === tcj ===;
+            axt @@ str.*tcj*;
+            echo === vap ===;
+            axt @@ str.*vap*;
+            echo === cert_md5 ===;
+            axt @@ str.*cert_md5*;
+            echo === code_size ===;
+            axt @@ str.*code_size*;
+          " "$F" > out11/xrefs2.txt 2>/dev/null || true
+          cat out11/xrefs2.txt
 
       - name: 清单
-        run: ls -l out10/ && du -sh out10/
+        run: ls -l out11/ && du -sh out11/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis10
-          path: out10/
+          name: ace-analysis11
+          path: out11/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis10
-          cp out10/* ace/analysis10/ 2>/dev/null || true
+          mkdir -p ace/analysis11
+          cp out11/* ace/analysis11/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis10
-          git commit -m "ace analysis10: main verification body" || echo "nothing to commit"
+          git add ace/analysis11
+          git commit -m "ace analysis11: tcj/vap hash check xrefs" || echo "nothing to commit"
           git push || echo "push skipped"
