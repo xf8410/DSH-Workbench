@@ -22,67 +22,69 @@ jobs:
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
           r2 -v || true
 
-      - name: round15 精确定位 MD5 IV
+      - name: round16 MD5/SHA256 IV 真实引用
         run: |
-          mkdir -p out15
+          mkdir -p out16
+          F=ace/tp2.so
+          if [ -f "$F" ]; then
+            r2 -q -e scr.color=false -e asm.lines=false -c "
+              aaa;
+              echo === axt 0x3d2540 (MD5 IV) ===;
+              axt @ 0x3d2540;
+              echo === axt 0x3d2544 ===;
+              axt @ 0x3d2544;
+              echo === axt 0x3d29b4 (SHA256 IV) ===;
+              axt @ 0x3d29b4;
+              echo === axt 0x37b54c (汇合点) ===;
+              axt @ 0x37b54c;
+            " "$F" > out16/iv_axt.txt 2>/dev/null || true
+            cat out16/iv_axt.txt
+          fi
+
+      - name: round16 objdump 侧 adrp 3d2000
+        run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             {
-              echo "=== .rodata 中含 01234567 的行 ==="
-              aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -n "01234567" | head -10
-              echo ""
-              echo "=== .rodata 中含 89abcdef 的行 ==="
-              aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -n "89abcdef" | head -10
-              echo ""
-              echo "=== .rodata 中含 67e6096a 的行 ==="
-              aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -n "67e6096a" | head -10
-            } > out15/iv_lines.txt 2>&1
-            cat out15/iv_lines.txt
+              echo "=== 所有 adrp 到 3d2000 的指令 ==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null \
+                | grep -nE "adrp\s+x[0-9]+, 3d2000" | head -40
+            } > out16/adrp3d2.txt 2>&1
+            cat out16/adrp3d2.txt
           fi
 
-      - name: round15 fcn.0037b3xx 反汇编
+      - name: round16 0x37b54c 汇合点
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === 0x37b300 起 ===;
-              pd 200 @ 0x37b300;
-            " "$F" > out15/fcn37b3.txt 2>/dev/null || true
-            wc -l out15/fcn37b3.txt 2>/dev/null || true
-            head -80 out15/fcn37b3.txt 2>/dev/null || true
-          fi
-
-      - name: round15 shift/mix 指令特征（MD5 轮函数）
-        run: |
-          F=ace/tp2.so
-          if [ -f "$F" ]; then
-            {
-              echo "=== 全 so 中 eor+ror/add 密集区域（MD5 轮函数特征）==="
-              aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x37b000 --stop-address=0x37c000 "$F" 2>/dev/null | head -150
-            } > out15/md5rounds.txt 2>&1
-            head -40 out15/md5rounds.txt
+              echo === 0x37b54c 起 ===;
+              pd 120 @ 0x37b54c;
+            " "$F" > out16/fcn_37b54c.txt 2>/dev/null || true
+            wc -l out16/fcn_37b54c.txt 2>/dev/null || true
+            head -60 out16/fcn_37b54c.txt 2>/dev/null || true
           fi
 
       - name: 清单
         run: |
-          ls -l out15/ || true
-          du -sh out15/ || true
+          ls -l out16/ || true
+          du -sh out16/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis15
-          path: out15/
+          name: ace-analysis16
+          path: out16/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis15
-          cp out15/* ace/analysis15/ 2>/dev/null || true
+          mkdir -p ace/analysis16
+          cp out16/* ace/analysis16/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis15
-          git commit -m "ace analysis15: exact MD5 IV location + fcn.0037b3xx" || echo "nothing to commit"
+          git add ace/analysis16
+          git commit -m "ace analysis16: MD5/SHA256 IV refs + convergence point" || echo "nothing to commit"
           git push || echo "push skipped"
