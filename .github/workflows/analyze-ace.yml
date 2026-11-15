@@ -20,77 +20,64 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
-          aarch64-linux-gnu-objdump --version | head -1
 
-      - name: round3 关键函数
+      - name: 准备
         run: |
-          mkdir -p out3
+          mkdir -p out4
+          ls -l ace/*.so
+
+      - name: dump fcn.003011a4（分片）
+        run: |
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x3011a4" "$F" > /tmp/fn4.txt 2>/dev/null || true
+          echo "总行数: $(wc -l < /tmp/fn4.txt)"
+          split -l 120 -d -a 3 /tmp/fn4.txt out4/fn011a4_
+          ls -l out4/ | head -20
+
+      - name: dump 4 个 open 调用点
+        run: |
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           {
-            echo "=== 1. fopen mode 字符串 @0x3f631f ==="
-            r2 -q -e scr.color=false -c "ps @ 0x3f631f" "$F" 2>/dev/null
-            echo ""
-            echo "=== 2. adt.s3.t 调用者 fcn.003011a4 ==="
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x3011a4" "$F" 2>/dev/null
-            echo ""
-            echo "=== 3. open 调用点 fcn.001a028c ==="
+            echo "########## fcn.001a028c (open @0x1a0310) ##########"
             r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x1a028c" "$F" 2>/dev/null
             echo ""
-            echo "=== 4. open 包装 fcn.00347f60 ==="
+            echo "########## fcn.00347f60 (open @0x347dcc / 0x347dd4) ##########"
             r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x347f60" "$F" 2>/dev/null
             echo ""
-            echo "=== 5. open 包装 fcn.00349d44 ==="
+            echo "########## fcn.00349d44 (open @0x349d84) ##########"
             r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x349d44" "$F" 2>/dev/null
-          } > out3/tp2.r3_fn.txt
-          wc -l out3/tp2.r3_fn.txt
+          } > /tmp/open4.txt
+          echo "总行数: $(wc -l < /tmp/open4.txt)"
+          split -l 120 -d -a 3 /tmp/open4.txt out4/open4_
 
-      - name: round3 路径字符串
+      - name: dump adt.s3.t 写函数
         run: |
           F=ace/tp2.so
-          {
-            echo "=== 含 lib/arm64 或 /lib/ ==="
-            strings -n 6 "$F" | grep -E "lib/arm64|lib/armeabi|/lib/" | sort -u | head -40
-            echo ""
-            echo "=== 含 .apk ==="
-            strings -n 6 "$F" | grep -E "\.apk" | sort -u | head -40
-            echo ""
-            echo "=== 含 /data/app 或 /data/user ==="
-            strings -n 6 "$F" | grep -E "/data/app|/data/user" | sort -u | head -40
-            echo ""
-            echo "=== 含 trampoline / backup / orig ==="
-            strings -n 6 "$F" | grep -iE "trampoline|backup|orig|restore" | sort -u | head -30
-          } > out3/tp2.r3_paths.txt
-          cat out3/tp2.r3_paths.txt
+          [ -f "$F" ] || exit 0
+          r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x303bec" "$F" > /tmp/adt.txt 2>/dev/null || true
+          echo "总行数: $(wc -l < /tmp/adt.txt)"
+          split -l 120 -d -a 3 /tmp/adt.txt out4/adt_
 
-      - name: round3 段表与导出
+      - name: 清单
         run: |
-          F=ace/tp2.so
-          {
-            echo "=== 段表 ==="
-            aarch64-linux-gnu-readelf -S "$F" 2>/dev/null | head -40
-            echo ""
-            echo "=== 动态依赖 ==="
-            aarch64-linux-gnu-readelf -d "$F" 2>/dev/null | grep NEEDED
-            echo ""
-            echo "=== 导出符号（tp2_* / tss_*） ==="
-            aarch64-linux-gnu-nm -D --defined-only "$F" 2>/dev/null | grep -E "tp2_|tss_" | head -40
-          } > out3/tp2.r3_sec.txt
-          cat out3/tp2.r3_sec.txt
+          ls -l out4/ | head -40
+          du -sh out4/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis3
-          path: out3/
+          name: ace-analysis4
+          path: out4/
           retention-days: 30
 
-      - name: 结果写回仓库
+      - name: 写回仓库
         run: |
-          mkdir -p ace/analysis3
-          cp out3/*.txt ace/analysis3/ 2>/dev/null || true
+          mkdir -p ace/analysis4
+          cp out4/* ace/analysis4/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis3
-          git commit -m "ace analysis3" || echo "nothing to commit"
+          git add ace/analysis4
+          git commit -m "ace analysis4: segmented disasm" || echo "nothing to commit"
           git push || echo "push skipped"
