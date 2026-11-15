@@ -1,0 +1,20 @@
+=== 与 APK / 校验有关的高价值字符串 ===
+!%s, size:%d, crc:%08x, t:%s
+!tcj,name:%s md5:%s,size:%d
+!vap_2:%s, cert_md5:%s
+%s;crc:%s
+.apk_path
+ApkAbort_CS_%d
+ApkAbort_CS_Cnt
+TssSDKOnRecvSignature
+[Shell]apk_path:%s
+ano_cert_md5
+apk_once
+apk_path=%s
+gp4, reason:%s, raw:%s, crc:%x
+jar_ver:%s,cert_env:%s
+mrpcs_data_crc_error
+ms_data_crc
+sig custom, name:%s, len:%d, crc:%08x
+tss_recv_sec_signature
+ver:%s app_ver:%s code_size:%s crc:%s

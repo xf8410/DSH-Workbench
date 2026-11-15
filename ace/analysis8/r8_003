@@ -1,0 +1,83 @@
+0x001054c8      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x001054cc      e92f0329       stp w9, w11, [arg_70hx18]
+0x001054d0      00011fd6       br x8
+0x001054d4      dfbc0094       bl fcn.00134850
+0x001054d8      dbc00094       bl fcn.00135844
+0x001054dc      e8898952       mov w8, 0x4c4f                          ; 'OL'
+0x001054e0      091d9452       mov w9, 0xa0e8
+0x001054e4      c840af72       movk w8, 0x7a06, lsl 16
+0x001054e8      6957af72       movk w9, 0x7abb, lsl 16
+0x001054ec      0a310011       add w10, w8, 0xc
+0x001054f0      2b090032       orr w11, w9, 7
+0x001054f4      4801084a       eor w8, w10, w8
+0x001054f8      6a01094a       eor w10, w11, w9
+0x001054fc      1f000072       tst w0, 1
+0x00105500      08118a1a       csel w8, w8, w10, ne
+0x00105504      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x00105508      eb270329       stp w11, w9, [arg_70hx18]
+0x0010550c      00011fd6       br x8
+0x00105510      e11500d0       adrp x1, 0x3c3000
+0x00105514      21001a91       add x1, x1, 0x680                       ; 0x3c3680 ; "mrpcs_abort.dat"
+0x00105518      e00315aa       mov x0, x21
+0x0010551c      8c130994       bl fcn.0034a34c
+0x00105520      08d48b52       mov w8, 0x5ea0
+0x00105524      e90c8552       mov w9, 0x2867                          ; 'g('
+0x00105528      0801b172       movk w8, 0x8808, lsl 16
+0x0010552c      4952b372       movk w9, 0x9a92, lsl 16
+0x00105530      0a090032       orr w10, w8, 7
+0x00105534      2b050011       add w11, w9, 1
+0x00105538      4801084a       eor w8, w10, w8
+0x0010553c      6a01094a       eor w10, w11, w9
+0x00105540      1f000071       cmp w0, 0
+0x00105544      08018a1a       csel w8, w8, w10, eq
+0x00105548      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0010554c      e92f0329       stp w9, w11, [arg_70hx18]
+0x00105550      00011fd6       br x8
+0x00105554      bd1b0094       bl fcn.0010c448
+0x00105558      68619f52       mov w8, 0xfb0b
+0x0010555c      69049252       mov w9, 0x9023
+0x00105560      0889a172       movk w8, 0xc48, lsl 16                  ; 'H\f'
+0x00105564      896ba272       movk w9, 0x135c, lsl 16                 ; '\\\x13'
+0x00105568      0a050011       add w10, w8, 1
+0x0010556c      2b190011       add w11, w9, 6
+0x00105570      4801084a       eor w8, w10, w8
+0x00105574      6a01094a       eor w10, w11, w9
+0x00105578      1f0000f1       cmp x0, 0
+0x0010557c      08018a1a       csel w8, w8, w10, eq
+0x00105580      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x00105584      eb270329       stp w11, w9, [arg_70hx18]
+0x00105588      00011fd6       br x8
+0x0010558c      f80300aa       mov x24, x0
+0x00105590      28008052       mov w8, 1
+0x00105594      60220091       add x0, x19, 8                          ; size_t size
+0x00105598      e00b00f9       str x0, [arg_70hx10]
+0x0010559c      e80300f9       str x8, [sp]
+0x001055a0      94f8fe97       bl sym.imp.malloc                       ;  void *malloc(size_t size)
+0x001055a4      c8819652       mov w8, 0xb40e
+0x001055a8      494d8252       mov w9, 0x126a                          ; 'j\x12'
+0x001055ac      68b4ae72       movk w8, 0x75a3, lsl 16
+0x001055b0      29c7ac72       movk w9, 0x6639, lsl 16                 ; '9f'
+0x001055b4      0a290011       add w10, w8, 0xa
+0x001055b8      2b090011       add w11, w9, 2
+0x001055bc      4801084a       eor w8, w10, w8
+0x001055c0      6a01094a       eor w10, w11, w9
+0x001055c4      1f0000f1       cmp x0, 0
+0x001055c8      08018a1a       csel w8, w8, w10, eq
+0x001055cc      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x001055d0      e00700f9       str x0, [var_0h_3]
+0x001055d4      e92f0329       stp w9, w11, [arg_70hx18]
+0x001055d8      00011fd6       br x8
+0x001055dc      8d000014       b 0x105810
+; DATA XREF from fcn.00105318 @ 0x1055cc(r)
+..
+; DATA XREFS from fcn.00105318 @ 0x1054c8(r), 0x105504(r), 0x105548(r), 0x105580(r)
+; CODE XREF from fcn.00105318 @ +0x4c0(x)
+; CODE XREFS from fcn.00105318 @ 0x105364(r), 0x105370(r), 0x1055dc(x)
+; CODE XREF from fcn.00105318 @ +0x4b4(r)
+0x00105810      fd7b46a9       ldp x29, x30, [var_60h]
+0x00105814      f44f45a9       ldp x20, x19, [var_50h]
+0x00105818      f65744a9       ldp x22, x21, [var_40h]
+0x0010581c      f85f43a9       ldp x24, x23, [var_30h]
+0x00105820      fa6742a9       ldp x26, x25, [var_20h]
+0x00105824      ffc30191       add sp, sp, 0x70
+0x00105828      c0035fd6       ret
