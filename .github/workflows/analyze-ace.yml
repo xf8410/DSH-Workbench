@@ -21,65 +21,65 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round20 加密表与 key 表
+      - name: round21 .bss 表 B 的写入者
         run: |
-          mkdir -p out20
+          mkdir -p out21
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.00381dc4 (table A) ===;
-              pdf @ 0x381dc4;
-              echo === fcn.00381dd0 (table B) ===;
-              pdf @ 0x381dd0;
-            " "$F" > out20/tables.txt 2>/dev/null || true
-            wc -l out20/tables.txt 2>/dev/null || true
-            cat out20/tables.txt
+              echo === xref 0x5146b0 (table B) ===;
+              axt @ 0x5146b0;
+              echo === xref 0x514000 (segment base) ===;
+              axt @ 0x514000;
+            " "$F" > out21/bss_writers.txt 2>/dev/null || true
+            cat out21/bss_writers.txt
           fi
 
-      - name: round20 kill 触发面
-        run: |
-          F=ace/tp2.so
-          if [ -f "$F" ]; then
-            r2 -q -e scr.color=false -e asm.lines=false -c "
-              aaa;
-              echo === xref fcn.00347f54 (kill) ===;
-              axt @ 0x347f54;
-            " "$F" > out20/kill_xrefs.txt 2>/dev/null || true
-            cat out20/kill_xrefs.txt
-          fi
-
-      - name: round20 解密表数据 dump
+      - name: round21 表 A 内容 dump
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             {
-              echo "=== 尝试从 fcn.00381dc4 / 381dd0 里提取 adrp 目标 ==="
-              aarch64-linux-gnu-objdump -d --no-show-raw-insn \
-                --start-address=0x381dc4 --stop-address=0x381e30 "$F" 2>/dev/null
-            } > out20/table_addrs.txt 2>&1
-            cat out20/table_addrs.txt
+              echo "=== 表 A 0x3e8645 起 512 字节 ==="
+              aarch64-linux-gnu-objdump -s --start-address=0x3e8645 --stop-address=0x3e8845 "$F" 2>/dev/null
+            } > out21/tableA_dump.txt 2>&1
+            cat out21/tableA_dump.txt
+          fi
+
+      - name: round21 段表完整（找 .data/.bss）
+        run: |
+          F=ace/tp2.so
+          if [ -f "$F" ]; then
+            {
+              echo "=== program headers ==="
+              aarch64-linux-gnu-readelf -l "$F" 2>/dev/null
+              echo ""
+              echo "=== section headers 尾部 ==="
+              aarch64-linux-gnu-readelf -S "$F" 2>/dev/null | tail -30
+            } > out21/segments.txt 2>&1
+            cat out21/segments.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out20/ || true
-          du -sh out20/ || true
+          ls -l out21/ || true
+          du -sh out21/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis20
-          path: out20/
+          name: ace-analysis21
+          path: out21/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis20
-          cp out20/* ace/analysis20/ 2>/dev/null || true
+          mkdir -p ace/analysis21
+          cp out21/* ace/analysis21/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis20
-          git commit -m "ace analysis20: crypto tables + kill trigger surface" || echo "nothing to commit"
+          git add ace/analysis21
+          git commit -m "ace analysis21: table B writers + table A dump + segments" || echo "nothing to commit"
           git push || echo "push skipped"
