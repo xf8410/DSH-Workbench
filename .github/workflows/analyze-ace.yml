@@ -4,7 +4,10 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'ace/**'
+      - 'ace/*.so'
+
+permissions:
+  contents: write
 
 jobs:
   analyze:
@@ -24,10 +27,10 @@ jobs:
           for f in ace/*.so; do
             [ -f "$f" ] || continue
             b=$(basename "$f")
-            echo "=== $b ===" | tee -a out/info.txt
-            file "$f" | tee -a out/info.txt
-            aarch64-linux-gnu-readelf -d "$f" 2>/dev/null | head -40 | tee -a out/info.txt
-            aarch64-linux-gnu-readelf -S "$f" 2>/dev/null | tee -a out/info.txt
+            echo "=== $b ===" >> out/info.txt
+            file "$f" >> out/info.txt
+            aarch64-linux-gnu-readelf -d "$f" 2>/dev/null | head -40 >> out/info.txt
+            aarch64-linux-gnu-readelf -S "$f" 2>/dev/null >> out/info.txt
           done
 
       - name: 反汇编
@@ -36,7 +39,7 @@ jobs:
             [ -f "$f" ] || continue
             b=$(basename "$f" .so)
             aarch64-linux-gnu-objdump -d --no-show-raw-insn "$f" > "out/${b}.disasm.txt" 2>/dev/null || true
-            wc -l "out/${b}.disasm.txt"
+            echo "$b disasm lines: $(wc -l < out/${b}.disasm.txt)"
           done
 
       - name: 关键字符串交叉引用
@@ -47,12 +50,26 @@ jobs:
             echo "### $b" > "out/${b}.xref.txt"
             for s in ".apk_path" "!tcj" "vap_2" "inline_hook_opcode" "ms_hook_opcode" \
                      "/proc/%d/status" "adt.s3.t" "check_state" "TssSDKOnRecvSignature" \
-                     "ano_cert_md5" "code_size" "sig custom"; do
+                     "ano_cert_md5" "code_size" "sig custom" "ms_data_crc" "HBCheck"; do
               echo "" >> "out/${b}.xref.txt"
               echo "=== $s ===" >> "out/${b}.xref.txt"
-              r2 -q -e scr.color=false -c "izz~${s}" "$f" 2>/dev/null \
-                | head -5 >> "out/${b}.xref.txt" || true
+              r2 -q -e scr.color=false -c "izz~${s}" "$f" 2>/dev/null | head -5 >> "out/${b}.xref.txt" || true
             done
+          done
+
+      - name: 定位字符串地址并找引用
+        run: |
+          for f in ace/*.so; do
+            [ -f "$f" ] || continue
+            b=$(basename "$f" .so)
+            {
+              echo "### $b : string -> address -> xref"
+              for s in ".apk_path" "!tcj,name" "/proc/%d/status" "inline_hook_opcode_dismatch" "adt.s3.t"; do
+                echo ""
+                echo "--- $s ---"
+                r2 -q -e scr.color=false -c "aaa; izz~${s}; axt @@ str.*${s}*" "$f" 2>/dev/null | head -20 || true
+              done
+            } > "out/${b}.strings_xref.txt"
           done
 
       - name: 导入/导出符号
@@ -65,9 +82,19 @@ jobs:
             echo "$b exports=$(wc -l < out/${b}.exports.txt) imports=$(wc -l < out/${b}.imports.txt)"
           done
 
-      - name: 上传结果
+      - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
           name: ace-analysis
           path: out/
           retention-days: 30
+
+      - name: 结果写回仓库
+        run: |
+          mkdir -p ace/analysis
+          cp out/*.txt ace/analysis/ 2>/dev/null || true
+          git config user.name "ace-bot"
+          git config user.email "ace-bot@users.noreply.github.com"
+          git add ace/analysis
+          git commit -m "ace analysis: $(date -u +%F)" || echo "nothing to commit"
+          git push || echo "push skipped"
