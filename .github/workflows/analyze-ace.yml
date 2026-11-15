@@ -21,62 +21,59 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round7 ApkAbort xref
+      - name: round8 ApkAbort 主函数与 mrpcs
         run: |
-          mkdir -p out7
+          mkdir -p out8
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           r2 -q -e scr.color=false -e asm.lines=false -c "
             aaa;
-            echo === xref ApkAbort_CS_Cnt 0x3c8d58 ===;
-            axt @ 0x3c8d58;
-            echo === xref ApkAbort_CS_pctd 0x3c8d68 ===;
-            axt @ 0x3c8d68;
-            echo === xref mrpcs_abort.dat 0x3c3680 ===;
-            axt @ 0x3c3680;
-            echo === xref FakeIdByOpenId ===;
-            izz~FakeIdByOpenId;
-            echo === xref AndroidID ===;
-            izz~AndroidID;
-          " "$F" > /tmp/r7.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/r7.txt)"
-          cat /tmp/r7.txt
-          cp /tmp/r7.txt out7/apkabort_xref.txt
+            echo === fcn.001830c0 (ApkAbort) ===;
+            pdf @ 0x1830c0;
+            echo === fcn.00105318 (mrpcs_abort.dat) ===;
+            pdf @ 0x105318;
+          " "$F" > /tmp/r8.txt 2>/dev/null || true
+          echo "总行数: $(wc -l < /tmp/r8.txt)"
+          split -l 120 -d -a 3 /tmp/r8.txt out8/r8_
 
-      - name: round7 abort 包装函数
+      - name: round8 调用者链
         run: |
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           r2 -q -e scr.color=false -e asm.lines=false -c "
             aaa;
-            echo === fcn.003bf3a4 ===;
-            pdf @ 0x3bf3a4;
-            echo === fcn.003bf438 ===;
-            pdf @ 0x3bf438;
-            echo === fcn.003bf54c ===;
-            pdf @ 0x3bf54c;
-            echo === fcn.00347f50 ===;
-            pdf @ 0x347f50;
-          " "$F" > /tmp/r7b.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/r7b.txt)"
-          split -l 120 -d -a 3 /tmp/r7b.txt out7/abw_
+            echo === xref fcn.001830c0 ===;
+            axt @ 0x1830c0;
+            echo === xref fcn.00105318 ===;
+            axt @ 0x105318;
+          " "$F" > out8/callers.txt 2>/dev/null || true
+          cat out8/callers.txt
+
+      - name: round8 校验相关字符串落点
+        run: |
+          F=ace/tp2.so
+          {
+            echo "=== 与 APK / 校验有关的高价值字符串 ==="
+            strings -n 6 "$F" | grep -iE "apk|signature|cert|integrity|tamper|checksum|md5|crc" | sort -u | head -60
+          } > out8/keystrings.txt
+          cat out8/keystrings.txt
 
       - name: 清单
-        run: ls -l out7/ && du -sh out7/
+        run: ls -l out8/ && du -sh out8/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis7
-          path: out7/
+          name: ace-analysis8
+          path: out8/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis7
-          cp out7/* ace/analysis7/ 2>/dev/null || true
+          mkdir -p ace/analysis8
+          cp out8/* ace/analysis8/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis7
-          git commit -m "ace analysis7: ApkAbort xref + abort wrappers" || echo "nothing to commit"
+          git add ace/analysis8
+          git commit -m "ace analysis8: ApkAbort body + callers" || echo "nothing to commit"
           git push || echo "push skipped"
