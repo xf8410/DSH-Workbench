@@ -1,0 +1,120 @@
+; CODE XREF from fcn.0036d5d4 @ 0x36d73c(x)
+0x0036d76c      e0230091       add x0, sp, 8
+0x0036d770      e10317aa       mov x1, x23
+0x0036d774      1fa9f797       bl fcn.00157bf0
+0x0036d778      80d78152       mov w0, 0xebc
+0x0036d77c      516e0094       bl fcn.003890c0
+0x0036d780      f80300aa       mov x24, x0
+0x0036d784      c0008152       mov w0, 0x806
+0x0036d788      79690094       bl fcn.00387d6c
+0x0036d78c      e30300aa       mov x3, x0
+0x0036d790      e00313aa       mov x0, x19
+0x0036d794      e10317aa       mov x1, x23
+0x0036d798      e20318aa       mov x2, x24
+0x0036d79c      faabf797       bl fcn.00158784
+0x0036d7a0      f80300aa       mov x24, x0
+0x0036d7a4      a00000b4       cbz x0, 0x36d7b8
+0x0036d7a8      e00313aa       mov x0, x19
+0x0036d7ac      09a9f797       bl fcn.00157bd0
+0x0036d7b0      1f1c0072       tst w0, 0xff
+0x0036d7b4      80000054       b.eq 0x36d7c4
+; CODE XREF from fcn.0036d5d4 @ 0x36d7a4(x)
+0x0036d7b8      e00313aa       mov x0, x19
+0x0036d7bc      09a9f797       bl fcn.00157be0
+0x0036d7c0      a7ffff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d7b4(x)
+0x0036d7c4      e0230091       add x0, sp, 8
+0x0036d7c8      e10318aa       mov x1, x24
+0x0036d7cc      09a9f797       bl fcn.00157bf0
+0x0036d7d0      00088f52       mov w0, 0x7840                          ; '@x'
+0x0036d7d4      77710094       bl fcn.00389db0
+0x0036d7d8      f90300aa       mov x25, x0
+0x0036d7dc      a00a8f52       mov w0, 0x7855                          ; 'Ux'
+0x0036d7e0      3b5c0094       bl fcn.003848cc
+0x0036d7e4      e30300aa       mov x3, x0
+0x0036d7e8      e00313aa       mov x0, x19
+0x0036d7ec      e10316aa       mov x1, x22
+0x0036d7f0      e20319aa       mov x2, x25
+0x0036d7f4      e40318aa       mov x4, x24
+0x0036d7f8      e5031f2a       mov w5, wzr
+0x0036d7fc      8ca8f797       bl fcn.00157a2c
+0x0036d800      f80300aa       mov x24, x0
+0x0036d804      a00000b4       cbz x0, 0x36d818
+0x0036d808      e00313aa       mov x0, x19
+0x0036d80c      f1a8f797       bl fcn.00157bd0
+0x0036d810      1f1c0072       tst w0, 0xff
+0x0036d814      80000054       b.eq 0x36d824
+; CODE XREF from fcn.0036d5d4 @ 0x36d804(x)
+0x0036d818      e00313aa       mov x0, x19
+0x0036d81c      f1a8f797       bl fcn.00157be0
+0x0036d820      8fffff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d814(x)
+0x0036d824      e0230091       add x0, sp, 8
+0x0036d828      e10318aa       mov x1, x24
+0x0036d82c      f1a8f797       bl fcn.00157bf0
+0x0036d830      80f18152       mov w0, 0xf8c
+0x0036d834      4b700094       bl fcn.00389960
+0x0036d838      f90300aa       mov x25, x0
+0x0036d83c      80068152       mov w0, 0x834
+0x0036d840      d05a0094       bl fcn.00384380
+0x0036d844      e30300aa       mov x3, x0
+0x0036d848      e00313aa       mov x0, x19
+0x0036d84c      e10317aa       mov x1, x23
+0x0036d850      e20319aa       mov x2, x25
+0x0036d854      ccabf797       bl fcn.00158784
+0x0036d858      f90300aa       mov x25, x0
+0x0036d85c      e00313aa       mov x0, x19
+0x0036d860      dca8f797       bl fcn.00157bd0
+0x0036d864      1f1c0072       tst w0, 0xff
+0x0036d868      80000054       b.eq 0x36d878
+0x0036d86c      e00313aa       mov x0, x19
+0x0036d870      dca8f797       bl fcn.00157be0
+0x0036d874      7affff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d868(x)
+0x0036d878      80d68152       mov w0, 0xeb4
+0x0036d87c      ea6b0094       bl fcn.00388824
+0x0036d880      fa0300aa       mov x26, x0
+0x0036d884      80068152       mov w0, 0x834
+0x0036d888      be5a0094       bl fcn.00384380
+0x0036d88c      e30300aa       mov x3, x0
+0x0036d890      e00313aa       mov x0, x19
+0x0036d894      e10318aa       mov x1, x24
+0x0036d898      e2031aaa       mov x2, x26
+0x0036d89c      baabf797       bl fcn.00158784
+0x0036d8a0      fa0300aa       mov x26, x0
+0x0036d8a4      e00313aa       mov x0, x19
+0x0036d8a8      caa8f797       bl fcn.00157bd0
+0x0036d8ac      1f1c0072       tst w0, 0xff
+0x0036d8b0      80000054       b.eq 0x36d8c0
+0x0036d8b4      e00313aa       mov x0, x19
+0x0036d8b8      caa8f797       bl fcn.00157be0
+0x0036d8bc      68ffff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d8b0(x)
+0x0036d8c0      c0f38152       mov w0, 0xf9e
+0x0036d8c4      00750094       bl fcn.0038acc4
+0x0036d8c8      fb0300aa       mov x27, x0
+0x0036d8cc      80068152       mov w0, 0x834
+0x0036d8d0      ac5a0094       bl fcn.00384380
+0x0036d8d4      e30300aa       mov x3, x0
+0x0036d8d8      e00313aa       mov x0, x19
+0x0036d8dc      e10317aa       mov x1, x23
+0x0036d8e0      e2031baa       mov x2, x27
+0x0036d8e4      0eadf797       bl fcn.00158d1c
+0x0036d8e8      fb0300aa       mov x27, x0
+0x0036d8ec      e00313aa       mov x0, x19
+0x0036d8f0      b8a8f797       bl fcn.00157bd0
+0x0036d8f4      1f1c0072       tst w0, 0xff
+0x0036d8f8      80000054       b.eq 0x36d908
+0x0036d8fc      e00313aa       mov x0, x19
+0x0036d900      b8a8f797       bl fcn.00157be0
+0x0036d904      56ffff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d8f8(x)
+0x0036d908      a0f68152       mov w0, 0xfb5
+0x0036d90c      39600094       bl fcn.003859f0
+0x0036d910      fc0300aa       mov x28, x0
+0x0036d914      80068152       mov w0, 0x834
+0x0036d918      9a5a0094       bl fcn.00384380
+0x0036d91c      e30300aa       mov x3, x0
+0x0036d920      e00313aa       mov x0, x19
+0x0036d924      e10317aa       mov x1, x23
+0x0036d928      e2031caa       mov x2, x28

@@ -1,0 +1,120 @@
+0x0036d92c      fcacf797       bl fcn.00158d1c
+0x0036d930      f70300aa       mov x23, x0
+0x0036d934      e00313aa       mov x0, x19
+; CODE XREF from str.jv_t @ +0x2e(x)
+0x0036d938      a6a8f797       bl fcn.00157bd0
+0x0036d93c      1f1c0072       tst w0, 0xff
+0x0036d940      80000054       b.eq 0x36d950
+0x0036d944      e00313aa       mov x0, x19
+0x0036d948      a6a8f797       bl fcn.00157be0
+0x0036d94c      44ffff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d940(x)
+0x0036d950      c0da8152       mov w0, 0xed6
+0x0036d954      dc740094       bl fcn.0038acc4
+0x0036d958      fc0300aa       mov x28, x0
+0x0036d95c      80068152       mov w0, 0x834
+0x0036d960      885a0094       bl fcn.00384380
+0x0036d964      e30300aa       mov x3, x0
+0x0036d968      e00313aa       mov x0, x19
+0x0036d96c      e10318aa       mov x1, x24
+0x0036d970      e2031caa       mov x2, x28
+0x0036d974      eaacf797       bl fcn.00158d1c
+0x0036d978      f80300aa       mov x24, x0
+0x0036d97c      e00313aa       mov x0, x19
+0x0036d980      94a8f797       bl fcn.00157bd0
+0x0036d984      1f1c0072       tst w0, 0xff
+0x0036d988      80000054       b.eq 0x36d998
+0x0036d98c      e00313aa       mov x0, x19
+0x0036d990      94a8f797       bl fcn.00157be0
+0x0036d994      32ffff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d988(x)
+0x0036d998      6803190a       and w8, w27, w25
+0x0036d99c      1f01176b       cmp w8, w23
+0x0036d9a0      e1e5ff54       b.ne 0x36d65c
+0x0036d9a4      1f031a6a       tst w24, w26
+0x0036d9a8      a0e5ff54       b.eq 0x36d65c
+0x0036d9ac      80f98152       mov w0, 0xfcc
+0x0036d9b0      3e660094       bl fcn.003872a8
+0x0036d9b4      f70300aa       mov x23, x0
+0x0036d9b8      40fc8152       mov w0, 0xfe2
+0x0036d9bc      236c0094       bl fcn.00388a48
+0x0036d9c0      e30300aa       mov x3, x0
+0x0036d9c4      e00313aa       mov x0, x19
+0x0036d9c8      e10314aa       mov x1, x20
+0x0036d9cc      e20317aa       mov x2, x23
+0x0036d9d0      e40315aa       mov x4, x21
+0x0036d9d4      16a8f797       bl fcn.00157a2c
+0x0036d9d8      f40300aa       mov x20, x0
+0x0036d9dc      e00313aa       mov x0, x19
+0x0036d9e0      7ca8f797       bl fcn.00157bd0
+0x0036d9e4      1f1c0072       tst w0, 0xff
+0x0036d9e8      80000054       b.eq 0x36d9f8
+0x0036d9ec      e00313aa       mov x0, x19
+0x0036d9f0      7ca8f797       bl fcn.00157be0
+0x0036d9f4      1affff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36d9e8(x)
+0x0036d9f8      40ff8152       mov w0, 0xffa
+0x0036d9fc      8b720094       bl fcn.0038a428
+0x0036da00      f50300aa       mov x21, x0
+0x0036da04      80068152       mov w0, 0x834
+0x0036da08      5e5a0094       bl fcn.00384380
+0x0036da0c      e30300aa       mov x3, x0
+0x0036da10      e00313aa       mov x0, x19
+0x0036da14      e10316aa       mov x1, x22
+0x0036da18      e20315aa       mov x2, x21
+0x0036da1c      c0acf797       bl fcn.00158d1c
+0x0036da20      f50300aa       mov x21, x0
+0x0036da24      e00313aa       mov x0, x19
+0x0036da28      6aa8f797       bl fcn.00157bd0
+0x0036da2c      1f1c0072       tst w0, 0xff
+0x0036da30      80000054       b.eq 0x36da40
+0x0036da34      e00313aa       mov x0, x19
+0x0036da38      6aa8f797       bl fcn.00157be0
+0x0036da3c      08ffff17       b 0x36d65c
+; CODE XREF from fcn.0036d5d4 @ 0x36da30(x)
+0x0036da40      9f02156b       cmp w20, w21
+0x0036da44      c1e0ff54       b.ne 0x36d65c
+0x0036da48      47ffff17       b 0x36d764
+=== fcn.0036d338 (备用校验) ===
+  ; CALL XREF from fcn.0036dab8 @ 0x36dbb8(x)
+608: fcn.0036d338 (int64_t arg1, int64_t arg2, int64_t arg3, int64_t arg4, int64_t arg_1b0h);
+`- args(x0, x1, x2, x3, sp[0x1b0..0x1b0]) vars(20:sp[0x8..0x1b0])
+0x0036d338      ffc306d1       sub sp, sp, 0x1b0
+0x0036d33c      fc6716a9       stp x28, x25, [var_160h]
+0x0036d340      f85f17a9       stp x24, x23, [var_170h]
+0x0036d344      f65718a9       stp x22, x21, [var_180h]
+0x0036d348      f44f19a9       stp x20, x19, [var_190h]
+0x0036d34c      fd7b1aa9       stp x29, x30, [var_1a0h]
+0x0036d350      fd830691       add x29, sp, 0x1a0
+0x0036d354      a30500b4       cbz x3, 0x36d408
+0x0036d358      68004039       ldrb w8, [x3]                           ; arg4
+0x0036d35c      f60303aa       mov x22, x3                             ; arg4
+0x0036d360      48050034       cbz w8, 0x36d408
+0x0036d364      f30301aa       mov x19, x1                             ; arg2
+0x0036d368      f8031f2a       mov w24, wzr                            ; arg1
+0x0036d36c      010700b4       cbz x1, 0x36d44c
+0x0036d370      f40302aa       mov x20, x2                             ; arg3
+0x0036d374      c20600b4       cbz x2, 0x36d44c
+0x0036d378      a06301d1       sub x0, x29, 0x58
+0x0036d37c      e10313aa       mov x1, x19
+0x0036d380      e2031faa       mov x2, xzr
+0x0036d384      e3031f2a       mov w3, wzr
+0x0036d388      e4031f2a       mov w4, wzr
+0x0036d38c      a7b0f797       bl fcn.00159628
+0x0036d390      e0230191       add x0, sp, 0x48                        ; void *s
+0x0036d394      e21f8052       mov w2, 0xff
+0x0036d398      e1031f2a       mov w1, wzr
+0x0036d39c      915af597       bl sym.imp.memset                       ; void *memset(void *s, int c, size_t n)
+0x0036d3a0      e0049452       mov w0, 0xa027
+0x0036d3a4      8d760094       bl fcn.0038add8
+0x0036d3a8      e20300aa       mov x2, x0
+0x0036d3ac      e0230191       add x0, sp, 0x48
+0x0036d3b0      e11f8052       mov w1, 0xff
+0x0036d3b4      e30316aa       mov x3, x22
+0x0036d3b8      4777ff97       bl fcn.0034b0d4
+0x0036d3bc      05100094       bl fcn.003713d0
+0x0036d3c0      e1230191       add x1, sp, 0x48
+0x0036d3c4      64100094       bl fcn.00371554
+0x0036d3c8      00e4006f       movi v0.2d, 0000000000000000
+0x0036d3cc      e00301ad       stp q0, q0, [arg_1b0hx20]
+0x0036d3d0      e00300ad       stp q0, q0, [sp]

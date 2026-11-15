@@ -1,0 +1,8 @@
+0x0036d580      b0ffff17       b 0x36d440
+; CODE XREF from fcn.0036d338 @ 0x36d550(x)
+0x0036d584      e00313aa       mov x0, x19
+0x0036d588      96a9f797       bl fcn.00157be0
+0x0036d58c      adffff17       b 0x36d440
+; CODE XREF from fcn.0036d338 @ 0x36d558(x)
+0x0036d590      38008052       mov w24, 1
+0x0036d594      acffff17       b 0x36d444
