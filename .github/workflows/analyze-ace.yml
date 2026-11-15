@@ -21,80 +21,65 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round19 最上游 fcn.000fcf0c
+      - name: round20 加密表与 key 表
         run: |
-          mkdir -p out19
+          mkdir -p out20
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              pdf @ 0xfcf0c;
-            " "$F" > /tmp/r19a.txt 2>/dev/null || true
-            wc -l /tmp/r19a.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r19a.txt out19/top_
+              echo === fcn.00381dc4 (table A) ===;
+              pdf @ 0x381dc4;
+              echo === fcn.00381dd0 (table B) ===;
+              pdf @ 0x381dd0;
+            " "$F" > out20/tables.txt 2>/dev/null || true
+            wc -l out20/tables.txt 2>/dev/null || true
+            cat out20/tables.txt
           fi
 
-      - name: round19 检查函数 1
+      - name: round20 kill 触发面
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.00389738 ===;
-              pdf @ 0x389738;
-            " "$F" > /tmp/r19b.txt 2>/dev/null || true
-            wc -l /tmp/r19b.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r19b.txt out19/chk1_
+              echo === xref fcn.00347f54 (kill) ===;
+              axt @ 0x347f54;
+            " "$F" > out20/kill_xrefs.txt 2>/dev/null || true
+            cat out20/kill_xrefs.txt
           fi
 
-      - name: round19 检查函数 2
+      - name: round20 解密表数据 dump
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
-            r2 -q -e scr.color=false -e asm.lines=false -c "
-              aaa;
-              echo === fcn.0038a764 ===;
-              pdf @ 0x38a764;
-            " "$F" > /tmp/r19c.txt 2>/dev/null || true
-            wc -l /tmp/r19c.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r19c.txt out19/chk2_
-          fi
-
-      - name: round19 上游 xref 与链表消费
-        run: |
-          F=ace/tp2.so
-          if [ -f "$F" ]; then
-            r2 -q -e scr.color=false -e asm.lines=false -c "
-              aaa;
-              echo === xref 0xfcf0c ===;
-              axt @ 0xfcf0c;
-              echo === xref 0xd463c ===;
-              axt @ 0xd463c;
-              echo === xref 0xfcb70 ===;
-              axt @ 0xfcb70;
-            " "$F" > out19/xrefs19.txt 2>/dev/null || true
-            cat out19/xrefs19.txt
+            {
+              echo "=== 尝试从 fcn.00381dc4 / 381dd0 里提取 adrp 目标 ==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn \
+                --start-address=0x381dc4 --stop-address=0x381e30 "$F" 2>/dev/null
+            } > out20/table_addrs.txt 2>&1
+            cat out20/table_addrs.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out19/ || true
-          du -sh out19/ || true
+          ls -l out20/ || true
+          du -sh out20/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis19
-          path: out19/
+          name: ace-analysis20
+          path: out20/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis19
-          cp out19/* ace/analysis19/ 2>/dev/null || true
+          mkdir -p ace/analysis20
+          cp out20/* ace/analysis20/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis19
-          git commit -m "ace analysis19: top-level caller + individual check functions" || echo "nothing to commit"
+          git add ace/analysis20
+          git commit -m "ace analysis20: crypto tables + kill trigger surface" || echo "nothing to commit"
           git push || echo "push skipped"
