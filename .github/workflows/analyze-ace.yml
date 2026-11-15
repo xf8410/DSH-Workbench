@@ -22,69 +22,67 @@ jobs:
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
           r2 -v || true
 
-      - name: round14 MD5/SHA256 IV 引用
+      - name: round15 精确定位 MD5 IV
         run: |
-          mkdir -p out14
+          mkdir -p out15
+          F=ace/tp2.so
+          if [ -f "$F" ]; then
+            {
+              echo "=== .rodata 中含 01234567 的行 ==="
+              aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -n "01234567" | head -10
+              echo ""
+              echo "=== .rodata 中含 89abcdef 的行 ==="
+              aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -n "89abcdef" | head -10
+              echo ""
+              echo "=== .rodata 中含 67e6096a 的行 ==="
+              aarch64-linux-gnu-objdump -s -j .rodata "$F" 2>/dev/null | grep -n "67e6096a" | head -10
+            } > out15/iv_lines.txt 2>&1
+            cat out15/iv_lines.txt
+          fi
+
+      - name: round15 fcn.0037b3xx 反汇编
+        run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === refs to 0x3e2f63 (MD5 IV) ===;
-              axt @ 0x3e2f63;
-              echo === refs to 0x3e2f6b (MD5 IV+8) ===;
-              axt @ 0x3e2f6b;
-              echo === refs to 0x3e33aa (SHA256 h0) ===;
-              axt @ 0x3e33aa;
-            " "$F" > out14/iv_refs.txt 2>/dev/null || true
-            cat out14/iv_refs.txt
+              echo === 0x37b300 起 ===;
+              pd 200 @ 0x37b300;
+            " "$F" > out15/fcn37b3.txt 2>/dev/null || true
+            wc -l out15/fcn37b3.txt 2>/dev/null || true
+            head -80 out15/fcn37b3.txt 2>/dev/null || true
           fi
 
-      - name: round14 IV 附近内容确认
+      - name: round15 shift/mix 指令特征（MD5 轮函数）
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             {
-              echo "=== 0x3e2f40..0x3e2fa0 ==="
-              aarch64-linux-gnu-objdump -s --start-address=0x3e2f40 --stop-address=0x3e2fa0 "$F" 2>/dev/null
-              echo ""
-              echo "=== 0x3e3380..0x3e3400 ==="
-              aarch64-linux-gnu-objdump -s --start-address=0x3e3380 --stop-address=0x3e3400 "$F" 2>/dev/null
-            } > out14/iv_dump.txt 2>&1
-            cat out14/iv_dump.txt
-          fi
-
-      - name: round14 hash 函数候选
-        run: |
-          F=ace/tp2.so
-          if [ -f "$F" ]; then
-            {
-              echo "=== 全 so 里引用 0x3e2f63 的指令（objdump 侧）==="
-              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null \
-                | grep -E "adrp\s+x[0-9]+, 3e2000|add\s+x[0-9]+, x[0-9]+, #0xf6[0-9a-f]" \
-                | head -30
-            } > out14/iv_objdump.txt 2>&1
-            cat out14/iv_objdump.txt
+              echo "=== 全 so 中 eor+ror/add 密集区域（MD5 轮函数特征）==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x37b000 --stop-address=0x37c000 "$F" 2>/dev/null | head -150
+            } > out15/md5rounds.txt 2>&1
+            head -40 out15/md5rounds.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out14/ || true
-          du -sh out14/ || true
+          ls -l out15/ || true
+          du -sh out15/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis14
-          path: out14/
+          name: ace-analysis15
+          path: out15/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis14
-          cp out14/* ace/analysis14/ 2>/dev/null || true
+          mkdir -p ace/analysis15
+          cp out15/* ace/analysis15/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis14
-          git commit -m "ace analysis14: MD5/SHA256 IV references" || echo "nothing to commit"
+          git add ace/analysis15
+          git commit -m "ace analysis15: exact MD5 IV location + fcn.0037b3xx" || echo "nothing to commit"
           git push || echo "push skipped"
