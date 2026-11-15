@@ -1,0 +1,60 @@
+=== fcn.003868f4 区间内所有 bl 与立即数 ===
+  386904:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  38690c:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  386950:	mov	w17, #0x23                  	// #35
+  38697c:	mov	w13, #0x1                   	// #1
+  3869a0:	mov	w10, #0xff                  	// #255
+  3869ec:	bl	347f50 <GetTssExportFunc2@@TERSAFE+0x27e46c>
+  3869f0:	mov	w1, #0x9                   	// #9
+  3869f4:	bl	347f54 <GetTssExportFunc2@@TERSAFE+0x27e470>
+  386a18:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  386a20:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  386a64:	mov	w17, #0x24                  	// #36
+  386a90:	mov	w13, #0x1                   	// #1
+  386ab4:	mov	w10, #0xff                  	// #255
+  386b00:	bl	347f50 <GetTssExportFunc2@@TERSAFE+0x27e46c>
+  386b04:	mov	w1, #0x9                   	// #9
+  386b08:	bl	347f54 <GetTssExportFunc2@@TERSAFE+0x27e470>
+  386b2c:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  386b34:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  386b78:	mov	w17, #0x25                  	// #37
+  386ba4:	mov	w13, #0x1                   	// #1
+  386bc8:	mov	w10, #0xff                  	// #255
+  386c14:	bl	347f50 <GetTssExportFunc2@@TERSAFE+0x27e46c>
+  386c18:	mov	w1, #0x9                   	// #9
+  386c1c:	bl	347f54 <GetTssExportFunc2@@TERSAFE+0x27e470>
+  386c40:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  386c48:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  386c8c:	mov	w17, #0x26                  	// #38
+  386cb8:	mov	w13, #0x1                   	// #1
+  386cdc:	mov	w10, #0xff                  	// #255
+  386d28:	bl	347f50 <GetTssExportFunc2@@TERSAFE+0x27e46c>
+  386d2c:	mov	w1, #0x9                   	// #9
+  386d30:	bl	347f54 <GetTssExportFunc2@@TERSAFE+0x27e470>
+  386d54:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  386d5c:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  386da0:	mov	w17, #0x27                  	// #39
+  386dcc:	mov	w13, #0x1                   	// #1
+  386df0:	mov	w10, #0xff                  	// #255
+  386e3c:	bl	347f50 <GetTssExportFunc2@@TERSAFE+0x27e46c>
+  386e40:	mov	w1, #0x9                   	// #9
+  386e44:	bl	347f54 <GetTssExportFunc2@@TERSAFE+0x27e470>
+  386e68:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  386e70:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  386eb4:	mov	w17, #0x28                  	// #40
+  386ee0:	mov	w13, #0x1                   	// #1
+  386f04:	mov	w10, #0xff                  	// #255
+  386f50:	bl	347f50 <GetTssExportFunc2@@TERSAFE+0x27e46c>
+  386f54:	mov	w1, #0x9                   	// #9
+  386f58:	bl	347f54 <GetTssExportFunc2@@TERSAFE+0x27e470>
+  386f7c:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  386f84:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  386fc8:	mov	w17, #0x29                  	// #41
+  386ff4:	mov	w13, #0x1                   	// #1
+  387018:	mov	w10, #0xff                  	// #255
+  387064:	bl	347f50 <GetTssExportFunc2@@TERSAFE+0x27e46c>
+  387068:	mov	w1, #0x9                   	// #9
+  38706c:	bl	347f54 <GetTssExportFunc2@@TERSAFE+0x27e470>
+  387090:	bl	381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>
+  387098:	bl	381dd0 <JNI_OnLoad@@TERSAFE+0x6c4>
+  3870dc:	mov	w17, #0x2a                  	// #42
