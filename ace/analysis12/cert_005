@@ -1,0 +1,110 @@
+0x00306d6c      1f01106b       cmp w8, w16
+0x00306d70      2a010054       b.ge 0x306d94
+0x00306d74      1f01136b       cmp w8, w19
+0x00306d78      a1eaff54       b.ne 0x306acc
+0x00306d7c      d5000014       b 0x3070d0
+; CODE XREF from fcn.003065dc @ 0x306d1c(x)
+0x00306d80      1f011a6b       cmp w8, w26
+0x00306d84      aa310054       b.ge 0x3073b8
+0x00306d88      1f010c6b       cmp w8, w12
+0x00306d8c      01eaff54       b.ne 0x306acc
+0x00306d90      98ffff17       b 0x306bf0
+; CODE XREF from fcn.003065dc @ 0x306d70(x)
+0x00306d94      49fa9a52       mov w9, 0xd7d2
+0x00306d98      093aac72       movk w9, 0x61d0, lsl 16
+0x00306d9c      1f01096b       cmp w8, w9
+0x00306da0      4a040054       b.ge 0x306e28
+0x00306da4      1f01106b       cmp w8, w16
+0x00306da8      21e9ff54       b.ne 0x306acc
+0x00306dac      a2010014       b 0x307434
+; CODE XREF from fcn.003065dc @ 0x3074d4(x)
+0x00306db0      acb09852       mov w12, 0xc585
+0x00306db4      edd78852       mov w13, 0x46bf
+0x00306db8      eeee9952       mov w14, 0xcf77
+0x00306dbc      1f01156b       cmp w8, w21
+0x00306dc0      ac5abc72       movk w12, 0xe2d5, lsl 16
+0x00306dc4      0decba72       movk w13, 0xd760, lsl 16
+0x00306dc8      eec1b672       movk w14, 0xb60f, lsl 16
+0x00306dcc      01e8ff54       b.ne 0x306acc
+; CODE XREFS from fcn.003065dc @ 0x306838(x), 0x306bb8(x)
+0x00306dd0      a10356f8       ldur x1, [x29, -0xa0]
+0x00306dd4      b0040094       bl fcn.00308094
+0x00306dd8      881d9752       mov w8, 0xb8ec
+0x00306ddc      493e8b52       mov w9, 0x59f2
+0x00306de0      ca239c52       mov w10, 0xe11e
+0x00306de4      2b569b52       mov w11, 0xdab1
+0x00306de8      48fab972       movk w8, 0xcfd2, lsl 16
+0x00306dec      0906bd72       movk w9, 0xe830, lsl 16
+0x00306df0      1f000072       tst w0, 1
+0x00306df4      4afca472       movk w10, 0x27e2, lsl 16
+0x00306df8      2becb272       movk w11, 0x9761, lsl 16
+0x00306dfc      abfeff17       b 0x3068a8
+; CODE XREF from fcn.003065dc @ 0x307400(x)
+0x00306e00      acb09852       mov w12, 0xc585
+0x00306e04      edd78852       mov w13, 0x46bf
+0x00306e08      eeee9952       mov w14, 0xcf77
+0x00306e0c      efea9552       mov w15, 0xaf57
+0x00306e10      b13e8e52       mov w17, 0x71f5
+0x00306e14      ac5abc72       movk w12, 0xe2d5, lsl 16
+0x00306e18      0decba72       movk w13, 0xd760, lsl 16
+0x00306e1c      eec1b672       movk w14, 0xb60f, lsl 16
+0x00306e20      6fa2ae72       movk w15, 0x7513, lsl 16                ; '\x13u'
+0x00306e24      3170a972       movk w17, 0x4b81, lsl 16
+; CODE XREFS from fcn.003065dc @ 0x3067d8(x), 0x306da0(x)
+0x00306e28      21e5ff54       b.ne 0x306acc
+0x00306e2c      ad570094       bl fcn.0031cce0
+0x00306e30      683a8252       mov w8, 0x11d3
+0x00306e34      49ba9852       mov w9, 0xc5d2
+0x00306e38      2a809a52       mov w10, 0xd401
+0x00306e3c      abbe9d52       mov w11, 0xedf5
+0x00306e40      483ebe72       movk w8, 0xf1f2, lsl 16
+0x00306e44      697fb172       movk w9, 0x8bfb, lsl 16
+0x00306e48      1f0000f1       cmp x0, 0
+0x00306e4c      2a41af72       movk w10, 0x7a09, lsl 16
+0x00306e50      8bcfb772       movk w11, 0xbe7c, lsl 16
+; CODE XREFS from fcn.003065dc @ 0x3069dc(x), 0x307610(x)
+0x00306e54      a9a32d29       stp w9, w8, [x29, -0x94]
+0x00306e58      68018a1a       csel w8, w11, w10, eq
+; CODE XREFS from fcn.003065dc @ 0x307370(x), 0x307458(x), 0x3076b0(x)
+0x00306e5c      a84317b8       stur w8, [x29, -0x8c]
+; CODE XREF from fcn.003065dc @ 0x306a30(x)
+0x00306e60      a84357b8       ldur w8, [x29, -0x8c]
+0x00306e64      1f01146b       cmp w8, w20
+0x00306e68      6a040054       b.ge 0x306ef4
+0x00306e6c      1f01196b       cmp w8, w25
+0x00306e70      8a0c0054       b.ge 0x307000
+0x00306e74      efea9552       mov w15, 0xaf57
+0x00306e78      b09e9d52       mov w16, 0xecf5
+0x00306e7c      b13e8e52       mov w17, 0x71f5
+0x00306e80      1f01186b       cmp w8, w24
+0x00306e84      6fa2ae72       movk w15, 0x7513, lsl 16                ; '\x13u'
+0x00306e88      30c9ab72       movk w16, 0x5e49, lsl 16                ; 'I^'
+0x00306e8c      3170a972       movk w17, 0x4b81, lsl 16
+0x00306e90      ca140054       b.ge 0x307128
+0x00306e94      eeee9952       mov w14, 0xcf77
+0x00306e98      eec1b672       movk w14, 0xb60f, lsl 16
+0x00306e9c      1f010e6b       cmp w8, w14
+0x00306ea0      6a230054       b.ge 0x30730c
+0x00306ea4      29569b52       mov w9, 0xdab1
+0x00306ea8      29ecb272       movk w9, 0x9761, lsl 16
+0x00306eac      acb09852       mov w12, 0xc585
+0x00306eb0      edd78852       mov w13, 0x46bf
+0x00306eb4      1f01096b       cmp w8, w9
+0x00306eb8      ac5abc72       movk w12, 0xe2d5, lsl 16
+0x00306ebc      0decba72       movk w13, 0xd760, lsl 16
+0x00306ec0      61e0ff54       b.ne 0x306acc
+; CODE XREFS from fcn.003065dc @ 0x3066c0(x), 0x306ca0(x)
+0x00306ec4      a38359f8       ldur x3, [x29, -0x68]                   ; int64_t arg4
+0x00306ec8      a18355f8       ldur x1, [x29, -0xa8]                   ; int64_t arg2
+0x00306ecc      a28354f8       ldur x2, [x29, -0xb8]                   ; int64_t arg3
+0x00306ed0      02070094       bl fcn.00308ad8
+0x00306ed4      e81e9f52       mov w8, 0xf8f7
+0x00306ed8      c9009152       mov w9, 0x8806
+0x00306edc      2a1e8e52       mov w10, 0x70f1
+0x00306ee0      885aa872       movk w8, 0x42d4, lsl 16
+0x00306ee4      e903b472       movk w9, 0xa01f, lsl 16
+0x00306ee8      1f000072       tst w0, 1
+0x00306eec      6a59bc72       movk w10, 0xe2cb, lsl 16
+0x00306ef0      6cfeff17       b 0x3068a0
+; CODE XREF from fcn.003065dc @ 0x306e68(x)
+0x00306ef4      1f01136b       cmp w8, w19

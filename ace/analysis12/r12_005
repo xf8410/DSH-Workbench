@@ -1,0 +1,110 @@
+0x001160f8      3f0300f1       cmp x25, 0
+0x001160fc      08018b1a       csel w8, w8, w11, eq
+0x00116100      085b68f8       ldr x8, [x24, w8, uxtw 3]
+0x00116104      a92b3529       stp w9, w10, [x29, -0x58]
+0x00116108      00011fd6       br x8
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2c3bac(r), 0x2cc4ec(r), 0x2d2ec8(r), 0x2d5ca8(r), 0x2d8c80(r)
+0x0011610c      1a718852       mov w26, 0x4388
+0x00116110      36f28952       mov w22, 0x4f91
+0x00116114      bb9c8c52       mov w27, 0x64e5
+0x00116118      7cb48d52       mov w28, 0x6da3
+0x0011611c      baf3b972       movk w26, 0xcf9d, lsl 16
+0x00116120      f636b872       movk w22, 0xc1b7, lsl 16
+0x00116124      7b90ac72       movk w27, 0x6483, lsl 16
+0x00116128      fc03ac72       movk w28, 0x601f, lsl 16                ; '\x1f`'
+; CODE XREF from fcn.00116034 @ 0x116260(x)
+0x0011612c      34430491       add x20, x25, 0x110
+0x00116130      a1c301d1       sub x1, x29, 0x70                       ; int64_t arg2
+0x00116134      e20314aa       mov x2, x20                             ; int64_t arg3
+0x00116138      eefdff97       bl fcn.001158f0
+; DATA XREF from case.0x2d0e84.1685 @ 0x2b7c54(r)
+0x0011613c      e0070037       tbnz w0, 0, 0x116238
+; CALL XREFS from fcn.0031d654 @ 0x31d758(r), 0x31d818(r), 0x31d81c(x)
+; CALL XREFS from fcn.0031d654 @ +0x1fc(r), +0x204(r)
+0x00116140      35430091       add x21, x25, 0x10
+0x00116144      73040036       tbz w19, 0, 0x1161d0
+; XREFS: DATA 0x002bf024  DATA 0x002c540c  DATA 0x002d91ec  
+; XREFS: DATA 0x002d92e0  DATA 0x002daa68  DATA 0x002dba64  
+; XREFS: DATA 0x002dbc20  DATA 0x002dbe00  DATA 0x002dc474  
+0x00116148      3de40094       bl fcn.0014f23c
+; XREFS: DATA 0x002b8cd4  DATA 0x002bde64  DATA 0x002bde70  
+; XREFS: DATA 0x002c3f0c  DATA 0x002c4854  DATA 0x002cb890  
+; XREFS: DATA 0x002ccd68  DATA 0x002cd0e4  DATA 0x002cd0ec  
+; XREFS: DATA 0x002cd670  DATA 0x002ce89c  DATA 0x002cf1f8  
+; XREFS: DATA 0x002cf570  DATA 0x002cf8a4  DATA 0x002cf960  
+; XREFS: DATA 0x002d0288  DATA 0x002d2f00  
+0x0011614c      e2430191       add x2, sp, 0x50
+; XREFS: DATA 0x002bb714  DATA 0x002be094  DATA 0x002bf208  
+; XREFS: DATA 0x002c70c0  DATA 0x002c71b8  DATA 0x002c72d0  
+; XREFS: DATA 0x002c7588  DATA 0x002c793c  DATA 0x002c7cf8  
+; XREFS: DATA 0x002d8024  DATA 0x002d86a8  DATA 0x002d9790  
+0x00116150      23048052       mov w3, 0x21                            ; '!'
+; DATA XREF from case.0x2d0e84.1685 @ 0x2cced4(r)
+0x00116154      e10314aa       mov x1, x20
+; XREFS: DATA 0x002beb9c  DATA 0x002c4b10  DATA 0x002c5694  
+; XREFS: DATA 0x002c599c  DATA 0x002c65a0  DATA 0x002d567c  
+; XREFS: DATA 0x002d6508  DATA 0x002d697c  DATA 0x002d6a98  
+; XREFS: DATA 0x002d6b38  DATA 0x002d6d38  DATA 0x002d6fd4  
+0x00116158      5fe90094       bl fcn.001506d4
+; XREFS(26)
+0x0011615c      6ac08d52       mov w10, 0x6e03
+; XREFS(22)
+0x00116160      8aa3ae72       movk w10, 0x751c, lsl 16                ; '\x1cu'
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2d75c8(r), 0x2d7638(r)
+0x00116164      48a10011       add w8, w10, 0x28
+; XREFS(22)
+0x00116168      497b0011       add w9, w26, 0x1e
+0x0011616c      08010a4a       eor w8, w8, w10
+; XREFS(97)
+0x00116170      4a03094a       eor w10, w26, w9
+0x00116174      1f000071       cmp w0, 0
+; DATA XREF from case.0x2d0e84.1685 @ 0x2ca090(r)
+0x00116178      08018a1a       csel w8, w8, w10, eq
+0x0011617c      08db68f8       ldr x8, [x24, w8, sxtw 3]
+; DATA XREF from case.0x2d0e84.1685 @ 0x2c9e50(r)
+0x00116180      ba273529       stp w26, w9, [x29, -0x58]
+0x00116184      00011fd6       br x8
+; XREFS: DATA 0x0011617c  DATA 0x002cbd00  DATA 0x002cc0a8  
+; XREFS: DATA 0x003a29f4  DATA 0x003a2a40  DATA 0x003a2c1c  
+; XREFS: DATA 0x003a2d1c  DATA 0x003a2d20  DATA 0x003a2d30  
+0x00116188      2de40094       bl fcn.0014f23c
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2b8cc8(r), 0x2b8ce4(r), 0x2e9c70(r)
+0x0011618c      e2430191       add x2, sp, 0x50
+; XREFS(33)
+0x00116190      23048052       mov w3, 0x21                            ; '!'
+; XREFS(37)
+0x00116194      e10315aa       mov x1, x21
+0x00116198      4fe90094       bl fcn.001506d4
+; XREFS: DATA 0x002c166c  DATA 0x002c18a0  DATA 0x002c1ef4  
+; XREFS: DATA 0x002c20a0  DATA 0x002c20a4  DATA 0x002c247c  
+; XREFS: DATA 0x002c2480  DATA 0x002c29b4  DATA 0x002c3d5c  
+; XREFS: DATA 0x002c3d60  DATA 0x002c58fc  DATA 0x002c590c  
+; XREFS: DATA 0x002c83e4  DATA 0x002c83e8  DATA 0x002c96ec  
+0x0011619c      eb038552       mov w11, 0x281f                         ; '\x1f('
+; DATA XREF from case.0x2d0e84.1685 @ 0x2c1580(r)
+0x001161a0      0b05a772       movk w11, 0x3828, lsl 16                ; '(8'
+0x001161a4      c8a20011       add w8, w22, 0x28
+0x001161a8      69510011       add w9, w11, 0x14
+0x001161ac      0801164a       eor w8, w8, w22
+0x001161b0      2a010b4a       eor w10, w9, w11
+0x001161b4      1f000071       cmp w0, 0
+0x001161b8      08018a1a       csel w8, w8, w10, eq
+; DATA XREF from case.0x2d0e84.1685 @ 0x2d5900(r)
+0x001161bc      08db68f8       ldr x8, [x24, w8, sxtw 3]
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2c379c(r), 0x2c4ee8(r)
+0x001161c0      a92f3529       stp w9, w11, [x29, -0x58]
+0x001161c4      00011fd6       br x8
+; XREFS: DATA 0x002c4f84  DATA 0x002ca538  DATA 0x002cc8cc  
+; XREFS: DATA 0x002cc8ec  DATA 0x002cf238  DATA 0x002cf5ec  
+; XREFS: DATA 0x002d0068  DATA 0x002d236c  DATA 0x002d23fc  
+; XREFS: DATA 0x002d3de8  DATA 0x002d9fa4  DATA 0x002d9fc4  
+0x001161c8      e1430191       add x1, sp, 0x50
+; DATA XREF from case.0x2d0e84.1685 @ 0x2d5ea0(r)
+0x001161cc      02000014       b 0x1161d4
+; XREFS: CODE 0x00116144  DATA 0x001161bc  DATA 0x00116374  
+; XREFS: DATA 0x002c3cb0  DATA 0x002c3e40  DATA 0x002c49a0  
+; XREFS: DATA 0x002c49a8  DATA 0x002ca17c  DATA 0x002ccdec  
+; XREFS: DATA 0x002d0420  
+0x001161d0      e1031faa       mov x1, xzr
+; CODE XREF from fcn.00116034 @ 0x1161cc(x)
+0x001161d4      e00314aa       mov x0, x20

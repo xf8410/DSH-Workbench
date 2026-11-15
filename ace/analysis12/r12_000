@@ -1,0 +1,110 @@
+=== fcn.0012c190 (file md5) ===
+  ; CALL XREF from fcn.0012bdac @ 0x12be78(x)
+932: fcn.0012c190 (int64_t arg1, int64_t arg2, int64_t arg3, uint32_t arg4, int64_t arg5, int64_t arg6, int64_t arg_a0h);
+`- args(x0, x1, x2, x3, x4, x5, sp[0xa0..0xa0]) vars(23:sp[0x8..0xa0])
+0x0012c190      ff8302d1       sub sp, sp, 0xa0
+0x0012c194      fa6705a9       stp x26, x25, [var_50h]
+0x0012c198      f85f06a9       stp x24, x23, [var_60h]
+0x0012c19c      f65707a9       stp x22, x21, [var_70h]
+0x0012c1a0      f44f08a9       stp x20, x19, [var_80h]
+0x0012c1a4      fd7b09a9       stp x29, x30, [var_90h]
+0x0012c1a8      fd430291       add x29, sp, 0x90
+0x0012c1ac      89728152       mov w9, 0xb94
+0x0012c1b0      6b359f52       mov w11, 0xf9ab
+0x0012c1b4      68018052       mov w8, 0xb
+0x0012c1b8      a907a272       movk w9, 0x103d, lsl 16                 ; '=\x10'
+0x0012c1bc      8a028052       mov w10, 0x14
+0x0012c1c0      8b37b672       movk w11, 0xb1bc, lsl 16
+0x0012c1c4      2801082a       orr w8, w9, w8
+0x0012c1c8      6a010a2a       orr w10, w11, w10
+0x0012c1cc      7f0000f1       cmp x3, 0                               ; arg4
+0x0012c1d0      0801094a       eor w8, w8, w9
+0x0012c1d4      49010b4a       eor w9, w10, w11
+0x0012c1d8      da1c0090       adrp x26, 0x4c4000
+0x0012c1dc      0801891a       csel w8, w8, w9, eq
+0x0012c1e0      5ac30691       add x26, x26, 0x1b0
+0x0012c1e4      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c1e8      f30300aa       mov x19, x0                             ; arg1
+0x0012c1ec      aac31bb8       stur w10, [x29, -0x44]
+0x0012c1f0      eb4b00b9       str w11, [arg_a0hx48]
+0x0012c1f4      00008012       mov w0, -1
+0x0012c1f8      00011fd6       br x8
+; DATA XREF from fcn.0012c190 @ 0x12c1e4(r)
+0x0012c1fc      68004039       ldrb w8, [x3]                           ; arg4
+0x0012c200      e9bc9e52       mov w9, 0xf5e7
+0x0012c204      c920b372       movk w9, 0x9906, lsl 16
+0x0012c208      8ad49152       mov w10, 0x8ea4
+0x0012c20c      0a18a072       movk w10, 0xc0, lsl 16
+0x0012c210      2b150011       add w11, w9, 5
+0x0012c214      6901094a       eor w9, w11, w9
+0x0012c218      4b5d0011       add w11, w10, 0x17
+0x0012c21c      6c010a4a       eor w12, w11, w10
+0x0012c220      1f010071       cmp w8, 0
+0x0012c224      28018c1a       csel w8, w9, w12, eq
+0x0012c228      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c22c      f40303aa       mov x20, x3                             ; arg4
+0x0012c230      abc31bb8       stur w11, [x29, -0x44]
+0x0012c234      ea4b00b9       str w10, [arg_a0hx48]
+0x0012c238      00008012       mov w0, -1
+0x0012c23c      00011fd6       br x8
+; DATA XREF from fcn.0012c190 @ 0x12c228(r)
+0x0012c240      f603012a       mov w22, w1                             ; arg2
+0x0012c244      81008052       mov w1, 4
+0x0012c248      e00314aa       mov x0, x20
+0x0012c24c      f903052a       mov w25, w5                             ; arg6
+0x0012c250      f503042a       mov w21, w4                             ; arg5
+0x0012c254      f703022a       mov w23, w2                             ; arg3
+0x0012c258      a6760894       bl fcn.00349cf0
+0x0012c25c      88d28352       mov w8, 0x1e94
+0x0012c260      e95c8752       mov w9, 0x3ae7
+0x0012c264      489da872       movk w8, 0x44ea, lsl 16
+0x0012c268      4949a772       movk w9, 0x3a4a, lsl 16                 ; 'J:'
+0x0012c26c      0a190011       add w10, w8, 6
+0x0012c270      2b150011       add w11, w9, 5
+0x0012c274      4801084a       eor w8, w10, w8
+0x0012c278      6a01094a       eor w10, w11, w9
+0x0012c27c      1f000071       cmp w0, 0
+0x0012c280      08018a1a       csel w8, w8, w10, eq
+0x0012c284      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c288      a9c31bb8       stur w9, [x29, -0x44]
+0x0012c28c      eb4b00b9       str w11, [arg_a0hx48]
+0x0012c290      00008012       mov w0, -1
+0x0012c294      00011fd6       br x8
+0x0012c298      60420391       add x0, x19, 0xd0                       ; int64_t arg1
+0x0012c29c      e2a30091       add x2, sp, 0x28                        ; int64_t arg3
+0x0012c2a0      e10314aa       mov x1, x20                             ; void *arg2
+0x0012c2a4      ff7f03a9       stp xzr, xzr, [arg_a0hx30]
+0x0012c2a8      ff1700f9       str xzr, [var_28h]
+0x0012c2ac      ff4300b9       str wzr, [arg_a0hx40]
+0x0012c2b0      1d190994       bl fcn.00372724
+0x0012c2b4      68c18b52       mov w8, 0x5e0b                          ; '\v^'
+0x0012c2b8      2a229752       mov w10, 0xb911
+0x0012c2bc      e8e9b872       movk w8, 0xc74f, lsl 16
+0x0012c2c0      49018052       mov w9, 0xa
+0x0012c2c4      4a9ea072       movk w10, 0x4f2, lsl 16
+0x0012c2c8      0b310011       add w11, w8, 0xc
+0x0012c2cc      4901092a       orr w9, w10, w9
+0x0012c2d0      6801084a       eor w8, w11, w8
+0x0012c2d4      2b010a4a       eor w11, w9, w10
+0x0012c2d8      1f040071       cmp w0, 1
+0x0012c2dc      08818b1a       csel w8, w8, w11, hi
+0x0012c2e0      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c2e4      a9c31bb8       stur w9, [x29, -0x44]
+0x0012c2e8      ea4b00b9       str w10, [arg_a0hx48]
+0x0012c2ec      00008012       mov w0, -1
+0x0012c2f0      00011fd6       br x8
+0x0012c2f4      e82f40b9       ldr w8, [var_2ch]
+0x0012c2f8      49789052       mov w9, 0x83c2
+0x0012c2fc      8947bc72       movk w9, 0xe23c, lsl 16
+0x0012c300      aa8a9e52       mov w10, 0xf455
+0x0012c304      aa39aa72       movk w10, 0x51cd, lsl 16
+0x0012c308      2b091e32       orr w11, w9, 0x1c
+0x0012c30c      6901094a       eor w9, w11, w9
+0x0012c310      4b011b32       orr w11, w10, 0x20
+0x0012c314      6c010a4a       eor w12, w11, w10
+0x0012c318      1f010071       cmp w8, 0
+0x0012c31c      28018c1a       csel w8, w9, w12, eq
+0x0012c320      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c324      e0031f2a       mov w0, wzr
+0x0012c328      aac31bb8       stur w10, [x29, -0x44]
+0x0012c32c      eb4b00b9       str w11, [arg_a0hx48]

@@ -1,0 +1,11 @@
+0x003076f4      23008052       mov w3, 1
+0x003076f8      e20300aa       mov x2, x0
+0x003076fc      00013fd6       blr x8
+0x00307700      28718552       mov w8, 0x2b89
+0x00307704      e9529952       mov w9, 0xca97
+0x00307708      ca239c52       mov w10, 0xe11e
+0x0030770c      689bbd72       movk w8, 0xecdb, lsl 16
+0x00307710      2967b972       movk w9, 0xcb39, lsl 16
+; CODE XREF from fcn.003065dc @ 0x307658(x)
+0x00307714      4afca472       movk w10, 0x27e2, lsl 16
+0x00307718      c4fcff17       b 0x306a28

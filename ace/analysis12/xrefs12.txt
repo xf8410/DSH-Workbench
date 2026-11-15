@@ -1,0 +1,6 @@
+=== 0x3c4670 crc:t ===
+fcn.0011f1a4 0x11f298 [STRN:r--] add x1, x1, str.__s__size:_d__crc:_08x__t:_s
+=== 0x3c36aa sig custom ===
+fcn.0010582c 0x105ae0 [STRN:r--] add x1, x1, str.sig_custom__name:_s__len:_d__crc:_08x
+=== 0x3c4acc tcj_protect ===
+=== 0x3c4a5e pub_tcj ===

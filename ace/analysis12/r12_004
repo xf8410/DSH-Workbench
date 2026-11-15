@@ -1,0 +1,110 @@
+0x001064ec      e11500b0       adrp x1, 0x3c3000
+0x001064f0      21901b91       add x1, x1, 0x6e4                       ; 0x3c36e4 ; "ver:%s app_ver:%s code_size:%s crc:%s"
+0x001064f4      e20317aa       mov x2, x23
+0x001064f8      e3031baa       mov x3, x27
+0x001064fc      e40319aa       mov x4, x25
+0x00106500      e50318aa       mov x5, x24
+0x00106504      31f20994       bl fcn.00382dc8
+; CODE XREF from fcn.001063dc @ 0x1064e4(x)
+0x00106508      b6000037       tbnz w22, 0, 0x10651c
+0x0010650c      e00317aa       mov x0, x23
+0x00106510      e1031baa       mov x1, x27
+0x00106514      8e0f0994       bl fcn.0034a34c
+0x00106518      80010035       cbnz w0, 0x106548
+; CODE XREF from fcn.001063dc @ 0x106508(x)
+0x0010651c      e00315aa       mov x0, x21                             ; int64_t arg1
+0x00106520      e1031aaa       mov x1, x26                             ; int64_t arg2
+0x00106524      e20318aa       mov x2, x24                             ; int64_t arg3
+0x00106528      10000094       bl fcn.00106568
+0x0010652c      e0000036       tbz w0, 0, 0x106548
+0x00106530      e00315aa       mov x0, x21
+0x00106534      e10314aa       mov x1, x20
+0x00106538      e20313aa       mov x2, x19
+0x0010653c      2bf8ff97       bl fcn.001045e8
+0x00106540      e0031f2a       mov w0, wzr
+0x00106544      02000014       b 0x10654c
+; XREFS: CODE 0x00106464  CODE 0x001064bc  CODE 0x001064c8  
+; XREFS: CODE 0x001064d4  CODE 0x00106518  CODE 0x0010652c  
+0x00106548      00008012       mov w0, -1
+; XREFS: CODE 0x0010647c  CODE 0x00106480  CODE 0x00106494  
+; XREFS: CODE 0x00106498  CODE 0x001064ac  CODE 0x001064b0  
+; XREFS: CODE 0x00106544  
+0x0010654c      fd7b45a9       ldp x29, x30, [var_50h]
+0x00106550      f44f44a9       ldp x20, x19, [var_40h]
+0x00106554      f65743a9       ldp x22, x21, [var_30h]
+0x00106558      f85f42a9       ldp x24, x23, [var_20h]
+0x0010655c      fa6741a9       ldp x26, x25, [var_10h]
+0x00106560      fb0746f8       ldr x27, [sp], 0x60
+0x00106564      c0035fd6       ret
+=== fcn.00116034 (ano_cert_md5) ===
+  ; XREFS: CALL 0x00115ac4  DATA 0x002b7b60  DATA 0x002b7b70  
+  ; XREFS: DATA 0x002b7b84  DATA 0x002b7b8c  DATA 0x002bfbd8  
+  ; XREFS: DATA 0x002d9504  DATA 0x002d950c  DATA 0x002d95b4  
+  ; XREFS: DATA 0x002d95bc  
+560: fcn.00116034 (int64_t arg1);
+`- args(x1) vars(18:sp[0x8..0xb0])
+0x00116034      ff0304d1       sub sp, sp, 0x100
+0x00116038      fc6f0aa9       stp x28, x27, [var_a0h]
+; DATA XREF from case.0x2d0e84.1685 @ 0x2b7b64(r)
+0x0011603c      fa670ba9       stp x26, x25, [var_b0h]
+0x00116040      f85f0ca9       stp x24, x23, [var_c0h]
+; DATA XREF from case.0x2d0e84.1685 @ 0x2b7b74(r)
+0x00116044      f6570da9       stp x22, x21, [var_d0h]
+0x00116048      f44f0ea9       stp x20, x19, [var_e0h]
+; DATA XREF from case.0x2d0e84.1685 @ 0x2b7b88(r)
+0x0011604c      fd7b0fa9       stp x29, x30, [var_f0h]
+0x00116050      fdc30391       add x29, sp, 0xf0
+; DATA XREF from case.0x2d0e84.1685 @ 0x2b7b94(r)
+0x00116054      f40301aa       mov x20, x1                             ; arg2
+0x00116058      bfff39a9       stp xzr, xzr, [x29, -0x68]
+0x0011605c      bf0319f8       stur xzr, [x29, -0x70]
+0x00116060      fc790094       bl fcn.00134850
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2b7ba4(r), 0x2b7bac(r)
+0x00116064      611500b0       adrp x1, 0x3c3000
+0x00116068      21982e91       add x1, x1, 0xba6                       ; 0x3c3ba6 ; "ano_cert_md5"
+0x0011606c      22008052       mov w2, 1
+0x00116070      a67a0094       bl fcn.00134b08
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2b80c4(r), 0x2c52e4(r), 0x2c53dc(r), 0x2c53e4(r)
+0x00116074      f303002a       mov w19, w0
+0x00116078      00e4006f       movi v0.2d, 0000000000000000
+0x0011607c      ffc30139       strb wzr, [var_0h_2]
+0x00116080      e08302ad       stp q0, q0, [var_50h]
+0x00116084      f3790094       bl fcn.00134850
+; XREFS: DATA 0x002ba924  DATA 0x002c0c24  DATA 0x002c5668  
+; XREFS: DATA 0x002c5b8c  DATA 0x002c6574  DATA 0x002c7740  
+; XREFS: DATA 0x002c96d8  DATA 0x002cc0ec  DATA 0x002cce40  
+0x00116088      a0c301d1       sub x0, x29, 0x70                       ; int64_t arg1
+0x0011608c      43a10094       bl fcn.0013e598
+; XREFS(50)
+0x00116090      48368752       mov w8, 0x39b2
+0x00116094      c9908c52       mov w9, 0x6486
+; DATA XREF from case.0x2d0e84.1685 @ 0x2c26c0(r)
+0x00116098      e896ab72       movk w8, 0x5cb7, lsl 16
+0x0011609c      c940b372       movk w9, 0x9a06, lsl 16
+0x001160a0      0a051e32       orr w10, w8, 0xc
+0x001160a4      2b710011       add w11, w9, 0x1c
+0x001160a8      1f000071       cmp w0, 0
+0x001160ac      4801084a       eor w8, w10, w8
+0x001160b0      6a01094a       eor w10, w11, w9
+0x001160b4      581d00b0       adrp x24, 0x4bf000
+0x001160b8      08018a1a       csel w8, w8, w10, eq
+0x001160bc      18c33791       add x24, x24, 0xdf0
+0x001160c0      085b68f8       ldr x8, [x24, w8, uxtw 3]
+0x001160c4      a92f3529       stp w9, w11, [x29, -0x58]
+0x001160c8      00011fd6       br x8
+; DATA XREF from fcn.00116034 @ 0x1160c0(r)
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2b69d8(r), 0x2be208(r)
+0x001160cc      a0c301d1       sub x0, x29, 0x70
+; DATA XREF from case.0x2d0e84.1685 @ 0x2c26e4(r)
+0x001160d0      d8caff97       bl fcn.00108c30
+; DATA XREFS from case.0x2d0e84.1685 @ 0x2b90bc(r), 0x2ca0c0(r), 0x2cca6c(r)
+; DATA XREFS from fcn.0031043c @ 0x31060c(r), 0x310640(r)
+0x001160d4      990240f9       ldr x25, [x20]
+0x001160d8      486c9e52       mov w8, 0xf362
+0x001160dc      2879bc72       movk w8, 0xe3c9, lsl 16
+0x001160e0      49128652       mov w9, 0x3092
+0x001160e4      69e2b472       movk w9, 0xa713, lsl 16
+0x001160e8      0a0d0011       add w10, w8, 3
+0x001160ec      4801084a       eor w8, w10, w8
+0x001160f0      2a9d0011       add w10, w9, 0x27
+0x001160f4      4b01094a       eor w11, w10, w9

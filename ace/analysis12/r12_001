@@ -1,0 +1,110 @@
+0x0012c330      00011fd6       br x8
+0x0012c334      e8a30091       add x8, sp, 0x28
+0x0012c338      18310091       add x24, x8, 0xc
+0x0012c33c      00e4006f       movi v0.2d, 0000000000000000
+0x0012c340      e1030091       mov x1, sp                              ; int64_t arg2
+0x0012c344      e00318aa       mov x0, x24                             ; int64_t arg1
+0x0012c348      ff830039       strb wzr, [arg_a0hx20]
+0x0012c34c      e00300ad       stp q0, q0, [sp]
+0x0012c350      99350894       bl fcn.003399b4
+0x0012c354      68669a52       mov w8, 0xd333
+0x0012c358      29a89252       mov w9, 0x9541
+0x0012c35c      083bad72       movk w8, 0x69d8, lsl 16
+0x0012c360      09eeba72       movk w9, 0xd770, lsl 16
+0x0012c364      0a011d32       orr w10, w8, 8
+0x0012c368      2b350011       add w11, w9, 0xd
+0x0012c36c      4801084a       eor w8, w10, w8
+0x0012c370      6a01094a       eor w10, w11, w9
+0x0012c374      3f030072       tst w25, 1
+0x0012c378      08118a1a       csel w8, w8, w10, ne
+0x0012c37c      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c380      a9c31bb8       stur w9, [x29, -0x44]
+0x0012c384      eb4b00b9       str w11, [arg_a0hx48]
+0x0012c388      00011fd6       br x8
+0x0012c38c      e2030091       mov x2, sp                              ; int64_t arg3
+0x0012c390      e00313aa       mov x0, x19                             ; int64_t arg1
+0x0012c394      e10314aa       mov x1, x20                             ; int64_t arg2
+0x0012c398      6f050094       bl fcn.0012d954
+; DATA XREF from fcn.0012c190 @ 0x12c37c(r)
+0x0012c39c      1e590994       bl fcn.00382814
+0x0012c3a0      21028052       mov w1, 0x11
+0x0012c3a4      255e0994       bl fcn.00383c38
+0x0012c3a8      c89d9c52       mov w8, 0xe4ee
+0x0012c3ac      89489a52       mov w9, 0xd244
+0x0012c3b0      e865bd72       movk w8, 0xeb2f, lsl 16
+0x0012c3b4      497fb672       movk w9, 0xb3fa, lsl 16
+0x0012c3b8      0a190011       add w10, w8, 6
+0x0012c3bc      2b110011       add w11, w9, 4
+0x0012c3c0      4801084a       eor w8, w10, w8
+0x0012c3c4      6a01094a       eor w10, w11, w9
+0x0012c3c8      1f000071       cmp w0, 0
+0x0012c3cc      08018a1a       csel w8, w8, w10, eq
+0x0012c3d0      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c3d4      abc31bb8       stur w11, [x29, -0x44]
+0x0012c3d8      e94b00b9       str w9, [arg_a0hx48]
+0x0012c3dc      00011fd6       br x8
+0x0012c3e0      0d590994       bl fcn.00382814
+0x0012c3e4      e42f40b9       ldr w4, [var_2ch]
+0x0012c3e8      c1140090       adrp x1, 0x3c4000
+0x0012c3ec      21542a91       add x1, x1, 0xa95                       ; 0x3c4a95 ; "!tcj,name:%s md5:%s,size:%d"
+0x0012c3f0      e3030091       mov x3, sp
+0x0012c3f4      e20314aa       mov x2, x20
+0x0012c3f8      745a0994       bl fcn.00382dc8
+; DATA XREF from fcn.0012c190 @ 0x12c3d0(r)
+0x0012c3fc      48e28652       mov w8, 0x3712                          ; '\x127'
+0x0012c400      29588652       mov w9, 0x32c1
+0x0012c404      2824b172       movk w8, 0x8921, lsl 16
+0x0012c408      89b8a572       movk w9, 0x2dc4, lsl 16
+0x0012c40c      0a090011       add w10, w8, 2
+0x0012c410      2b5d0011       add w11, w9, 0x17
+0x0012c414      4801084a       eor w8, w10, w8
+0x0012c418      6a01094a       eor w10, w11, w9
+0x0012c41c      ff020071       cmp w23, 0
+0x0012c420      08118a1a       csel w8, w8, w10, ne
+0x0012c424      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c428      abc31bb8       stur w11, [x29, -0x44]
+0x0012c42c      e94b00b9       str w9, [arg_a0hx48]
+0x0012c430      00011fd6       br x8
+; DATA XREF from fcn.0012c190 @ 0x12c424(r)
+; CODE XREF from fcn.0012c190 @ +0x2fc(r)
+0x0012c434      e8031f2a       mov w8, wzr
+0x0012c438      1a000014       b 0x12c4a0
+; DATA XREF from reloc.fixup.yBRJRgrUr @ 
+..
+; CODE XREF from fcn.0012c190 @ 0x12c438(x)
+0x0012c4a0      e92f40b9       ldr w9, [var_2ch]
+0x0012c4a4      ff020071       cmp w23, 0
+0x0012c4a8      0ac8a052       mov w10, 0x6400000
+0x0012c4ac      eb079f1a       cset w11, ne
+0x0012c4b0      3f010a6b       cmp w9, w10
+0x0012c4b4      e9979f1a       cset w9, hi
+0x0012c4b8      6901090a       and w9, w11, w9
+0x0012c4bc      60e20191       add x0, x19, 0x78                       ; int64_t arg1
+0x0012c4c0      02028052       mov w2, 0x10
+0x0012c4c4      e10318aa       mov x1, x24                             ; int64_t arg2
+0x0012c4c8      1901092a       orr w25, w8, w9
+0x0012c4cc      d4150994       bl fcn.00371c1c
+0x0012c4d0      c9599652       mov w9, 0xb2ce
+0x0012c4d4      8a9d9c52       mov w10, 0xe4ec
+0x0012c4d8      0963a072       movk w9, 0x318, lsl 16
+0x0012c4dc      4a3bbc72       movk w10, 0xe1da, lsl 16
+0x0012c4e0      0800192a       orr w8, w0, w25
+0x0012c4e4      2b3d0011       add w11, w9, 0xf
+0x0012c4e8      4c010032       orr w12, w10, 1
+0x0012c4ec      6901094a       eor w9, w11, w9
+0x0012c4f0      8b010a4a       eor w11, w12, w10
+0x0012c4f4      1f010072       tst w8, 1
+0x0012c4f8      28118b1a       csel w8, w9, w11, ne
+0x0012c4fc      485b68f8       ldr x8, [x26, w8, uxtw 3]
+0x0012c500      acc31bb8       stur w12, [x29, -0x44]
+0x0012c504      ea4b00b9       str w10, [arg_a0hx48]
+0x0012c508      00011fd6       br x8
+0x0012c50c      f6020034       cbz w22, 0x12c568
+0x0012c510      c1580994       bl fcn.00382814
+0x0012c514      21028052       mov w1, 0x11
+0x0012c518      c85d0994       bl fcn.00383c38
+0x0012c51c      68ac8052       mov w8, 0x563
+0x0012c520      a9898f52       mov w9, 0x7c4d                          ; 'M|'
+0x0012c524      e823bf72       movk w8, 0xf91f, lsl 16
+0x0012c528      498db672       movk w9, 0xb46a, lsl 16
+0x0012c52c      0a0d0011       add w10, w8, 3
