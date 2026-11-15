@@ -1,0 +1,38 @@
+=== tcj ===
+fcn.000f25fc 0xf26b4 [STRN:r--] add x1, x1, str.tcj_encrypt
+fcn.000f4488 0xf44ec [STRN:r--] add x1, x1, str.tcj_encrypt
+fcn.0012a9f0 0x12ab90 [STRN:r--] add x1, x1, str.tcj_ss_error:_d
+fcn.0012c190 0x12c3ec [STRN:r--] add x1, x1, str._tcj_name:_s_md5:_s_size:_d
+fcn.0012d0ec 0x12d1d8 [STRN:r--] add x1, x1, str.tcj_app_ver.zip
+fcn.0012d0ec 0x12d1ec [STRN:r--] add x1, x1, str.custom_tcj.zip
+fcn.0012da8c 0x12db10 [STRN:r--] add x1, x1, str._tcj_remove__s
+fcn.003723d8 0x372424 [STRN:r--] add x1, x1, str.tcj_flow:_dM
+fcn.003720ec 0x3722d8 [STRN:r--] add x1, x1, str.tcj_flow_ctl
+fcn.00372464 0x3724d8 [STRN:r--] add x1, x1, str.tcj_flow_ctl
+=== vap ===
+fcn.001255a4 0x125604 [STRN:r--] add x1, x1, str.vap_pkg_tips
+fcn.001255a4 0x125664 [STRN:r--] add x1, x1, str.vap_icon_tips
+fcn.0016c5e4 0x16c99c [STRN:r--] add x1, x1, str.gp4_vap_2
+fcn.003011a4 0x30137c [STRN:r--] add x1, x1, str.simu_vap
+fcn.00303664 0x303698 [STRN:r--] add x20, x20, str._vap_1:_s
+fcn.003065dc 0x306a08 [STRN:r--] add x1, x1, str._vap_2:_s__cert_md5:_s
+fcn.00303d54 0x3043e4 [STRN:r--] add x1, x1, str.vap_2.5
+fcn.00303d54 0x3044f4 [STRN:r--] add x1, x1, str.vap_2.5
+fcn.00303d54 0x304594 [STRN:r--] add x0, x0, str.vap_2.5
+fcn.003065dc 0x306bf8 [STRN:r--] add x1, x1, str.vap_2.5
+fcn.003065dc 0x306fa0 [STRN:r--] add x1, x1, str.vap_2.5
+fcn.003065dc 0x3070ec [STRN:r--] add x1, x1, str.vap_2.5
+fcn.003065dc 0x30716c [STRN:r--] add x0, x0, str.vap_2.5
+fcn.003065dc 0x3073c4 [STRN:r--] add x1, x1, str.vap_2.5
+fcn.003065dc 0x307634 [STRN:r--] add x1, x1, str.vap_2.5
+fcn.003065dc 0x3076f0 [STRN:r--] add x0, x0, str.vap_2.5
+fcn.003065dc 0x307678 [STRN:r--] add x1, x1, str.vap_rsa_parse
+fcn.003065dc 0x3071d4 [STRN:r--] add x1, x1, str._vap_2.5:_s
+fcn.00303d54 0x304178 [STRN:r--] add x1, x1, str._vap_3:_s:_s
+fcn.00307a54 0x307a70 [STRN:r--] add x1, x1, str.vap_axml
+=== cert_md5 ===
+fcn.00116034 0x116068 [STRN:r--] add x1, x1, str.ano_cert_md5
+fcn.003065dc 0x306a08 [STRN:r--] add x1, x1, str._vap_2:_s__cert_md5:_s
+=== code_size ===
+fcn.001063dc 0x1064f0 [STRN:r--] add x1, x1, str.ver:_s_app_ver:_s_code_size:_s_crc:_s
+(nofunc) 0x4b0218 [DATA:r--] invalid

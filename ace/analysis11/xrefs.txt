@@ -1,0 +1,40 @@
+=== xref 0x003c32bd ===
+fcn.000f25fc 0xf26b4 [STRN:r--] add x1, x1, str.tcj_encrypt
+fcn.000f4488 0xf44ec [STRN:r--] add x1, x1, str.tcj_encrypt
+=== xref 0x003c32bd ===
+fcn.000f25fc 0xf26b4 [STRN:r--] add x1, x1, str.tcj_encrypt
+fcn.000f4488 0xf44ec [STRN:r--] add x1, x1, str.tcj_encrypt
+=== xref 0x003c49e0 ===
+fcn.0012a9f0 0x12ab90 [STRN:r--] add x1, x1, str.tcj_ss_error:_d
+=== xref 0x003c49e0 ===
+fcn.0012a9f0 0x12ab90 [STRN:r--] add x1, x1, str.tcj_ss_error:_d
+=== xref 0x003c4a5e ===
+=== xref 0x003c4a5e ===
+=== xref 0x003c4a95 ===
+fcn.0012c190 0x12c3ec [STRN:r--] add x1, x1, str._tcj_name:_s_md5:_s_size:_d
+=== xref 0x003c4a95 ===
+fcn.0012c190 0x12c3ec [STRN:r--] add x1, x1, str._tcj_name:_s_md5:_s_size:_d
+=== xref 0x003c4acc ===
+=== xref 0x003c4acc ===
+=== xref 0x003c4ae3 ===
+fcn.0012d0ec 0x12d1d8 [STRN:r--] add x1, x1, str.tcj_app_ver.zip
+=== xref 0x003c4ae3 ===
+fcn.0012d0ec 0x12d1d8 [STRN:r--] add x1, x1, str.tcj_app_ver.zip
+=== xref 0x003c4af3 ===
+fcn.0012d0ec 0x12d1ec [STRN:r--] add x1, x1, str.custom_tcj.zip
+=== xref 0x003c4af3 ===
+fcn.0012d0ec 0x12d1ec [STRN:r--] add x1, x1, str.custom_tcj.zip
+=== xref 0x003c4b08 ===
+fcn.0012da8c 0x12db10 [STRN:r--] add x1, x1, str._tcj_remove__s
+=== xref 0x003c4b08 ===
+fcn.0012da8c 0x12db10 [STRN:r--] add x1, x1, str._tcj_remove__s
+=== xref 0x003d8bd0 ===
+fcn.003723d8 0x372424 [STRN:r--] add x1, x1, str.tcj_flow:_dM
+=== xref 0x003d8bd0 ===
+fcn.003723d8 0x372424 [STRN:r--] add x1, x1, str.tcj_flow:_dM
+=== xref 0x003d8bdd ===
+fcn.003720ec 0x3722d8 [STRN:r--] add x1, x1, str.tcj_flow_ctl
+fcn.00372464 0x3724d8 [STRN:r--] add x1, x1, str.tcj_flow_ctl
+=== xref 0x003d8bdd ===
+fcn.003720ec 0x3722d8 [STRN:r--] add x1, x1, str.tcj_flow_ctl
+fcn.00372464 0x3724d8 [STRN:r--] add x1, x1, str.tcj_flow_ctl

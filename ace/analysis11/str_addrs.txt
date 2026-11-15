@@ -1,0 +1,31 @@
+16289 0x003c32bd 0x003c32bd 11  12   .rodata             ascii   tcj_encrypt
+16573 0x003c49e0 0x003c49e0 15  16   .rodata             ascii   tcj_ss_error:%d
+16580 0x003c4a5e 0x003c4a5e 7   8    .rodata             ascii   pub_tcj
+16583 0x003c4a95 0x003c4a95 27  28   .rodata             ascii   !tcj,name:%s md5:%s,size:%d
+16586 0x003c4acc 0x003c4acc 11  12   .rodata             ascii   tcj_protect
+16588 0x003c4ae3 0x003c4ae3 15  16   .rodata             ascii   tcj_app_ver.zip
+16589 0x003c4af3 0x003c4af3 14  15   .rodata             ascii   custom_tcj.zip
+16591 0x003c4b08 0x003c4b08 14  15   .rodata             ascii   !tcj,remove %s
+18466 0x003d8bd0 0x003d8bd0 12  13   .rodata             ascii   tcj_flow:%dM
+18467 0x003d8bdd 0x003d8bdd 12  13   .rodata             ascii   tcj_flow_ctl
+16552 0x003c481f 0x003c481f 12  13   .rodata             ascii   vap_pkg_tips
+16553 0x003c482c 0x003c482c 13  14   .rodata             ascii   vap_icon_tips
+17007 0x003c7666 0x003c7666 9   10   .rodata             ascii   gp4_vap_2
+17733 0x003cf538 0x003cf538 8   9    .rodata             ascii   simu_vap
+17735 0x003cf553 0x003cf553 9   10   .rodata             ascii   !vap_1:%s
+17737 0x003cf569 0x003cf569 22  23   .rodata             ascii   !vap_2:%s, cert_md5:%s
+17738 0x003cf580 0x003cf580 7   8    .rodata             ascii   vap_2.5
+17739 0x003cf588 0x003cf588 13  14   .rodata             ascii   vap_rsa_parse
+17740 0x003cf596 0x003cf596 11  12   .rodata             ascii   !vap_2.5:%s
+17741 0x003cf5a5 0x003cf5a5 12  13   .rodata             ascii   !vap_3:%s:%s
+17743 0x003cf5cf 0x003cf5cf 8   9    .rodata             ascii   vap_axml
+16342 0x003c36aa 0x003c36aa 37  38   .rodata             ascii   sig custom, name:%s, len:%d, crc:%08x
+16345 0x003c36e4 0x003c36e4 37  38   .rodata             ascii   ver:%s app_ver:%s code_size:%s crc:%s
+16524 0x003c4670 0x003c4670 28  29   .rodata             ascii   !%s, size:%d, crc:%08x, t:%s
+17014 0x003c76b6 0x003c76b6 30  31   .rodata             ascii   gp4, reason:%s, raw:%s, crc:%x
+17538 0x003cd38e 0x003cd38e 11  12   .rodata             ascii   ms_data_crc
+17539 0x003cd39a 0x003cd39a 20  21   .rodata             ascii   mrpcs_data_crc_error
+17557 0x003cd4ed 0x003cd4ed 9   10   .rodata             ascii   %s;crc:%s
+16345 0x003c36e4 0x003c36e4 37  38   .rodata             ascii   ver:%s app_ver:%s code_size:%s crc:%s
+16397 0x003c3ba6 0x003c3ba6 12  13   .rodata             ascii   ano_cert_md5
+17737 0x003cf569 0x003cf569 22  23   .rodata             ascii   !vap_2:%s, cert_md5:%s
