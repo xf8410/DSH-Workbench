@@ -1,0 +1,68 @@
+=== program headers ===
+
+Elf file type is DYN (Shared object file)
+Entry point 0xc4500
+There are 8 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  LOAD           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x00000000004a9a6c 0x00000000004a9a6c  R E    0x1000
+  LOAD           0x00000000004aa9d8 0x00000000004ab9d8 0x00000000004ab9d8
+                 0x000000000005f1d0 0x0000000000073508  RW     0x1000
+  DYNAMIC        0x00000000004b2898 0x00000000004b3898 0x00000000004b3898
+                 0x0000000000000230 0x0000000000000230  RW     0x8
+  NOTE           0x0000000000000200 0x0000000000000200 0x0000000000000200
+                 0x0000000000000024 0x0000000000000024  R      0x4
+  NOTE           0x00000000004a99d4 0x00000000004a99d4 0x00000000004a99d4
+                 0x0000000000000098 0x0000000000000098  R      0x4
+  GNU_EH_FRAME   0x00000000003f71ec 0x00000000003f71ec 0x00000000003f71ec
+                 0x000000000001ef24 0x000000000001ef24  R      0x4
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RW     0x10
+  GNU_RELRO      0x00000000004aa9d8 0x00000000004ab9d8 0x00000000004ab9d8
+                 0x0000000000009628 0x0000000000009628  R      0x1
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .note.gnu.build-id .hash .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_d .gnu.version_r .rela.dyn .rela.plt .plt .text .rodata .eh_frame_hdr .eh_frame .gcc_except_table .note.android.ident 
+   01     .init_array .fini_array .data.rel.ro .dynamic .got .data .bss 
+   02     .dynamic 
+   03     .note.gnu.build-id 
+   04     .note.android.ident 
+   05     .eh_frame_hdr 
+   06     
+   07     .init_array .fini_array .data.rel.ro .dynamic .got 
+
+=== section headers 尾部 ===
+       000000000001ef24  0000000000000000   A       0     0     4
+  [15] .eh_frame         PROGBITS         0000000000416110  00416110
+       000000000007db28  0000000000000000   A       0     0     8
+  [16] .gcc_except_table PROGBITS         0000000000493c38  00493c38
+       0000000000015d9c  0000000000000000   A       0     0     4
+  [17] .note.androi[...] NOTE             00000000004a99d4  004a99d4
+       0000000000000098  0000000000000000   A       0     0     4
+  [18] .init_array       INIT_ARRAY       00000000004ab9d8  004aa9d8
+       0000000000000188  0000000000000008  WA       0     0     8
+  [19] .fini_array       FINI_ARRAY       00000000004abb60  004aab60
+       0000000000000010  0000000000000008  WA       0     0     8
+  [20] .data.rel.ro      PROGBITS         00000000004abb70  004aab70
+       0000000000007d28  0000000000000000  WA       0     0     8
+  [21] .dynamic          DYNAMIC          00000000004b3898  004b2898
+       0000000000000230  0000000000000010  WA       5     0     8
+  [22] .got              PROGBITS         00000000004b3ac8  004b2ac8
+       0000000000001538  0000000000000008  WA       0     0     8
+  [23] .data             PROGBITS         00000000004b5000  004b4000
+       0000000000055ba8  0000000000000000  WA       0     0     256
+  [24] .bss              NOBITS           000000000050abb0  00509ba8
+       0000000000014330  0000000000000000  WA       0     0     16
+  [25] .comment          PROGBITS         0000000000000000  00509ba8
+       000000000000021e  0000000000000001  MS       0     0     1
+  [26] .shstrtab         STRTAB           0000000000000000  00509dc6
+       000000000000010a  0000000000000000           0     0     1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
