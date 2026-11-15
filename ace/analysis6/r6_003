@@ -1,0 +1,92 @@
+0x003abde0      0e008092       mov x14, -1
+0x003abde4      ef279f1a       cset w15, lo
+0x003abde8      cc21cc9a       lsl x12, x14, x12
+0x003abdec      ff194d6a       tst w15, w13, lsr 6
+0x003abdf0      8c119f9a       csel x12, x12, xzr, ne
+0x003abdf4      08010caa       orr x8, x8, x12
+0x003abdf8      2c190453       ubfx w12, w9, 4, 3
+0x003abdfc      2cfbff35       cbnz w12, 0x3abd60
+0x003abe00      dcffff17       b 0x3abd70
+;-- case 10:                                                           ; from 0x003abd08
+; CODE XREF from fcn.003abcdc @ 0x3abd08(x)
+0x003abe04      ea030baa       mov x10, x11
+0x003abe08      48258078       ldrsh x8, [x10], 2
+0x003abe0c      2c190453       ubfx w12, w9, 4, 3
+0x003abe10      8cfaff35       cbnz w12, 0x3abd60
+0x003abe14      d7ffff17       b 0x3abd70
+;-- case 11:                                                           ; from 0x003abd08
+; CODE XREF from fcn.003abcdc @ 0x3abd08(x)
+0x003abe18      ea030baa       mov x10, x11
+0x003abe1c      484580b8       ldrsw x8, [x10], 4
+0x003abe20      2c190453       ubfx w12, w9, 4, 3
+0x003abe24      ecf9ff35       cbnz w12, 0x3abd60
+0x003abe28      d2ffff17       b 0x3abd70
+;-- case 5:                                                            ; from 0x003abd08
+; CODE XREFS from fcn.003abcdc @ 0x3abcf8(x), 0x3abd08(x), 0x3abd64(x)
+0x003abe2c      6960f497       bl sym.imp.abort                        ; void abort(void)
+=== fcn.003adfe4 ===
+  ; XREFS(25)
+240: fcn.003adfe4 (char *format, int64_t arg2, int64_t arg3, int64_t arg4, int64_t arg5, int64_t arg6, int64_t arg7, int64_t arg8); // noreturn
+`- args(x0, x1, x2, x3, x4, x5, x6, x7) vars(44:sp[0x8..0x1a0])
+0x003adfe4      ff8306d1       sub sp, sp, 0x1a0
+0x003adfe8      fc6715a9       stp x28, x25, [var_150h]
+0x003adfec      f85f16a9       stp x24, x23, [var_160h]
+0x003adff0      f65717a9       stp x22, x21, [var_170h]
+0x003adff4      f44f18a9       stp x20, x19, [var_180h]
+0x003adff8      fd7b19a9       stp x29, x30, [var_190h]
+0x003adffc      fd430691       add x29, sp, 0x190
+; DATA XREFS from fcn.003adfe4 @ +0xf8(r), +0x120(r)
+0x003ae000      f6068092       mov x22, -0x38
+0x003ae004      e8030091       mov x8, sp
+0x003ae008      e9230291       add x9, sp, 0x88
+0x003ae00c      16f0dff2       movk x22, 0xff80, lsl 32
+0x003ae010      b7430091       add x23, x29, 0x10
+0x003ae014      18010291       add x24, x8, 0x80
+0x003ae018      39e10091       add x25, x9, 0x38
+0x003ae01c      b85b3ba9       stp x24, x22, [x29, -0x50]
+0x003ae020      b7673aa9       stp x23, x25, [x29, -0x60]
+0x003ae024      e00700ad       stp q0, q1, [sp]
+0x003ae028      a1037dad       ldp q1, q0, [x29, -0x60]
+0x003ae02c      e18b08a9       stp x1, x2, [var_88h]                   ; arg3
+0x003ae030      e39309a9       stp x3, x4, [var_0hx98]                 ; arg5
+0x003ae034      e59b0aa9       stp x5, x6, [var_0hxa8]                 ; arg7
+0x003ae038      e75f00f9       str x7, [var_0hxb8]                     ; arg8
+0x003ae03c      e20f01ad       stp q2, q3, [var_0hx20]
+0x003ae040      e41702ad       stp q4, q5, [var_0hx40]
+0x003ae044      e61f03ad       stp q6, q7, [var_0hx60]
+0x003ae048      a1033cad       stp q1, q0, [x29, -0x80]
+0x003ae04c      280800d0       adrp x8, dlclose                        ; 0x4b4000
+0x003ae050      080d44f9       ldr x8, [x8, 0x818]                     ; [0x4b4818:4]=0
+                                                                       ; reloc.__sF
+0x003ae054      f30300aa       mov x19, x0                             ; arg1
+0x003ae058      a20302d1       sub x2, x29, 0x80                       ; va_list ap
+0x003ae05c      e10313aa       mov x1, x19                             ; const char *format
+0x003ae060      14c10491       add x20, x8, 0x130
+0x003ae064      e00314aa       mov x0, x20                             ; FILE *stream
+0x003ae068      b5a302d1       sub x21, x29, 0xa8
+0x003ae06c      0156f497       bl sym.imp.vfprintf                     ; int vfprintf(FILE *stream, const char *format, va_list ap)
+0x003ae070      40018052       mov w0, 0xa
+0x003ae074      e10314aa       mov x1, x20                             ; FILE *stream
+0x003ae078      9256f497       bl sym.imp.fputc                        ; int fputc(int c, FILE *stream)
+0x003ae07c      b8db36a9       stp x24, x22, [x29, -0x98]
+0x003ae080      b7e735a9       stp x23, x25, [x29, -0xa8]
+0x003ae084      a10240ad       ldp q1, q0, [x21]
+0x003ae088      a02302d1       sub x0, x29, 0x88
+0x003ae08c      e2030391       add x2, sp, 0xc0
+0x003ae090      e10313aa       mov x1, x19
+0x003ae094      e10306ad       stp q1, q0, [var_c0h]
+0x003ae098      8a55f497       bl sym.imp.vasprintf
+0x003ae09c      a08357f8       ldur x0, [x29, -0x88]
+0x003ae0a0      8c57f497       bl sym.imp.android_set_abort_message
+0x003ae0a4      200200f0       adrp x0, 0x3f5000
+0x003ae0a8      00a00d91       add x0, x0, 0x368                       ; 0x3f5368 ; "libc++abi"
+0x003ae0ac      e1031f2a       mov w1, wzr
+0x003ae0b0      e2031f2a       mov w2, wzr
+0x003ae0b4      5f56f497       bl sym.imp.openlog
+0x003ae0b8      a28357f8       ldur x2, [x29, -0x88]
+0x003ae0bc      010100b0       adrp x1, 0x3cf000
+0x003ae0c0      21441891       add x1, x1, 0x611
+0x003ae0c4      40008052       mov w0, 2
+0x003ae0c8      4658f497       bl sym.imp.syslog
+0x003ae0cc      4156f497       bl sym.imp.closelog
+0x003ae0d0      c057f497       bl sym.imp.abort                        ; void abort(void)

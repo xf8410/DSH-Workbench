@@ -1,0 +1,9 @@
+=== 反汇编中引用 abort/kill/_exit 的位置（objdump 侧） ===
+
+=== 所有 ApkAbort 相关字符串（含上下文） ===
+9384-u_old_m
+9385-UseTwoMth
+9386:ApkAbort_CS_Cnt
+9387:ApkAbort_CS_%d
+9388-FakeIdByOpenId
+9389-AndroidID

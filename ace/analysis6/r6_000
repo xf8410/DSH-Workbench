@@ -1,0 +1,120 @@
+=== ApkAbort / mrpcs_abort 字符串地址 ===
+17321 0x003c8d58 0x003c8d58 15  16   .rodata             ascii   ApkAbort_CS_Cnt
+17322 0x003c8d68 0x003c8d68 14  15   .rodata             ascii   ApkAbort_CS_%d
+16340 0x003c3680 0x003c3680 15  16   .rodata             ascii   mrpcs_abort.dat
+
+=== fcn.003bf1a0 ===
+  ; DATA XREF from fcn.003b3868 @ 0x3bf788(r)
+  ; CALL XREFS from case.0x3b3e78.1163 @ 0x3bfe50(r), 0x3bff4c(x)
+  ; CALL XREF from fcn.003b3868 @ 0x3c01dc(r)
+240: fcn.003bf1a0 (int64_t arg1, int64_t arg2, int64_t arg3, int64_t arg4);
+`- args(x0, x1, x2, x3) vars(7:sp[0x8..0x40])
+0x003bf1a0      fd7bbca9       stp x29, x30, [sp, -0x40]!
+0x003bf1a4      fd030091       mov x29, sp
+0x003bf1a8      f35301a9       stp x19, x20, [var_10h]
+0x003bf1ac      141c0053       uxtb w20, w0                            ; arg1
+0x003bf1b0      f30302aa       mov x19, x2                             ; arg3
+0x003bf1b4      f55b02a9       stp x21, x22, [var_20h]
+0x003bf1b8      9f420171       cmp w20, 0x50                           ; 'P'
+0x003bf1bc      f60301aa       mov x22, x1                             ; arg2
+0x003bf1c0      f50303aa       mov x21, x3                             ; arg4
+0x003bf1c4      a1000054       b.ne 0x3bf1d8
+0x003bf1c8      531c0091       add x19, x2, 7                          ; arg3
+0x003bf1cc      60f27d92       and x0, x19, 0xfffffffffffffff8
+0x003bf1d0      018440f8       ldr x1, [x0], 8
+0x003bf1d4      2a000014       b 0x3bf27c
+; CODE XREF from fcn.003bf1a0 @ 0x3bf1c4(x)
+0x003bf1d8      810e0012       and w1, w20, 0xf
+0x003bf1dc      3f300071       cmp w1, 0xc
+0x003bf1e0      e8030054       b.hi case.0x3bf1f0.5
+0x003bf1e4      c0010090       adrp x0, 0x3f7000
+0x003bf1e8      00d00491       add x0, x0, 0x134
+0x003bf1ec      00486138       ldrb w0, [x0, w1, uxtw]
+;-- switch:
+0x003bf1f0      61000010       adr x1, case.0x3bf1f0.1                 ; 0x3bf1fc ; switch table (12 cases) at 0x3f7134
+0x003bf1f4      2088208b       add x0, x1, w0, sxtb 2                  ; 0x3bf220
+                                                                       ; case.0x3bf1f0.2
+0x003bf1f8      00001fd6       br x0
+;-- case 1:                                                            ; from 0x003bf1f0
+; DATA XREF from fcn.003bf1a0 @ 0x3bf1f0(r)
+0x003bf1fc      e00302aa       mov x0, x2                              ; arg3
+0x003bf200      a1e30091       add x1, x29, 0x38
+0x003bf204      cdffff97       bl fcn.003bf138
+0x003bf208      04000014       b 0x3bf218
+;-- case 9:                                                            ; from 0x003bf1f0
+; CODE XREF from fcn.003bf1a0 @ 0x3bf1f0(x)
+0x003bf20c      e00302aa       mov x0, x2                              ; arg3
+0x003bf210      a1e30091       add x1, x29, 0x38
+0x003bf214      d3ffff97       bl fcn.003bf160
+; CODE XREF from fcn.003bf1a0 @ 0x3bf208(x)
+0x003bf218      a11f40f9       ldr x1, [x29, 0x38]                     ; [0x38:4]=0x400008
+0x003bf21c      11000014       b 0x3bf260
+;-- case 2:                                                            ; from 0x003bf1f0
+; DATA XREFS from fcn.003bf1a0 @ 0x3bf1f0(x), 0x3bf1f4(r)
+0x003bf220      e00302aa       mov x0, x2                              ; arg3
+0x003bf224      01244078       ldrh w1, [x0], 2
+0x003bf228      0e000014       b 0x3bf260
+;-- case 3:                                                            ; from 0x003bf1f0
+; CODE XREF from fcn.003bf1a0 @ 0x3bf1f0(x)
+0x003bf22c      e00302aa       mov x0, x2                              ; arg3
+0x003bf230      014440b8       ldr w1, [x0], 4
+0x003bf234      0b000014       b 0x3bf260
+;-- case 10:                                                           ; from 0x003bf1f0
+; CODE XREF from fcn.003bf1a0 @ 0x3bf1f0(x)
+0x003bf238      e00302aa       mov x0, x2                              ; arg3
+0x003bf23c      01248078       ldrsh x1, [x0], 2
+0x003bf240      08000014       b 0x3bf260
+;-- case 11:                                                           ; from 0x003bf1f0
+; CODE XREF from fcn.003bf1a0 @ 0x3bf1f0(x)
+0x003bf244      e00302aa       mov x0, x2                              ; arg3
+0x003bf248      014480b8       ldrsw x1, [x0], 4
+0x003bf24c      05000014       b 0x3bf260
+;-- case 0:                                                            ; from 0x003bf1f0
+; CODE XREF from fcn.003bf1a0 @ 0x3bf1f0(x)
+0x003bf250      e00302aa       mov x0, x2                              ; arg3
+0x003bf254      018440f8       ldr x1, [x0], 8
+0x003bf258      02000014       b 0x3bf260
+;-- case 5:                                                            ; from 0x003bf1f0
+; CODE XREFS from fcn.003bf1a0 @ 0x3bf1e0(x), 0x3bf1f0(x)
+0x003bf25c      5d13f497       bl sym.imp.abort                        ; void abort(void)
+; XREFS: CODE 0x003bf21c  CODE 0x003bf228  CODE 0x003bf234  
+; XREFS: CODE 0x003bf240  CODE 0x003bf24c  CODE 0x003bf258  
+0x003bf260      e10000b4       cbz x1, 0x3bf27c
+0x003bf264      820a1c12       and w2, w20, 0x70
+0x003bf268      5f400071       cmp w2, 0x10
+0x003bf26c      7302969a       csel x19, x19, x22, eq
+0x003bf270      2100138b       add x1, x1, x19                         ; 0x3f6023 ; " ... "
+0x003bf274      54003836       tbz w20, 7, 0x3bf27c
+0x003bf278      210040f9       ldr x1, [x1]                            ; [0x3f6023:4]=0x2e2e2e20 ; " ... "
+; CODE XREFS from fcn.003bf1a0 @ 0x3bf1d4(x), 0x3bf260(x), 0x3bf274(x)
+;-- case 1318:                                                         ; from 0x002d5c70
+; CODE XREF from case.0x2d0e84.1685 @ 0x2d5c70(x)
+0x003bf27c  ~   a10200f9       str x1, [x21]
+0x003bf280      f35341a9       ldp x19, x20, [var_10h]
+0x003bf284      f55b42a9       ldp x21, x22, [var_20h]
+0x003bf288      fd7bc4a8       ldp x29, x30, [sp], 0x40
+0x003bf28c      c0035fd6       ret
+=== fcn.003bf3a4 ===
+  ; CALL XREF from fcn.003bf438 @ 0x3bf474(x)
+  ; DATA XREFS from fcn.003b3868 @ 0x3c05b8(x), 0x3c0800(r)
+60: fcn.003bf3a4 (int64_t arg1, int64_t arg2, int64_t arg3);
+`- args(x0, x1, x2) vars(2:sp[0x8..0x10])
+0x003bf3a4      e30a00f0       adrp x3, 0x51e000
+0x003bf3a8      fd7bbfa9       stp x29, x30, [sp, -0x10]!
+0x003bf3ac      fd030091       mov x29, sp
+0x003bf3b0      63fc7239       ldrb w3, [x3, 0xcbf]
+0x003bf3b4      7f200071       cmp w3, 8
+0x003bf3b8      c1000054       b.ne 0x3bf3d0
+0x003bf3bc      410000f9       str x1, [x2]                            ; arg3
+0x003bf3c0  ~   01a041f9       ldr x1, [x0, 0x340]                     ; arg1
+;-- case 849:                                                          ; from 0x003b3974
+;-- case 1048:                                                         ; from 0x003b3a94
+; CODE XREFS from fcn.003b3868 @ 0x3b3974(x), 0x3b39b4(x), 0x3b3a94(x), 0x3b3e78(x)
+0x003bf3c2      41f9           unaligned
+0x003bf3c4      8100f0b6       tbz x1, 0x3e, 0x3bf3d4
+0x003bf3c8      1fdc0d39       strb wzr, [x0, 0x377]                   ; arg1
+0x003bf3cc      02000014       b 0x3bf3d4
+; CODE XREF from fcn.003bf3a4 @ 0x3bf3b8(x)
+0x003bf3d0      0013f497       bl sym.imp.abort                        ; void abort(void)
+; CODE XREFS from fcn.003bf3a4 @ 0x3bf3c4(x), 0x3bf3cc(x)
+0x003bf3d4      027c00f9       str x2, [x0, 0xf8]                      ; arg3
