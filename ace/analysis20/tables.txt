@@ -1,0 +1,12 @@
+=== fcn.00381dc4 (table A) ===
+  ; XREFS(100)
+12: fcn.00381dc4 ();
+0x00381dc4      200300f0       adrp x0, 0x3e8000
+0x00381dc8      00141991       add x0, x0, 0x645
+0x00381dcc      c0035fd6       ret
+=== fcn.00381dd0 (table B) ===
+  ; XREFS(100)
+12: fcn.00381dd0 ();
+0x00381dd0      800c00f0       adrp x0, 0x514000
+0x00381dd4      00c01a91       add x0, x0, 0x6b0
+0x00381dd8      c0035fd6       ret

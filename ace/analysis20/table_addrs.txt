@@ -1,0 +1,35 @@
+=== 尝试从 fcn.00381dc4 / 381dd0 里提取 adrp 目标 ===
+
+ace/tp2.so:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000381dc4 <JNI_OnLoad@@TERSAFE+0x6b8>:
+  381dc4:	adrp	x0, 3e8000 <JNI_OnLoad@@TERSAFE+0x668f4>
+  381dc8:	add	x0, x0, #0x645
+  381dcc:	ret
+  381dd0:	adrp	x0, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+  381dd4:	add	x0, x0, #0x6b0
+  381dd8:	ret
+  381ddc:	mov	w0, wzr
+  381de0:	b	384380 <JNI_OnLoad@@TERSAFE+0x2c74>
+  381de4:	stp	x20, x19, [sp, #-32]!
+  381de8:	stp	x29, x30, [sp, #16]
+  381dec:	add	x29, sp, #0x10
+  381df0:	mov	x20, x0
+  381df4:	mov	w0, #0x8e36                	// #36406
+  381df8:	mov	x19, x1
+  381dfc:	bl	3849e0 <JNI_OnLoad@@TERSAFE+0x32d4>
+  381e00:	ldp	x29, x30, [sp, #16]
+  381e04:	mov	x1, x20
+  381e08:	mov	x2, x19
+  381e0c:	ldp	x20, x19, [sp], #32
+  381e10:	b	381e14 <JNI_OnLoad@@TERSAFE+0x708>
+  381e14:	stp	x22, x21, [sp, #-48]!
+  381e18:	stp	x20, x19, [sp, #16]
+  381e1c:	stp	x29, x30, [sp, #32]
+  381e20:	add	x29, sp, #0x20
+  381e24:	mov	x21, x2
+  381e28:	mov	x19, x1
+  381e2c:	mov	x20, x0
