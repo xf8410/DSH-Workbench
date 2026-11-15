@@ -21,59 +21,59 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round8 ApkAbort 主函数与 mrpcs
+      - name: round9 核心校验 fcn.0036dab8
         run: |
-          mkdir -p out8
+          mkdir -p out9
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           r2 -q -e scr.color=false -e asm.lines=false -c "
             aaa;
-            echo === fcn.001830c0 (ApkAbort) ===;
-            pdf @ 0x1830c0;
-            echo === fcn.00105318 (mrpcs_abort.dat) ===;
-            pdf @ 0x105318;
-          " "$F" > /tmp/r8.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/r8.txt)"
-          split -l 120 -d -a 3 /tmp/r8.txt out8/r8_
+            echo === fcn.0036dab8 ===;
+            pdf @ 0x36dab8;
+            echo === fcn.0036d29c (前置) ===;
+            pdf @ 0x36d29c;
+          " "$F" > /tmp/r9.txt 2>/dev/null || true
+          echo "总行数: $(wc -l < /tmp/r9.txt)"
+          split -l 120 -d -a 3 /tmp/r9.txt out9/r9_
 
-      - name: round8 调用者链
+      - name: round9 调用链
         run: |
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           r2 -q -e scr.color=false -e asm.lines=false -c "
             aaa;
-            echo === xref fcn.001830c0 ===;
-            axt @ 0x1830c0;
-            echo === xref fcn.00105318 ===;
-            axt @ 0x105318;
-          " "$F" > out8/callers.txt 2>/dev/null || true
-          cat out8/callers.txt
+            echo === xref fcn.0036dab8 ===;
+            axt @ 0x36dab8;
+            echo === xref fcn.0036d29c ===;
+            axt @ 0x36d29c;
+          " "$F" > out9/callers9.txt 2>/dev/null || true
+          cat out9/callers9.txt
 
-      - name: round8 校验相关字符串落点
+      - name: round9 该函数引用的字符串
         run: |
           F=ace/tp2.so
           {
-            echo "=== 与 APK / 校验有关的高价值字符串 ==="
-            strings -n 6 "$F" | grep -iE "apk|signature|cert|integrity|tamper|checksum|md5|crc" | sort -u | head -60
-          } > out8/keystrings.txt
-          cat out8/keystrings.txt
+            echo "=== fcn.0036dab8 区间内的 adrp+add 字符串 ==="
+            aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x36dab8 --stop-address=0x36e200 "$F" 2>/dev/null | grep -E "adrp|add\s+x[0-9]+, x[0-9]+, #" | head -60
+          } > out9/strs9.txt
+          cat out9/strs9.txt
 
       - name: 清单
-        run: ls -l out8/ && du -sh out8/
+        run: ls -l out9/ && du -sh out9/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis8
-          path: out8/
+          name: ace-analysis9
+          path: out9/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis8
-          cp out8/* ace/analysis8/ 2>/dev/null || true
+          mkdir -p ace/analysis9
+          cp out9/* ace/analysis9/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis8
-          git commit -m "ace analysis8: ApkAbort body + callers" || echo "nothing to commit"
+          git add ace/analysis9
+          git commit -m "ace analysis9: core check fcn.0036dab8" || echo "nothing to commit"
           git push || echo "push skipped"
