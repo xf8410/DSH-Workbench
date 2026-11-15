@@ -1,0 +1,11 @@
+--- xref /proc/%d/status (0x4e3edb) ---
+
+--- xref .apk_path (0x3c474b) ---
+
+--- xref apk_path=%s (0x3c4768) ---
+fcn.001232d0 0x123440 [STRN:r--] add x2, x2, str.apk_path_s
+
+--- xref inline_hook_opcode_dismatch (0x3cd4ad) ---
+
+--- xref /data/data/%s/files/adt.s3.t (0x3cf5b2) ---
+fcn.00303bec 0x303c70 [STRN:r--] add x2, x2, str._data_data__s_files_adt.s3.t

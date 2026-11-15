@@ -1,0 +1,101 @@
+### 引用 adt.s3.t 的函数 fcn.00303bec
+  ; CALL XREFS from fcn.003011a4 @ 0x301408(x), 0x301414(x)
+360: fcn.00303bec (int64_t arg1);
+`- args(x1) vars(11:sp[0x8..0x55])
+0x00303bec      f657bda9       stp x22, x21, [sp, -0x30]!
+0x00303bf0      f44f01a9       stp x20, x19, [var_10h]
+0x00303bf4      fd7b02a9       stp x29, x30, [stream]
+0x00303bf8      fd830091       add x29, sp, 0x20
+0x00303bfc      ffc300d1       sub sp, sp, 0x30
+0x00303c00      b4588152       mov w20, 0xac5
+0x00303c04      d4d9b472       movk w20, 0xa6ce, lsl 16
+0x00303c08      b4431cb8       stur w20, [x29, -0x3c]
+0x00303c0c      a8435cb8       ldur w8, [x29, -0x3c]
+0x00303c10      d5b49452       mov w21, 0xa5a6
+0x00303c14      d525a372       movk w21, 0x192e, lsl 16                ; '.\x19'
+0x00303c18      16b18452       mov w22, 0x2588
+0x00303c1c      f30301aa       mov x19, x1                             ; arg2
+0x00303c20      1f01156b       cmp w8, w21
+0x00303c24      9636ad72       movk w22, 0x69b4, lsl 16
+0x00303c28      cb000054       b.lt 0x303c40
+0x00303c2c      1f01166b       cmp w8, w22
+0x00303c30      ea070054       b.ge 0x303d2c
+0x00303c34      29000014       b 0x303cd8
+; CODE XREF from fcn.00303bec @ 0x303d34(x)
+0x00303c38      1f01156b       cmp w8, w21
+0x00303c3c      aa040054       b.ge 0x303cd0
+; CODE XREFS from fcn.00303bec @ 0x303c28(x), 0x303d20(x)
+0x00303c40      1f01146b       cmp w8, w20
+0x00303c44      61070054       b.ne 0x303d30
+0x00303c48      e80304f1       subs x8, sp, 0x100
+0x00303c4c      1f010091       mov sp, x8
+0x00303c50      a8831cf8       stur x8, [x29, -0x38]
+0x00303c54      a8835cf8       ldur x8, [x29, -0x38]
+0x00303c58      a0835cf8       ldur x0, [x29, -0x38]                   ; void *s
+0x00303c5c      e21f8052       mov w2, 0xff
+0x00303c60      e1031f2a       mov w1, wzr
+0x00303c64      5f00f797       bl sym.imp.memset                       ; void *memset(void *s, int c, size_t n)
+0x00303c68      a0835cf8       ldur x0, [x29, -0x38]
+0x00303c6c      62060090       adrp x2, 0x3cf000
+0x00303c70      42c81691       add x2, x2, 0x5b2                       ; 0x3cf5b2 ; "/data/data/%s/files/adt.s3.t"
+0x00303c74      e11f8052       mov w1, 0xff
+0x00303c78      e30313aa       mov x3, x19
+0x00303c7c      161d0194       bl fcn.0034b0d4
+0x00303c80      a0835cf8       ldur x0, [x29, -0x38]                   ; const char *filename
+0x00303c84      810700f0       adrp x1, 0x3f6000
+0x00303c88      217c0c91       add x1, x1, 0x31f                       ; const char *mode
+0x00303c8c      7501f797       bl sym.imp.fopen                        ; file*fopen(const char *filename, const char *mode)
+0x00303c90      a0031df8       stur x0, [x29, -0x30]
+0x00303c94      ab035df8       ldur x11, [x29, -0x30]
+0x00303c98      683d9d52       mov w8, 0xe9eb
+0x00303c9c      a9898952       mov w9, 0x4c4d                          ; 'ML'
+0x00303ca0      cab49452       mov w10, 0xa5a6
+0x00303ca4      0cb18452       mov w12, 0x2588
+0x00303ca8      0829a672       movk w8, 0x3148, lsl 16                 ; 'H1'
+0x00303cac      c90ca572       movk w9, 0x2866, lsl 16                 ; 'f('
+0x00303cb0      ca25a372       movk w10, 0x192e, lsl 16                ; '.\x19'
+0x00303cb4      8c36ad72       movk w12, 0x69b4, lsl 16
+0x00303cb8      7f0100f1       cmp x11, 0
+0x00303cbc      a9a33729       stp w9, w8, [x29, -0x44]
+0x00303cc0      88018a1a       csel w8, w12, w10, eq
+0x00303cc4      a8431cb8       stur w8, [x29, -0x3c]
+0x00303cc8      bfb31b38       sturb wzr, [x29, -0x45]
+0x00303ccc      19000014       b 0x303d30
+; CODE XREF from fcn.00303bec @ 0x303c3c(x)
+0x00303cd0      1f01166b       cmp w8, w22
+0x00303cd4      ca020054       b.ge 0x303d2c
+; CODE XREFS from fcn.00303bec @ 0x303c34(x), 0x303d28(x)
+0x00303cd8      1f01156b       cmp w8, w21
+0x00303cdc      a1020054       b.ne 0x303d30
+0x00303ce0      a0035df8       ldur x0, [x29, -0x30]                   ; FILE *stream
+0x00303ce4      9f00f797       bl sym.imp.fclose                       ; int fclose(FILE *stream)
+0x00303ce8      a0835cf8       ldur x0, [x29, -0x38]                   ; const char *path
+0x00303cec      ad01f797       bl sym.imp.unlink                       ; int unlink(const char *path)
+0x00303cf0      e8528052       mov w8, 0x297
+0x00303cf4      e9e38452       mov w9, 0x271f                          ; '\x1f\''
+0x00303cf8      0ab18452       mov w10, 0x2588
+0x00303cfc      28f0b272       movk w8, 0x9781, lsl 16
+0x00303d00      a9c6bf72       movk w9, 0xfe35, lsl 16
+0x00303d04      8a36ad72       movk w10, 0x69b4, lsl 16
+0x00303d08      2b008052       mov w11, 1
+0x00303d0c      a9a33729       stp w9, w8, [x29, -0x44]
+0x00303d10      aa431cb8       stur w10, [x29, -0x3c]
+0x00303d14      abb31b38       sturb w11, [x29, -0x45]
+0x00303d18      a8435cb8       ldur w8, [x29, -0x3c]
+0x00303d1c      1f01156b       cmp w8, w21
+0x00303d20      0bf9ff54       b.lt 0x303c40
+0x00303d24      1f01166b       cmp w8, w22
+0x00303d28      8bfdff54       b.lt 0x303cd8
+; CODE XREFS from fcn.00303bec @ 0x303c30(x), 0x303cd4(x)
+0x00303d2c      60000054       b.eq 0x303d38
+; CODE XREFS from fcn.00303bec @ 0x303c44(x), 0x303ccc(x), 0x303cdc(x)
+0x00303d30      a8435cb8       ldur w8, [x29, -0x3c]
+0x00303d34      c1ffff17       b 0x303c38
+; CODE XREF from fcn.00303bec @ 0x303d2c(x)
+0x00303d38      a0b35b38       ldurb w0, [x29, -0x45]
+0x00303d3c      a8835cf8       ldur x8, [x29, -0x38]
+0x00303d40      bf8300d1       sub sp, x29, 0x20
+0x00303d44      fd7b42a9       ldp x29, x30, [stream]
+0x00303d48      f44f41a9       ldp x20, x19, [var_10h]
+0x00303d4c      f657c3a8       ldp x22, x21, [sp], 0x30
+0x00303d50      c0035fd6       ret

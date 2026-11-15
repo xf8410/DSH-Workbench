@@ -1,0 +1,34 @@
+--- 引用 open 的地址 ---
+fcn.001a028c 0x1a0310 [CALL:--x] bl sym.imp.open
+fcn.00347f60 0x347dcc [CODE:--x] b sym.imp.open
+fcn.00347f60 0x347dd4 [CODE:--x] b sym.imp.open
+fcn.00349d44 0x349d84 [CODE:--x] b sym.imp.open
+
+--- 引用 fopen 的地址 ---
+fcn.002650c8 0x2651a0 [CALL:--x] bl sym.imp.fopen
+fcn.002694cc 0x2699e0 [CALL:--x] bl sym.imp.fopen
+fcn.0027075c 0x270808 [CALL:--x] bl sym.imp.fopen
+fcn.00270d54 0x270df8 [CALL:--x] bl sym.imp.fopen
+fcn.002710c4 0x27116c [CALL:--x] bl sym.imp.fopen
+fcn.00271c70 0x271f64 [CALL:--x] bl sym.imp.fopen
+fcn.00274108 0x2741c0 [CALL:--x] bl sym.imp.fopen
+fcn.002903c4 0x290594 [CALL:--x] bl sym.imp.fopen
+fcn.00290bcc 0x290df4 [CALL:--x] bl sym.imp.fopen
+fcn.002918b4 0x291af0 [CALL:--x] bl sym.imp.fopen
+fcn.0029890c 0x2989e4 [CALL:--x] bl sym.imp.fopen
+fcn.00299ce0 0x299cfc [CALL:--x] bl sym.imp.fopen
+fcn.00303bec 0x303c8c [CALL:--x] bl sym.imp.fopen
+fcn.00307c10 0x307d10 [CALL:--x] bl sym.imp.fopen
+fcn.00307c10 0x307f5c [CALL:--x] bl sym.imp.fopen
+fcn.00348cb4 0x348cd0 [CALL:--x] bl sym.imp.fopen
+fcn.00348d90 0x348ea4 [CALL:--x] bl sym.imp.fopen
+fcn.0034917c 0x349198 [CALL:--x] bl sym.imp.fopen
+fcn.003491b8 0x34926c [CALL:--x] bl sym.imp.fopen
+fcn.003491b8 0x3493e4 [CALL:--x] bl sym.imp.fopen
+fcn.0034958c 0x34958c [CODE:--x] b sym.imp.fopen
+fcn.00349590 0x3495dc [CALL:--x] bl sym.imp.fopen
+fcn.0038290c 0x382968 [CALL:--x] bl sym.imp.fopen
+
+--- 引用 __open_2 ---
+fcn.001074e8 0x1075a4 [CALL:--x] bl sym.imp.__open_2
+(nofunc) 0x347f5c [CODE:--x] b sym.imp.__open_2
