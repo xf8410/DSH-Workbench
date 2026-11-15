@@ -1,0 +1,40 @@
+=== abort/exit/_exit/kill 的引用 ===
+--- abort ---
+fcn.00144d1c 0x144d3c [CALL:--x] bl sym.imp.abort
+(nofunc) 0x146158 [CALL:--x] bl sym.imp.abort
+(nofunc) 0x14692c [CALL:--x] bl sym.imp.abort
+fcn.00146b98 0x146c10 [CALL:--x] bl sym.imp.abort
+fcn.003abcdc 0x3abe2c [CALL:--x] bl sym.imp.abort
+fcn.003adfe4 0x3ae0d0 [CALL:--x] bl sym.imp.abort
+fcn.003bf1a0 0x3bf25c [CALL:--x] bl sym.imp.abort
+fcn.003bf3a4 0x3bf3d0 [CALL:--x] bl sym.imp.abort
+case.0x2d0e84.1685 0x3bf3f0 [ICOD:r--] bl sym.imp.abort
+fcn.003bf438 0x3bf494 [CALL:--x] bl sym.imp.abort
+fcn.003bf54c 0x3bf55c [CALL:--x] bl sym.imp.abort
+fcn.003b3868 0x3bf678 [ICOD:r--] bl sym.imp.abort
+--- exit ---
+fcn.0035021c 0x350244 [CALL:--x] bl sym.imp.exit
+--- _exit ---
+fcn.00169c9c 0x169ef0 [CALL:--x] bl sym.imp._exit
+fcn.0016b6a4 0x16b744 [CALL:--x] bl sym.imp._exit
+--- kill ---
+(nofunc) 0x16a988 [CALL:--x] bl sym.imp.kill
+(nofunc) 0x16a9bc [CALL:--x] bl sym.imp.kill
+fcn.00347f54 0x347f54 [CODE:--x] b sym.imp.kill
+--- raise ---
+--- pthread_kill ---
+--- tgkill ---
+
+=== exit/abort 附近的字符串 ===
+ApkAbort_CS_%d
+ApkAbort_CS_Cnt
+[ScreenShot]Abort
+[TCJ]Abort
+[sc]Abort
+__cxa_atexit
+__cxa_guard_abort
+android_set_abort_message
+mrpcs_abort.dat
+pthread_exit
+terminate_handler unexpectedly returned
+terminate_handler unexpectedly threw an exception

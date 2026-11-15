@@ -1,0 +1,15 @@
+0x00301634      a9a33329       stp w9, w8, [x29, -0x64]
+0x00301638      aa431ab8       stur w10, [x29, -0x5c]
+0x0030163c      a8435ab8       ldur w8, [x29, -0x5c]
+0x00301640      1f01196b       cmp w8, w25
+0x00301644      ab0a0054       b.lt 0x301798
+0x00301648      1f011a6b       cmp w8, w26
+0x0030164c      2bfdff54       b.lt 0x3015f0
+0x00301650      2c000014       b 0x301700
+; CODE XREF from fcn.003014f0 @ 0x30157c(x)
+0x00301654      1f01166b       cmp w8, w22
+0x00301658      0a030054       b.ge 0x3016b8
+; CODE XREFS from fcn.003014f0 @ 0x30155c(x), 0x3016b4(x), 0x3016fc(x), 0x3017a4(x), 0x301804(x)
+0x0030165c      1f01176b       cmp w8, w23
+0x00301660      210b0054       b.ne 0x3017c4
+0x00301664      e00313aa       mov x0, x19                             ; int64_t arg_b0h

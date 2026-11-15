@@ -1,0 +1,42 @@
+########## fcn.00347f50 ##########
+  ;-- case 5:                                                          ; from 0x003480a0
+  ; XREFS(132)
+4: fcn.00347f50 ();
+0x00347f50      b4edf517       b sym.imp.getpid
+
+########## fcn.0030180c ##########
+  ; CALL XREF from fcn.003011a4 @ 0x301280(x)
+  ; CALL XREF from fcn.0030194c @ 0x301d78(x)
+  ; CALL XREF from fcn.00308094 @ 0x308168(x)
+120: fcn.0030180c (int64_t arg1, int64_t arg_1a0h);
+`- args(x1, sp[0x1a0..0x1a0]) vars(21:sp[0x8..0x1a0])
+0x0030180c      ff8306d1       sub sp, sp, 0x1a0
+0x00301810      fc4f18a9       stp x28, x19, [var_18h0]
+0x00301814      fd7b19a9       stp x29, x30, [var_190h]
+0x00301818      fd430691       add x29, sp, 0x190
+0x0030181c      f303012a       mov w19, w1                             ; arg2
+0x00301820      e0030291       add x0, sp, 0x80                        ; void *s
+0x00301824      e21f8052       mov w2, 0xff
+0x00301828      e1031f2a       mov w1, wzr
+0x0030182c      6d09f797       bl sym.imp.memset                       ; void *memset(void *s, int c, size_t n)
+0x00301830      20548552       mov w0, 0x2aa1
+0x00301834      4a0e0294       bl fcn.0038515c
+0x00301838      e10300aa       mov x1, x0
+0x0030183c      e0030291       add x0, sp, 0x80
+0x00301840      e203132a       mov w2, w19
+0x00301844      63260194       bl fcn.0034b1d0
+0x00301848      00e4006f       movi v0.2d, 0000000000000000
+0x0030184c      e0030291       add x0, sp, 0x80
+0x00301850      e1030091       mov x1, sp
+0x00301854      e00303ad       stp q0, q0, [arg_1a0hx60]
+0x00301858      e00302ad       stp q0, q0, [arg_1a0hx40]
+0x0030185c      e00301ad       stp q0, q0, [arg_1a0hx20]
+0x00301860      e00300ad       stp q0, q0, [sp]
+0x00301864      1e210194       bl fcn.00349cdc
+0x00301868      e81b40b9       ldr w8, [var_18h]
+0x0030186c      fd7b59a9       ldp x29, x30, [var_190h]
+0x00301870      fc4f58a9       ldp x28, x19, [var_18h0]
+0x00301874      1f000071       cmp w0, 0
+0x00301878      00019f5a       csinv w0, w8, wzr, eq
+0x0030187c      ff830691       add sp, sp, 0x1a0
+0x00301880      c0035fd6       ret
