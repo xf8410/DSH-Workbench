@@ -1,0 +1,16 @@
+0x000fd0ac      36008052       mov w22, 1
+; CODE XREFS from fcn.000fcf0c @ 0xfcf6c(x), 0xfcfc8(x), 0xfd010(x)
+0x000fd0b0      a0c301d1       sub x0, x29, 0x70                       ; int64_t arg1
+0x000fd0b4      70010094       bl fcn.000fd674
+; CODE XREFS from fcn.000fcf0c @ 0xfcfb0(x), 0xfd060(x), 0xfd068(x)
+0x000fd0b8      a06301d1       sub x0, x29, 0x58                       ; int64_t arg1
+0x000fd0bc      6b060094       bl fcn.000fea68
+; CODE XREFS from fcn.000fcf0c @ 0xfcf2c(x), 0xfcf34(x)
+0x000fd0c0      e003162a       mov w0, w22
+0x000fd0c4      fd7b57a9       ldp x29, x30, [var_170h]
+0x000fd0c8      f44f56a9       ldp x20, x19, [var_160h]
+0x000fd0cc      f65755a9       ldp x22, x21, [var_150h]
+0x000fd0d0      f85f54a9       ldp x24, x23, [var_140h]
+0x000fd0d4      fc9b40f9       ldr x28, [var_130h]
+0x000fd0d8      ff030691       add sp, sp, 0x180
+0x000fd0dc      c0035fd6       ret

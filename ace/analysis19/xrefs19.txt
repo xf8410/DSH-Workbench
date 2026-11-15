@@ -1,0 +1,5 @@
+=== xref 0xfcf0c ===
+fcn.000fc928 0xfc99c [CALL:--x] bl fcn.000fcf0c
+=== xref 0xd463c ===
+=== xref 0xfcb70 ===
+fcn.000fbd6c 0xfbe6c [CALL:--x] bl fcn.000fcb70
