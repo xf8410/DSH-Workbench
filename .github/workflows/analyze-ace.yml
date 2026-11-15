@@ -22,72 +22,75 @@ jobs:
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
           aarch64-linux-gnu-objdump --version | head -1
 
-      - name: 探针列表
+      - name: round3 关键函数
         run: |
-          mkdir -p out2
-          ls ace/*.so
-
-      - name: 反编译关键函数（adt.s3.t）
-        run: |
+          mkdir -p out3
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           {
-            echo "### 引用 adt.s3.t 的函数 fcn.00303bec"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x303bec" "$F" 2>/dev/null
-          } > out2/tp2.fn_adt.txt
-          wc -l out2/tp2.fn_adt.txt
+            echo "=== 1. fopen mode 字符串 @0x3f631f ==="
+            r2 -q -e scr.color=false -c "ps @ 0x3f631f" "$F" 2>/dev/null
+            echo ""
+            echo "=== 2. adt.s3.t 调用者 fcn.003011a4 ==="
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x3011a4" "$F" 2>/dev/null
+            echo ""
+            echo "=== 3. open 调用点 fcn.001a028c ==="
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x1a028c" "$F" 2>/dev/null
+            echo ""
+            echo "=== 4. open 包装 fcn.00347f60 ==="
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x347f60" "$F" 2>/dev/null
+            echo ""
+            echo "=== 5. open 包装 fcn.00349d44 ==="
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x349d44" "$F" 2>/dev/null
+          } > out3/tp2.r3_fn.txt
+          wc -l out3/tp2.r3_fn.txt
 
-      - name: 找 /proc 与 apk_path 的引用
+      - name: round3 路径字符串
         run: |
           F=ace/tp2.so
-          [ -f "$F" ] || exit 0
           {
-            echo "--- xref /proc/%d/status (0x4e3edb) ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ 0x4e3edb" "$F" 2>/dev/null | head -30
+            echo "=== 含 lib/arm64 或 /lib/ ==="
+            strings -n 6 "$F" | grep -E "lib/arm64|lib/armeabi|/lib/" | sort -u | head -40
             echo ""
-            echo "--- xref .apk_path (0x3c474b) ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ 0x3c474b" "$F" 2>/dev/null | head -30
+            echo "=== 含 .apk ==="
+            strings -n 6 "$F" | grep -E "\.apk" | sort -u | head -40
             echo ""
-            echo "--- xref apk_path=%s (0x3c4768) ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ 0x3c4768" "$F" 2>/dev/null | head -30
+            echo "=== 含 /data/app 或 /data/user ==="
+            strings -n 6 "$F" | grep -E "/data/app|/data/user" | sort -u | head -40
             echo ""
-            echo "--- xref inline_hook_opcode_dismatch (0x3cd4ad) ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ 0x3cd4ad" "$F" 2>/dev/null | head -30
-            echo ""
-            echo "--- xref /data/data/%s/files/adt.s3.t (0x3cf5b2) ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ 0x3cf5b2" "$F" 2>/dev/null | head -30
-          } > out2/tp2.xref2.txt
-          cat out2/tp2.xref2.txt
+            echo "=== 含 trampoline / backup / orig ==="
+            strings -n 6 "$F" | grep -iE "trampoline|backup|orig|restore" | sort -u | head -30
+          } > out3/tp2.r3_paths.txt
+          cat out3/tp2.r3_paths.txt
 
-      - name: 找 open/fopen 调用点
+      - name: round3 段表与导出
         run: |
           F=ace/tp2.so
-          [ -f "$F" ] || exit 0
           {
-            echo "--- 引用 open 的地址 ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.open" "$F" 2>/dev/null | head -40
+            echo "=== 段表 ==="
+            aarch64-linux-gnu-readelf -S "$F" 2>/dev/null | head -40
             echo ""
-            echo "--- 引用 fopen 的地址 ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.fopen" "$F" 2>/dev/null | head -40
+            echo "=== 动态依赖 ==="
+            aarch64-linux-gnu-readelf -d "$F" 2>/dev/null | grep NEEDED
             echo ""
-            echo "--- 引用 __open_2 ---"
-            r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.__open_2" "$F" 2>/dev/null | head -20
-          } > out2/tp2.io_calls.txt
-          cat out2/tp2.io_calls.txt
+            echo "=== 导出符号（tp2_* / tss_*） ==="
+            aarch64-linux-gnu-nm -D --defined-only "$F" 2>/dev/null | grep -E "tp2_|tss_" | head -40
+          } > out3/tp2.r3_sec.txt
+          cat out3/tp2.r3_sec.txt
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis2
-          path: out2/
+          name: ace-analysis3
+          path: out3/
           retention-days: 30
 
       - name: 结果写回仓库
         run: |
-          mkdir -p ace/analysis2
-          cp out2/*.txt ace/analysis2/ 2>/dev/null || true
+          mkdir -p ace/analysis3
+          cp out3/*.txt ace/analysis3/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis2
-          git commit -m "ace analysis2" || echo "nothing to commit"
+          git add ace/analysis3
+          git commit -m "ace analysis3" || echo "nothing to commit"
           git push || echo "push skipped"
