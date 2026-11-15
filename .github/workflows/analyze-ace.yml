@@ -21,69 +21,82 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round17 MD5 三件套
+      - name: round18 上游调用者
         run: |
-          mkdir -p out17
+          mkdir -p out18
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.00338db4 (md5 init?) ===;
-              pdf @ 0x338db4;
-              echo === fcn.0033ab2c (md5 transform?) ===;
-              pdf @ 0x33ab2c;
-              echo === fcn.0033ab9c ===;
-              pdf @ 0x33ab9c;
-            " "$F" > /tmp/r17.txt 2>/dev/null || true
-            wc -l /tmp/r17.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r17.txt out17/md5_
+              echo === fcn.0037af90 ===;
+              pdf @ 0x37af90;
+            " "$F" > /tmp/r18a.txt 2>/dev/null || true
+            wc -l /tmp/r18a.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r18a.txt out18/up_
           fi
 
-      - name: round17 十个分片配置码
-        run: |
-          F=ace/tp2.so
-          if [ -f "$F" ]; then
-            {
-              echo "=== fcn.0037b0ac 里的配置码与分片源 ==="
-              aarch64-linux-gnu-objdump -d --no-show-raw-insn \
-                --start-address=0x37b0ac --stop-address=0x37b560 "$F" 2>/dev/null \
-                | grep -E "mov\s+w0, 0x[0-9a-f]+|mov\s+w10, 0x|add\s+x8, x8|x9, x9|bl\s+34a5c0|tbz|b\s+37b54c" | head -80
-            } > out17/shards.txt 2>&1
-            cat out17/shards.txt
-          fi
-
-      - name: round17 汇合点后续
+      - name: round18 分片主函数完整
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === 0x37b54c 之后 ===;
-              pd 100 @ 0x37b54c;
-            " "$F" > out17/conv.txt 2>/dev/null || true
-            wc -l out17/conv.txt 2>/dev/null || true
-            head -60 out17/conv.txt 2>/dev/null || true
+              echo === fcn.0037b0ac 全文 ===;
+              pdf @ 0x37b0ac;
+            " "$F" > /tmp/r18b.txt 2>/dev/null || true
+            wc -l /tmp/r18b.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r18b.txt out18/main_
+          fi
+
+      - name: round18 MD5 轮函数
+        run: |
+          F=ace/tp2.so
+          if [ -f "$F" ]; then
+            r2 -q -e scr.color=false -e asm.lines=false -c "
+              aaa;
+              echo === fcn.0033a8a8 ===;
+              pdf @ 0x33a8a8;
+            " "$F" > /tmp/r18c.txt 2>/dev/null || true
+            wc -l /tmp/r18c.txt 2>/dev/null || true
+            head -100 /tmp/r18c.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r18c.txt out18/md5core_
+          fi
+
+      - name: round18 链表消费方
+        run: |
+          F=ace/tp2.so
+          if [ -f "$F" ]; then
+            r2 -q -e scr.color=false -e asm.lines=false -c "
+              aaa;
+              echo === xref fcn.0037b56c ===;
+              axt @ 0x37b56c;
+              echo === xref 0x37b0ac ===;
+              axt @ 0x37b0ac;
+              echo === xref 0x37af90 ===;
+              axt @ 0x37af90;
+            " "$F" > out18/xrefs18.txt 2>/dev/null || true
+            cat out18/xrefs18.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out17/ || true
-          du -sh out17/ || true
+          ls -l out18/ || true
+          du -sh out18/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis17
-          path: out17/
+          name: ace-analysis18
+          path: out18/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis17
-          cp out17/* ace/analysis17/ 2>/dev/null || true
+          mkdir -p ace/analysis18
+          cp out18/* ace/analysis18/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis17
-          git commit -m "ace analysis17: MD5 trio + 10 shard codes" || echo "nothing to commit"
+          git add ace/analysis18
+          git commit -m "ace analysis18: upstream callers + MD5 core + chain consumers" || echo "nothing to commit"
           git push || echo "push skipped"
