@@ -21,65 +21,70 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round24 配置码 0xca3 处理函数
+      - name: round25 表 B 偏移引用（0x6b0）
         run: |
-          mkdir -p out24
+          mkdir -p out25
           F=ace/tp2.so
           if [ -f "$F" ]; then
-            r2 -q -e scr.color=false -e asm.lines=false -c "
-              aaa;
-              echo === fcn.003868f4 ===;
-              pdf @ 0x3868f4;
-            " "$F" > /tmp/r24a.txt 2>/dev/null || true
-            wc -l /tmp/r24a.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r24a.txt out24/ca3_
+            {
+              echo "=== 所有 add xN, xN, #0x6b0（表 B 偏移） ==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null \
+                | grep -nE "add\s+x[0-9]+, x[0-9]+, #0x6b0" | head -20
+              echo ""
+              echo "=== 所有 ldr/str 0x6b0 偏移 ==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null \
+                | grep -nE "(ldr|str)\s+[ wx][0-9]+, \[x[0-9]+, #0x6b0\]" | head -20
+              echo ""
+              echo "=== 0x514000 附近的 adrp 全部列出 ==="
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$F" 2>/dev/null \
+                | grep -nE "adrp\s+x[0-9]+, 514000" | head -20
+            } > out25/tableB_refs.txt 2>&1
+            cat out25/tableB_refs.txt
           fi
 
-      - name: round24 配置码 0xbc9 取值函数
-        run: |
-          F=ace/tp2.so
-          if [ -f "$F" ]; then
-            r2 -q -e scr.color=false -e asm.lines=false -c "
-              aaa;
-              echo === fcn.003855a0 ===;
-              pdf @ 0x3855a0;
-            " "$F" > /tmp/r24b.txt 2>/dev/null || true
-            wc -l /tmp/r24b.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r24b.txt out24/bc9_
-          fi
-
-      - name: round24 0xca3 分支追踪
+      - name: round25 表 A 与表 B 的相对关系
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             {
-              echo "=== fcn.003868f4 区间内所有 bl 与立即数 ==="
+              echo "=== 表 A 0x3e8645 之后 4KB（看是否连续字符串池）==="
+              aarch64-linux-gnu-objdump -s --start-address=0x3e8645 --stop-address=0x3e9645 "$F" 2>/dev/null | head -40
+            } > out25/tableA_ext.txt 2>&1
+            cat out25/tableA_ext.txt
+          fi
+
+      - name: round25 init 函数全集里对 0x514xxx 的写
+        run: |
+          F=ace/tp2.so
+          if [ -f "$F" ]; then
+            {
+              echo "=== .init_array 区间 0xc4500..0xc5c00 中 adrp 514000 ==="
               aarch64-linux-gnu-objdump -d --no-show-raw-insn \
-                --start-address=0x3868f4 --stop-address=0x387100 "$F" 2>/dev/null \
-                | grep -E "bl\s+|mov\s+w[0-9]+, #0x|adrp" | head -80
-            } > out24/ca3_ops.txt 2>&1
-            cat out24/ca3_ops.txt
+                --start-address=0xc4500 --stop-address=0xc5c00 "$F" 2>/dev/null \
+                | grep -nE "adrp\s+x[0-9]+, 514000"
+            } > out25/init_bss.txt 2>&1
+            cat out25/init_bss.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out24/ || true
-          du -sh out24/ || true
+          ls -l out25/ || true
+          du -sh out25/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis24
-          path: out24/
+          name: ace-analysis25
+          path: out25/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis24
-          cp out24/* ace/analysis24/ 2>/dev/null || true
+          mkdir -p ace/analysis25
+          cp out25/* ace/analysis25/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis24
-          git commit -m "ace analysis24: config 0xca3 handler" || echo "nothing to commit"
+          git add ace/analysis25
+          git commit -m "ace analysis25: table B writers + table A extent" || echo "nothing to commit"
           git push || echo "push skipped"
