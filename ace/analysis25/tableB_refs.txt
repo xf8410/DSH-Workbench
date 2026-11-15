@@ -1,0 +1,33 @@
+=== 所有 add xN, xN, #0x6b0（表 B 偏移） ===
+2143:   c4f34:	add	x8, x8, #0x6b0
+32718:   e2b18:	add	x20, x20, #0x6b0
+89216:  119de0:	add	x0, x0, #0x6b0
+95454:  11ff58:	add	x1, x1, #0x6b0
+129531:  1413cc:	add	x21, x21, #0x6b0
+165561:  1646c4:	add	x26, x26, #0x6b0
+315548:  1f6e50:	add	x1, x1, #0x6b0
+720003:  381dd4:	add	x0, x0, #0x6b0
+
+=== 所有 ldr/str 0x6b0 偏移 ===
+
+=== 0x514000 附近的 adrp 全部列出 ===
+2956:   c5be8:	adrp	x19, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+711162:  3793b8:	adrp	x19, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+711536:  379990:	adrp	x24, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+711949:  37a004:	adrp	x19, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+711952:  37a010:	adrp	x0, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+711969:  37a054:	adrp	x19, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+712656:  37ab10:	adrp	x20, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+712659:  37ab1c:	adrp	x0, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+712683:  37ab7c:	adrp	x20, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+713809:  37bd14:	adrp	x19, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+713812:  37bd20:	adrp	x0, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+713831:  37bd6c:	adrp	x19, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+714250:  37c3f8:	adrp	x20, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+715407:  37d60c:	adrp	x9, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+715425:  37d654:	adrp	x9, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+716707:  37ea5c:	adrp	x20, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+716710:  37ea68:	adrp	x0, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+716734:  37eac8:	adrp	x20, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+718238:  380248:	adrp	x20, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
+718241:  380254:	adrp	x0, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>

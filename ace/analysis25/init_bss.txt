@@ -1,0 +1,2 @@
+=== .init_array 区间 0xc4500..0xc5c00 中 adrp 514000 ===
+1474:   c5be8:	adrp	x19, 514000 <g_AllTssExportFunc@@TERSAFE+0x5eea8>
