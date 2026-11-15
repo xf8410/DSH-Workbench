@@ -1,0 +1,91 @@
+; DATA XREF from case.0x2d5c70.1146 @ +0x44(r)
+0x0037b438      e00313aa       mov x0, x19
+0x0037b43c      e10314aa       mov x1, x20
+0x0037b440      603cff97       bl fcn.0034a5c0
+0x0037b444      280300f0       adrp x8, 0x3e2000
+0x0037b448      49030090       adrp x9, 0x3e3000
+0x0037b44c      e0031f2a       mov w0, wzr
+0x0037b450      08113491       add x8, x8, 0xd04
+0x0037b454      29411291       add x9, x9, 0x490
+0x0037b458      0a078052       mov w10, 0x38                           ; '8'
+0x0037b45c      3c000014       b 0x37b54c
+; CODE XREF from fcn.0037b0ac @ 0x37b194(x)
+0x0037b460      fce4f697       bl fcn.00134850
+0x0037b464      f50300aa       mov x21, x0
+0x0037b468      20778652       mov w0, 0x33b9
+0x0037b46c      c02e0094       bl fcn.00386f6c
+0x0037b470      e10300aa       mov x1, x0
+0x0037b474      22008052       mov w2, 1
+0x0037b478      e00315aa       mov x0, x21
+0x0037b47c      a3e5f697       bl fcn.00134b08
+0x0037b480      c0060036       tbz w0, 0, 0x37b558
+0x0037b484      02088052       mov w2, 0x40
+0x0037b488      e00313aa       mov x0, x19
+0x0037b48c      e10314aa       mov x1, x20
+0x0037b490      4c3cff97       bl fcn.0034a5c0
+0x0037b494      48030090       adrp x8, 0x3e3000
+0x0037b498      490300b0       adrp x9, 0x3e4000
+0x0037b49c      e0031f2a       mov w0, wzr
+0x0037b4a0      08c11591       add x8, x8, 0x570
+0x0037b4a4      29d10991       add x9, x9, 0x274
+0x0037b4a8      6a0c8052       mov w10, 0x63                           ; 'c'
+0x0037b4ac      28000014       b 0x37b54c
+; CODE XREF from fcn.0037b0ac @ 0x37b1ac(x)
+0x0037b4b0      e8e4f697       bl fcn.00134850
+0x0037b4b4      f50300aa       mov x21, x0
+0x0037b4b8      007b8652       mov w0, 0x33d8
+0x0037b4bc      01370094       bl fcn.003890c0
+0x0037b4c0      e10300aa       mov x1, x0
+0x0037b4c4      22008052       mov w2, 1
+0x0037b4c8      e00315aa       mov x0, x21
+0x0037b4cc      8fe5f697       bl fcn.00134b08
+0x0037b4d0      40040036       tbz w0, 0, 0x37b558
+0x0037b4d4      02088052       mov w2, 0x40
+0x0037b4d8      e00313aa       mov x0, x19
+0x0037b4dc      e10314aa       mov x1, x20
+0x0037b4e0      383cff97       bl fcn.0034a5c0
+0x0037b4e4      480300b0       adrp x8, 0x3e4000
+0x0037b4e8      490300d0       adrp x9, 0x3e5000
+0x0037b4ec      e0031f2a       mov w0, wzr
+0x0037b4f0      08011091       add x8, x8, 0x400
+0x0037b4f4      29710c91       add x9, x9, 0x31c
+0x0037b4f8      ea0e8052       mov w10, 0x77                           ; 'w'
+0x0037b4fc      14000014       b 0x37b54c
+; CODE XREF from fcn.0037b0ac @ 0x37b1c4(x)
+0x0037b500      d4e4f697       bl fcn.00134850
+0x0037b504      f50300aa       mov x21, x0
+0x0037b508      60888652       mov w0, 0x3443                          ; 'C4'
+0x0037b50c      d0380094       bl fcn.0038984c
+0x0037b510      e10300aa       mov x1, x0
+0x0037b514      22008052       mov w2, 1
+0x0037b518      e00315aa       mov x0, x21
+0x0037b51c      7be5f697       bl fcn.00134b08
+0x0037b520      c0010036       tbz w0, 0, 0x37b558
+0x0037b524      02088052       mov w2, 0x40
+0x0037b528      e00313aa       mov x0, x19
+0x0037b52c      e10314aa       mov x1, x20
+0x0037b530      243cff97       bl fcn.0034a5c0
+0x0037b534      480300d0       adrp x8, 0x3e5000
+0x0037b538      490300f0       adrp x9, 0x3e6000
+0x0037b53c      e0031f2a       mov w0, wzr
+0x0037b540      08e11391       add x8, x8, 0x4f8
+0x0037b544      29213a91       add x9, x9, 0xe88
+0x0037b548      aa0f8052       mov w10, 0x7d                           ; '}'
+; XREFS: CODE 0x0037b22c  CODE 0x0037b27c  CODE 0x0037b2cc  
+; XREFS: CODE 0x0037b31c  CODE 0x0037b36c  CODE 0x0037b3bc  
+; XREFS: CODE 0x0037b40c  CODE 0x0037b45c  CODE 0x0037b4ac  
+; XREFS: CODE 0x0037b4fc  
+0x0037b54c      682604a9       stp x8, x9, [x19, 0x40]
+0x0037b550      6a2a00f9       str x10, [x19, 0x50]
+0x0037b554      02000014       b 0x37b55c
+; XREFS: CODE 0x0037b0bc  CODE 0x0037b1dc  CODE 0x0037b200  
+; XREFS: CODE 0x0037b250  CODE 0x0037b2a0  CODE 0x0037b2f0  
+; XREFS: CODE 0x0037b340  CODE 0x0037b390  CODE 0x0037b3e0  
+; XREFS: CODE 0x0037b430  CODE 0x0037b480  CODE 0x0037b4d0  
+; XREFS: CODE 0x0037b520  
+0x0037b558      00008012       mov w0, -1
+; CODE XREFS from fcn.0037b0ac @ 0x37b0cc(x), 0x37b0d4(x), 0x37b554(x)
+0x0037b55c      fd7b42a9       ldp x29, x30, [var_20h]
+0x0037b560      f44f41a9       ldp x20, x19, [var_10h]
+0x0037b564      f50743f8       ldr x21, [sp], 0x30
+0x0037b568      c0035fd6       ret

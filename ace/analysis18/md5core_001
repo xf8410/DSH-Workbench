@@ -1,0 +1,6 @@
+; CODE XREF from fcn.0033a8a8 @ 0x33a8c4(x)
+0x0033aa4c      f44f56a9       ldp x20, x19, [var_160h]
+0x0033aa50      f65755a9       ldp x22, x21, [var_150h]
+0x0033aa54      fc5f54a9       ldp x28, x23, [var_140h]
+0x0033aa58      ffc30591       add sp, sp, 0x170                       ; 0x10078000
+0x0033aa5c      c0035fd6       ret
