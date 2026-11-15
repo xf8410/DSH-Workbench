@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'ace/*.so'
+      - 'ace/trigger'
 
 permissions:
   contents: write
@@ -21,80 +22,72 @@ jobs:
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
           aarch64-linux-gnu-objdump --version | head -1
 
-      - name: 文件信息
+      - name: 探针列表
         run: |
-          mkdir -p out
-          for f in ace/*.so; do
-            [ -f "$f" ] || continue
-            b=$(basename "$f")
-            echo "=== $b ===" >> out/info.txt
-            file "$f" >> out/info.txt
-            aarch64-linux-gnu-readelf -d "$f" 2>/dev/null | head -40 >> out/info.txt
-            aarch64-linux-gnu-readelf -S "$f" 2>/dev/null >> out/info.txt
-          done
+          mkdir -p out2
+          ls ace/*.so
 
-      - name: 反汇编
+      - name: 反编译关键函数（adt.s3.t）
         run: |
-          for f in ace/*.so; do
-            [ -f "$f" ] || continue
-            b=$(basename "$f" .so)
-            aarch64-linux-gnu-objdump -d --no-show-raw-insn "$f" > "out/${b}.disasm.txt" 2>/dev/null || true
-            echo "$b disasm lines: $(wc -l < out/${b}.disasm.txt)"
-          done
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          {
+            echo "### 引用 adt.s3.t 的函数 fcn.00303bec"
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x303bec" "$F" 2>/dev/null
+          } > out2/tp2.fn_adt.txt
+          wc -l out2/tp2.fn_adt.txt
 
-      - name: 关键字符串交叉引用
+      - name: 找 /proc 与 apk_path 的引用
         run: |
-          for f in ace/*.so; do
-            [ -f "$f" ] || continue
-            b=$(basename "$f" .so)
-            echo "### $b" > "out/${b}.xref.txt"
-            for s in ".apk_path" "!tcj" "vap_2" "inline_hook_opcode" "ms_hook_opcode" \
-                     "/proc/%d/status" "adt.s3.t" "check_state" "TssSDKOnRecvSignature" \
-                     "ano_cert_md5" "code_size" "sig custom" "ms_data_crc" "HBCheck"; do
-              echo "" >> "out/${b}.xref.txt"
-              echo "=== $s ===" >> "out/${b}.xref.txt"
-              r2 -q -e scr.color=false -c "izz~${s}" "$f" 2>/dev/null | head -5 >> "out/${b}.xref.txt" || true
-            done
-          done
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          {
+            echo "--- xref /proc/%d/status (0x4e3edb) ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ 0x4e3edb" "$F" 2>/dev/null | head -30
+            echo ""
+            echo "--- xref .apk_path (0x3c474b) ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ 0x3c474b" "$F" 2>/dev/null | head -30
+            echo ""
+            echo "--- xref apk_path=%s (0x3c4768) ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ 0x3c4768" "$F" 2>/dev/null | head -30
+            echo ""
+            echo "--- xref inline_hook_opcode_dismatch (0x3cd4ad) ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ 0x3cd4ad" "$F" 2>/dev/null | head -30
+            echo ""
+            echo "--- xref /data/data/%s/files/adt.s3.t (0x3cf5b2) ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ 0x3cf5b2" "$F" 2>/dev/null | head -30
+          } > out2/tp2.xref2.txt
+          cat out2/tp2.xref2.txt
 
-      - name: 定位字符串地址并找引用
+      - name: 找 open/fopen 调用点
         run: |
-          for f in ace/*.so; do
-            [ -f "$f" ] || continue
-            b=$(basename "$f" .so)
-            {
-              echo "### $b : string -> address -> xref"
-              for s in ".apk_path" "!tcj,name" "/proc/%d/status" "inline_hook_opcode_dismatch" "adt.s3.t"; do
-                echo ""
-                echo "--- $s ---"
-                r2 -q -e scr.color=false -c "aaa; izz~${s}; axt @@ str.*${s}*" "$f" 2>/dev/null | head -20 || true
-              done
-            } > "out/${b}.strings_xref.txt"
-          done
-
-      - name: 导入/导出符号
-        run: |
-          for f in ace/*.so; do
-            [ -f "$f" ] || continue
-            b=$(basename "$f" .so)
-            aarch64-linux-gnu-nm -D --defined-only "$f" 2>/dev/null > "out/${b}.exports.txt" || true
-            aarch64-linux-gnu-nm -D -u "$f" 2>/dev/null > "out/${b}.imports.txt" || true
-            echo "$b exports=$(wc -l < out/${b}.exports.txt) imports=$(wc -l < out/${b}.imports.txt)"
-          done
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          {
+            echo "--- 引用 open 的地址 ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.open" "$F" 2>/dev/null | head -40
+            echo ""
+            echo "--- 引用 fopen 的地址 ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.fopen" "$F" 2>/dev/null | head -40
+            echo ""
+            echo "--- 引用 __open_2 ---"
+            r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.__open_2" "$F" 2>/dev/null | head -20
+          } > out2/tp2.io_calls.txt
+          cat out2/tp2.io_calls.txt
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis
-          path: out/
+          name: ace-analysis2
+          path: out2/
           retention-days: 30
 
       - name: 结果写回仓库
         run: |
-          mkdir -p ace/analysis
-          cp out/*.txt ace/analysis/ 2>/dev/null || true
+          mkdir -p ace/analysis2
+          cp out2/*.txt ace/analysis2/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis
-          git commit -m "ace analysis: $(date -u +%F)" || echo "nothing to commit"
+          git add ace/analysis2
+          git commit -m "ace analysis2" || echo "nothing to commit"
           git push || echo "push skipped"
