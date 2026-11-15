@@ -1,0 +1,22 @@
+0x00349d84      8be7f517       b sym.imp.open
+; CODE XREF from fcn.00349d44 @ 0x349d68(x)
+0x00349d88      560e0090       adrp x22, 0x511000
+0x00349d8c      c8c641f9       ldr x8, [x22, 0x388]
+0x00349d90      e80000b5       cbnz x8, 0x349dac
+0x00349d94      69f9ff97       bl fcn.00348338
+0x00349d98      480b00f0       adrp x8, dlclose                        ; 0x4b4000
+0x00349d9c      08b546f9       ldr x8, [x8, 0xd68]                     ; [0x34b310:4]=0xaa0003e8 ; fcn.0034b310
+0x00349da0      1f0000f1       cmp x0, 0
+0x00349da4      0801809a       csel x8, x8, x0, eq
+0x00349da8      c8c601f9       str x8, [x22, 0x388]
+; CODE XREF from fcn.00349d44 @ 0x349d90(x)
+0x00349dac      00078052       mov w0, 0x38                            ; '8'
+0x00349db0      610c8012       mov w1, -0x64
+0x00349db4      e20315aa       mov x2, x21
+0x00349db8      e303142a       mov w3, w20
+0x00349dbc      e403132a       mov w4, w19
+0x00349dc0      00013fd6       blr x8
+0x00349dc4      fd7b42a9       ldp x29, x30, [var_20h]
+0x00349dc8      f44f41a9       ldp x20, x19, [var_10h]
+0x00349dcc      f657c3a8       ldp x22, x21, [sp], 0x30
+0x00349dd0      c0035fd6       ret

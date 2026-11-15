@@ -1,0 +1,90 @@
+0x00301350      4d010094       bl fcn.00301884
+0x00301354      ffff00a9       stp xzr, xzr, [var_0h_3]
+0x00301358      ff0300f9       str xzr, [sp]
+0x0030135c      e2030091       mov x2, sp
+0x00301360      e4630091       add x4, sp, 0x18
+0x00301364      e00313aa       mov x0, x19
+0x00301368      e103162a       mov w1, w22
+0x0030136c      e303152a       mov w3, w21
+0x00301370      77010094       bl fcn.0030194c
+0x00301374      37cdf897       bl fcn.00134850
+0x00301378      610600d0       adrp x1, 0x3cf000
+0x0030137c      21e01491       add x1, x1, 0x538                       ; 0x3cf538 ; "simu_vap"
+0x00301380      22008052       mov w2, 1
+0x00301384      e1cdf897       bl fcn.00134b08
+0x00301388      c0000036       tbz w0, 0, 0x3013a0
+0x0030138c      e1c30091       add x1, sp, 0x30
+0x00301390      e2030091       mov x2, sp
+0x00301394      e3630091       add x3, sp, 0x18
+0x00301398      e00313aa       mov x0, x19
+0x0030139c      a4050094       bl fcn.00302a2c
+; CODE XREF from fcn.003011a4 @ 0x301388(x)
+0x003013a0      685a4039       ldrb w8, [x19, 0x16]
+0x003013a4      a8000034       cbz w8, 0x3013b8
+0x003013a8      e1030091       mov x1, sp
+0x003013ac      e2c30091       add x2, sp, 0x30
+0x003013b0      e00313aa       mov x0, x19
+0x003013b4      75060094       bl fcn.00302d88
+; CODE XREF from fcn.003011a4 @ 0x3013a4(x)
+0x003013b8      e80b40f9       ldr x8, [var_10h_2]
+0x003013bc      c80100b4       cbz x8, 0x3013f4
+0x003013c0      e1030091       mov x1, sp
+0x003013c4      5c070094       bl fcn.00303134
+0x003013c8      e1030091       mov x1, sp
+0x003013cc      e2c30091       add x2, sp, 0x30
+0x003013d0      e30314aa       mov x3, x20
+0x003013d4      fa070094       bl fcn.003033bc
+0x003013d8      e1030091       mov x1, sp
+0x003013dc      e00313aa       mov x0, x19
+0x003013e0      a1080094       bl fcn.00303664
+0x003013e4      e1030091       mov x1, sp
+0x003013e8      e2c30091       add x2, sp, 0x30
+0x003013ec      e00313aa       mov x0, x19
+0x003013f0      dd080094       bl fcn.00303764
+; CODE XREF from fcn.003011a4 @ 0x3013bc(x)
+0x003013f4      00b38c52       mov w0, 0x6598
+0x003013f8      020e0294       bl fcn.00384c00
+0x003013fc      f40300aa       mov x20, x0
+0x00301400      610600d0       adrp x1, 0x3cf000
+0x00301404      21041591       add x1, x1, 0x541                       ; 0x3cf541 ; "com.ace.gamesafe4"
+0x00301408      f9090094       bl fcn.00303bec
+0x0030140c      a0010037       tbnz w0, 0, 0x301440
+0x00301410      e10314aa       mov x1, x20
+0x00301414      f6090094       bl fcn.00303bec
+0x00301418      40010036       tbz w0, 0, 0x301440
+0x0030141c      cd1a0194       bl fcn.00347f50
+0x00301420      e103002a       mov w1, w0
+0x00301424      650600d0       adrp x5, 0x3cf000
+0x00301428      a5681791       add x5, x5, 0x5da
+0x0030142c      e00313aa       mov x0, x19
+0x00301430      e20314aa       mov x2, x20
+0x00301434      e30314aa       mov x3, x20
+0x00301438      e4031faa       mov x4, xzr
+0x0030143c      460a0094       bl fcn.00303d54
+; CODE XREFS from fcn.003011a4 @ 0x30140c(x), 0x301418(x)
+0x00301440      e00313aa       mov x0, x19
+0x00301444      c00c0094       bl fcn.00304744
+0x00301448      e00313aa       mov x0, x19
+0x0030144c      2f0d0094       bl fcn.00304908
+0x00301450      e00313aa       mov x0, x19
+0x00301454      6a0d0094       bl fcn.003049fc
+0x00301458      e00313aa       mov x0, x19
+0x0030145c      f10d0094       bl fcn.00304c20
+0x00301460      e00313aa       mov x0, x19
+0x00301464      2e0e0094       bl fcn.00304d1c
+0x00301468      681240b9       ldr w8, [x19, 0x10]
+0x0030146c      68000035       cbnz w8, 0x301478
+0x00301470      88008052       mov w8, 4
+0x00301474      681200b9       str w8, [x19, 0x10]
+; CODE XREF from fcn.003011a4 @ 0x30146c(x)
+0x00301478      e0030091       mov x0, sp
+0x0030147c      6f0e0094       bl fcn.00304e38
+0x00301480      e0630091       add x0, sp, 0x18
+0x00301484      eb1df897       bl fcn.00108c30
+; CODE XREFS from fcn.003011a4 @ 0x301264(x), 0x301270(x), 0x301288(x), 0x3012b0(x)
+0x00301488      ffc30891       add sp, sp, 0x230
+0x0030148c      fd7b43a9       ldp x29, x30, [s]
+0x00301490      f44f42a9       ldp x20, x19, [var_20h_3]
+0x00301494      f65741a9       ldp x22, x21, [var_10h_2]
+0x00301498      fc0744f8       ldr x28, [sp], 0x40
+0x0030149c      c0035fd6       ret
