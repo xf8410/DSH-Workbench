@@ -21,82 +21,80 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round18 上游调用者
+      - name: round19 最上游 fcn.000fcf0c
         run: |
-          mkdir -p out18
+          mkdir -p out19
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.0037af90 ===;
-              pdf @ 0x37af90;
-            " "$F" > /tmp/r18a.txt 2>/dev/null || true
-            wc -l /tmp/r18a.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r18a.txt out18/up_
+              pdf @ 0xfcf0c;
+            " "$F" > /tmp/r19a.txt 2>/dev/null || true
+            wc -l /tmp/r19a.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r19a.txt out19/top_
           fi
 
-      - name: round18 分片主函数完整
+      - name: round19 检查函数 1
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.0037b0ac 全文 ===;
-              pdf @ 0x37b0ac;
-            " "$F" > /tmp/r18b.txt 2>/dev/null || true
-            wc -l /tmp/r18b.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r18b.txt out18/main_
+              echo === fcn.00389738 ===;
+              pdf @ 0x389738;
+            " "$F" > /tmp/r19b.txt 2>/dev/null || true
+            wc -l /tmp/r19b.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r19b.txt out19/chk1_
           fi
 
-      - name: round18 MD5 轮函数
+      - name: round19 检查函数 2
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === fcn.0033a8a8 ===;
-              pdf @ 0x33a8a8;
-            " "$F" > /tmp/r18c.txt 2>/dev/null || true
-            wc -l /tmp/r18c.txt 2>/dev/null || true
-            head -100 /tmp/r18c.txt 2>/dev/null || true
-            split -l 120 -d -a 3 /tmp/r18c.txt out18/md5core_
+              echo === fcn.0038a764 ===;
+              pdf @ 0x38a764;
+            " "$F" > /tmp/r19c.txt 2>/dev/null || true
+            wc -l /tmp/r19c.txt 2>/dev/null || true
+            split -l 120 -d -a 3 /tmp/r19c.txt out19/chk2_
           fi
 
-      - name: round18 链表消费方
+      - name: round19 上游 xref 与链表消费
         run: |
           F=ace/tp2.so
           if [ -f "$F" ]; then
             r2 -q -e scr.color=false -e asm.lines=false -c "
               aaa;
-              echo === xref fcn.0037b56c ===;
-              axt @ 0x37b56c;
-              echo === xref 0x37b0ac ===;
-              axt @ 0x37b0ac;
-              echo === xref 0x37af90 ===;
-              axt @ 0x37af90;
-            " "$F" > out18/xrefs18.txt 2>/dev/null || true
-            cat out18/xrefs18.txt
+              echo === xref 0xfcf0c ===;
+              axt @ 0xfcf0c;
+              echo === xref 0xd463c ===;
+              axt @ 0xd463c;
+              echo === xref 0xfcb70 ===;
+              axt @ 0xfcb70;
+            " "$F" > out19/xrefs19.txt 2>/dev/null || true
+            cat out19/xrefs19.txt
           fi
 
       - name: 清单
         run: |
-          ls -l out18/ || true
-          du -sh out18/ || true
+          ls -l out19/ || true
+          du -sh out19/ || true
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis18
-          path: out18/
+          name: ace-analysis19
+          path: out19/
           retention-days: 30
           if-no-files-found: warn
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis18
-          cp out18/* ace/analysis18/ 2>/dev/null || true
+          mkdir -p ace/analysis19
+          cp out19/* ace/analysis19/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis18
-          git commit -m "ace analysis18: upstream callers + MD5 core + chain consumers" || echo "nothing to commit"
+          git add ace/analysis19
+          git commit -m "ace analysis19: top-level caller + individual check functions" || echo "nothing to commit"
           git push || echo "push skipped"
