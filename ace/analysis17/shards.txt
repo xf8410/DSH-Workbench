@@ -1,0 +1,55 @@
+=== fcn.0037b0ac 里的配置码与分片源 ===
+  37b200:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b210:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b220:	add	x8, x8, #0x7c
+  37b224:	add	x9, x9, #0x928
+  37b22c:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b250:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b260:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b270:	add	x8, x8, #0x658
+  37b274:	add	x9, x9, #0x5e0
+  37b27c:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b2a0:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b2b0:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b2c0:	add	x8, x8, #0x70c
+  37b2c4:	add	x9, x9, #0xc54
+  37b2cc:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b2f0:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b300:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b310:	add	x8, x8, #0xe6c
+  37b314:	add	x9, x9, #0x664
+  37b31c:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b340:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b350:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b360:	add	x8, x8, #0x730
+  37b364:	add	x9, x9, #0x894
+  37b36c:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b390:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b3a0:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b3b0:	add	x8, x8, #0xa60
+  37b3b4:	add	x9, x9, #0xd4
+  37b3bc:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b3e0:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b3f0:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b400:	add	x8, x8, #0x1c0
+  37b404:	add	x9, x9, #0xbd0
+  37b40c:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b430:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b440:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b450:	add	x8, x8, #0xd04
+  37b454:	add	x9, x9, #0x490
+  37b45c:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b480:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b490:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b4a0:	add	x8, x8, #0x570
+  37b4a4:	add	x9, x9, #0x274
+  37b4ac:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b4d0:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b4e0:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b4f0:	add	x8, x8, #0x400
+  37b4f4:	add	x9, x9, #0x31c
+  37b4fc:	b	37b54c <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f18>
+  37b520:	tbz	w0, #0, 37b558 <_ZN6TssSdk11gen_random2Ev@@TERSAFE+0x7f24>
+  37b530:	bl	34a5c0 <GetTssExportFunc2@@TERSAFE+0x280adc>
+  37b540:	add	x8, x8, #0x4f8
+  37b544:	add	x9, x9, #0xe88

@@ -1,0 +1,23 @@
+0x0033ac84      e8031faa       mov x8, xzr
+; CODE XREF from fcn.0033ab9c @ 0x33ac98(x)
+0x0033ac88      09686838       ldrb w9, [x0, x8]
+0x0033ac8c      696a2838       strb w9, [x19, x8]
+0x0033ac90      08050091       add x8, x8, 1
+0x0033ac94      1f5100f1       cmp x8, 0x14
+0x0033ac98      81ffff54       b.ne 0x33ac88
+0x0033ac9c      e0031f2a       mov w0, wzr
+0x0033aca0      04000014       b 0x33acb0
+; CODE XREF from fcn.0033ab9c @ 0x33ac48(x)
+0x0033aca4      e00315aa       mov x0, x21
+0x0033aca8      06390094       bl fcn.003490c0
+; CODE XREF from fcn.0033ab9c @ 0x33abf0(x)
+0x0033acac      00008012       mov w0, -1
+; CODE XREF from fcn.0033ab9c @ 0x33aca0(x)
+0x0033acb0      ff074091       add sp, sp, 1, lsl 12
+0x0033acb4      ff830191       add sp, sp, 0x60
+0x0033acb8      fd7b44a9       ldp x29, x30, [sp, 0x40]
+0x0033acbc      f44f43a9       ldp x20, x19, [sp, 0x30]
+0x0033acc0      f65742a9       ldp x22, x21, [sp, 0x20]
+0x0033acc4      f85f41a9       ldp x24, x23, [sp, 0x10]
+0x0033acc8      fc0745f8       ldr x28, [sp], 0x50
+0x0033accc      c0035fd6       ret
