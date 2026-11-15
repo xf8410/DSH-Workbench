@@ -20,71 +20,69 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
+          r2 -v | head -1
 
-      - name: round12 三个校验函数本体
+      - name: round13 pdc 伪代码
         run: |
-          mkdir -p out12
+          mkdir -p out13
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
-          r2 -q -e scr.color=false -e asm.lines=false -c "
-            aaa;
-            echo === fcn.0012c190 (file md5) ===;
-            pdf @ 0x12c190;
-            echo === fcn.0012d0ec (tcj zip loader) ===;
-            pdf @ 0x12d0ec;
-            echo === fcn.001063dc (ver/crc) ===;
-            pdf @ 0x1063dc;
-            echo === fcn.00116034 (ano_cert_md5) ===;
-            pdf @ 0x116034;
-          " "$F" > /tmp/r12.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/r12.txt)"
-          split -l 110 -d -a 3 /tmp/r12.txt out12/r12_
+          for a in 0x12c190 0x349cf0 0x12bdac; do
+            echo "=== pdc @ $a ==="
+            r2 -q -e scr.color=false -e asm.lines=false -e scr.html=false -A -c "pdc @ $a" "$F" 2>/dev/null > "out13/pdc_${a}.txt" || true
+            echo "  lines: $(wc -l < out13/pdc_${a}.txt)"
+          done
+          ls -l out13/
 
-      - name: round12 证书校验（分段）
+      - name: round13 md5 实现确认
         run: |
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
-          r2 -q -e scr.color=false -e asm.lines=false -c "
-            aaa;
-            echo === fcn.003065dc (cert) ===;
-            pdf @ 0x3065dc;
-          " "$F" > /tmp/r12b.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/r12b.txt)"
-          split -l 110 -d -a 3 /tmp/r12b.txt out12/cert_
+          {
+            echo "=== fcn.00349cf0 是否 md5（找 md5 常量）==="
+            aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x349cf0 --stop-address=0x34a400 "$F" 2>/dev/null | head -120
+          } > out13/md5_body.txt
+          cat out13/md5_body.txt
 
-      - name: round12 剩余字符串引用
+      - name: round13 调换字节序/P盒常量搜索
         run: |
           F=ace/tp2.so
-          [ -f "$F" ] || exit 0
-          r2 -q -e scr.color=false -e asm.lines=false -c "
-            aaa;
-            echo === 0x3c4670 crc:t ===;
-            axt @ 0x3c4670;
-            echo === 0x3c36aa sig custom ===;
-            axt @ 0x3c36aa;
-            echo === 0x3c4acc tcj_protect ===;
-            axt @ 0x3c4acc;
-            echo === 0x3c4a5e pub_tcj ===;
-            axt @ 0x3c4a5e;
-          " "$F" > out12/xrefs12.txt 2>/dev/null || true
-          cat out12/xrefs12.txt
+          {
+            echo "=== 搜索 MD5 初始常量 67452301 / efcdab89 ==="
+            # 小端存放: 01 23 45 67 / 89 ab cd ef
+            python3 - "$F" <<'PY'
+            import sys, re
+            data = open(sys.argv[1],'rb').read()
+            pats = {
+                "md5_init_67452301_le": bytes.fromhex("01234567"),
+                "md5_init_efcdab89_le": bytes.fromhex("89abcdef"),
+                "md5_k_table_first":   bytes.fromhex("78a46ad7"),  # d76aa478 LE
+                "sha256_h0":           bytes.fromhex("67e6096a"),  # 6a09e667 LE
+                "sha1_h0":             bytes.fromhex("01234567"),
+            }
+            for name, p in pats.items():
+                idx = data.find(p)
+                print(f"{name}: {'0x%x' % idx if idx >= 0 else 'not found'}")
+            PY
+          } > out13/const_scan.txt 2>&1
+          cat out13/const_scan.txt
 
       - name: 清单
-        run: ls -l out12/ && du -sh out12/
+        run: ls -l out13/ && du -sh out13/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis12
-          path: out12/
+          name: ace-analysis13
+          path: out13/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis12
-          cp out12/* ace/analysis12/ 2>/dev/null || true
+          mkdir -p ace/analysis13
+          cp out13/* ace/analysis13/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis12
-          git commit -m "ace analysis12: md5/cert/ver check bodies" || echo "nothing to commit"
+          git add ace/analysis13
+          git commit -m "ace analysis13: pdc pseudocode + md5 constant scan" || echo "nothing to commit"
           git push || echo "push skipped"
