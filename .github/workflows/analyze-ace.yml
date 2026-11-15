@@ -21,63 +21,81 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: 准备
+      - name: round5 检测失败汇合点 0x301488
         run: |
-          mkdir -p out4
-          ls -l ace/*.so
-
-      - name: dump fcn.003011a4（分片）
-        run: |
+          mkdir -p out5
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
-          r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x3011a4" "$F" > /tmp/fn4.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/fn4.txt)"
-          split -l 120 -d -a 3 /tmp/fn4.txt out4/fn011a4_
-          ls -l out4/ | head -20
+          r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pd 120 @ 0x301488" "$F" > /tmp/r5a.txt 2>/dev/null || true
+          echo "=== 0x301488 附近 ==="
+          cat /tmp/r5a.txt
+          cp /tmp/r5a.txt out5/detect_fail_0x301488.txt
+          split -l 120 -d -a 3 /tmp/r5a.txt out5/detf_
 
-      - name: dump 4 个 open 调用点
+      - name: round5 检测函数本体
         run: |
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           {
-            echo "########## fcn.001a028c (open @0x1a0310) ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x1a028c" "$F" 2>/dev/null
+            echo "########## fcn.00347f50 ##########"
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x347f50" "$F" 2>/dev/null
             echo ""
-            echo "########## fcn.00347f60 (open @0x347dcc / 0x347dd4) ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x347f60" "$F" 2>/dev/null
-            echo ""
-            echo "########## fcn.00349d44 (open @0x349d84) ##########"
-            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x349d44" "$F" 2>/dev/null
-          } > /tmp/open4.txt
-          echo "总行数: $(wc -l < /tmp/open4.txt)"
-          split -l 120 -d -a 3 /tmp/open4.txt out4/open4_
+            echo "########## fcn.0030180c ##########"
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x30180c" "$F" 2>/dev/null
+          } > /tmp/r5b.txt
+          echo "总行数: $(wc -l < /tmp/r5b.txt)"
+          split -l 120 -d -a 3 /tmp/r5b.txt out5/det_
 
-      - name: dump adt.s3.t 写函数
+      - name: round5 早期检测函数
         run: |
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
-          r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x303bec" "$F" > /tmp/adt.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/adt.txt)"
-          split -l 120 -d -a 3 /tmp/adt.txt out4/adt_
+          {
+            echo "########## fcn.0014e9c4 (检测1) ##########"
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0x14e9c4" "$F" 2>/dev/null | head -150
+            echo ""
+            echo "########## fcn.000fb988 ##########"
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0xfb988" "$F" 2>/dev/null | head -80
+            echo ""
+            echo "########## fcn.000fdc6c (检测2) ##########"
+            r2 -q -e scr.color=false -e asm.lines=false -c "aaa; pdf @ 0xfdc6c" "$F" 2>/dev/null | head -150
+          } > /tmp/r5c.txt
+          echo "总行数: $(wc -l < /tmp/r5c.txt)"
+          split -l 120 -d -a 3 /tmp/r5c.txt out5/early_
+
+      - name: round5 退出路径
+        run: |
+          F=ace/tp2.so
+          [ -f "$F" ] || exit 0
+          {
+            echo "=== abort/exit/_exit/kill 的引用 ==="
+            for s in abort exit _exit kill raise pthread_kill tgkill; do
+              echo "--- $s ---"
+              r2 -q -e scr.color=false -c "aaa; axt @ sym.imp.${s}" "$F" 2>/dev/null | head -12
+            done
+            echo ""
+            echo "=== exit/abort 附近的字符串 ==="
+            strings -n 6 "$F" | grep -iE "exit|abort|quit|terminate|stop game|检测|退出" | sort -u | head -20
+          } > /tmp/r5d.txt
+          cat /tmp/r5d.txt
+          cp /tmp/r5d.txt out5/exit_paths.txt
 
       - name: 清单
-        run: |
-          ls -l out4/ | head -40
-          du -sh out4/
+        run: ls -l out5/ && du -sh out5/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis4
-          path: out4/
+          name: ace-analysis5
+          path: out5/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis4
-          cp out4/* ace/analysis4/ 2>/dev/null || true
+          mkdir -p ace/analysis5
+          cp out5/* ace/analysis5/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis4
-          git commit -m "ace analysis4: segmented disasm" || echo "nothing to commit"
+          git add ace/analysis5
+          git commit -m "ace analysis5: detection failure path + early checks" || echo "nothing to commit"
           git push || echo "push skipped"
