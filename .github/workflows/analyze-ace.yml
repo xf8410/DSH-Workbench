@@ -21,59 +21,64 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq binutils-aarch64-linux-gnu radare2 file
 
-      - name: round9 核心校验 fcn.0036dab8
+      - name: round10 主校验 fcn.0036d5d4
         run: |
-          mkdir -p out9
+          mkdir -p out10
           F=ace/tp2.so
           [ -f "$F" ] || exit 0
           r2 -q -e scr.color=false -e asm.lines=false -c "
             aaa;
-            echo === fcn.0036dab8 ===;
-            pdf @ 0x36dab8;
-            echo === fcn.0036d29c (前置) ===;
-            pdf @ 0x36d29c;
-          " "$F" > /tmp/r9.txt 2>/dev/null || true
-          echo "总行数: $(wc -l < /tmp/r9.txt)"
-          split -l 120 -d -a 3 /tmp/r9.txt out9/r9_
+            echo === fcn.0036d5d4 (主校验) ===;
+            pdf @ 0x36d5d4;
+            echo === fcn.0036d338 (备用校验) ===;
+            pdf @ 0x36d338;
+          " "$F" > /tmp/r10.txt 2>/dev/null || true
+          echo "总行数: $(wc -l < /tmp/r10.txt)"
+          split -l 120 -d -a 3 /tmp/r10.txt out10/r10_
 
-      - name: round9 调用链
-        run: |
-          F=ace/tp2.so
-          [ -f "$F" ] || exit 0
-          r2 -q -e scr.color=false -e asm.lines=false -c "
-            aaa;
-            echo === xref fcn.0036dab8 ===;
-            axt @ 0x36dab8;
-            echo === xref fcn.0036d29c ===;
-            axt @ 0x36d29c;
-          " "$F" > out9/callers9.txt 2>/dev/null || true
-          cat out9/callers9.txt
-
-      - name: round9 该函数引用的字符串
+      - name: round10 字符串解析
         run: |
           F=ace/tp2.so
           {
-            echo "=== fcn.0036dab8 区间内的 adrp+add 字符串 ==="
-            aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x36dab8 --stop-address=0x36e200 "$F" 2>/dev/null | grep -E "adrp|add\s+x[0-9]+, x[0-9]+, #" | head -60
-          } > out9/strs9.txt
-          cat out9/strs9.txt
+            echo "=== 0x36df48 附近字符串 ==="
+            r2 -q -e scr.color=false -c "ps @ 0x36df48" "$F" 2>/dev/null
+            echo ""
+            echo "=== 0x3d89d6 附近字符串 ==="
+            r2 -q -e scr.color=false -c "ps @ 0x3d89d6" "$F" 2>/dev/null
+            echo ""
+            echo "=== 0x50c4d0 / 0x4b0a40 / 0x4b09b0 附近 ==="
+            for a in 0x50c4d0 0x4b0a40 0x4b09b0; do
+              echo "--- $a ---"
+              r2 -q -e scr.color=false -c "px 32 @ $a" "$F" 2>/dev/null
+            done
+          } > out10/strs10.txt
+          cat out10/strs10.txt
+
+      - name: round10 主校验引用的导入函数
+        run: |
+          F=ace/tp2.so
+          {
+            echo "=== fcn.0036d5d4 区间内调用 ==="
+            aarch64-linux-gnu-objdump -d --no-show-raw-insn --start-address=0x36d5d4 --stop-address=0x36dab8 "$F" 2>/dev/null | grep -E "bl\s+" | head -60
+          } > out10/imports10.txt
+          cat out10/imports10.txt
 
       - name: 清单
-        run: ls -l out9/ && du -sh out9/
+        run: ls -l out10/ && du -sh out10/
 
       - name: 上传 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ace-analysis9
-          path: out9/
+          name: ace-analysis10
+          path: out10/
           retention-days: 30
 
       - name: 写回仓库
         run: |
-          mkdir -p ace/analysis9
-          cp out9/* ace/analysis9/ 2>/dev/null || true
+          mkdir -p ace/analysis10
+          cp out10/* ace/analysis10/ 2>/dev/null || true
           git config user.name "ace-bot"
           git config user.email "ace-bot@users.noreply.github.com"
-          git add ace/analysis9
-          git commit -m "ace analysis9: core check fcn.0036dab8" || echo "nothing to commit"
+          git add ace/analysis10
+          git commit -m "ace analysis10: main verification body" || echo "nothing to commit"
           git push || echo "push skipped"
