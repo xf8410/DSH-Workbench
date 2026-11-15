@@ -1,0 +1,54 @@
+### tp2
+
+=== .apk_path ===
+16537 0x003c474b 0x003c474b 9   10   .rodata             ascii   .apk_path
+16538 0x003c4755 0x003c4755 18  19   .rodata             ascii   [Shell]apk_path:%s
+16539 0x003c4768 0x003c4768 11  12   .rodata             ascii   apk_path=%s
+
+=== !tcj ===
+nth   paddr      vaddr      len size section             type    string
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+0     0x00000034 0x00000034 5   12                       utf16le @8\b@\e
+1     0x00000364 0x00000364 4   20   .hash               utf32le <óÜf
+2     0x00000378 0x00000378 6   28   .hash               utf32le X²ù+¥ä
+
+=== vap_2 ===
+17007 0x003c7666 0x003c7666 9   10   .rodata             ascii   gp4_vap_2
+17737 0x003cf569 0x003cf569 22  23   .rodata             ascii   !vap_2:%s, cert_md5:%s
+17738 0x003cf580 0x003cf580 7   8    .rodata             ascii   vap_2.5
+17740 0x003cf596 0x003cf596 11  12   .rodata             ascii   !vap_2.5:%s
+
+=== inline_hook_opcode ===
+17554 0x003cd4ad 0x003cd4ad 27  28   .rodata             ascii   inline_hook_opcode_dismatch
+
+=== ms_hook_opcode ===
+17555 0x003cd4c9 0x003cd4c9 14  15   .rodata             ascii   ms_hook_opcode
+
+=== /proc/%d/status ===
+25325 0x004e2edb 0x004e3edb 15  16   .data               ascii   /proc/%d/status
+
+=== adt.s3.t ===
+17742 0x003cf5b2 0x003cf5b2 28  29   .rodata             ascii   /data/data/%s/files/adt.s3.t
+
+=== check_state ===
+16543 0x003c479f 0x003c479f 11  12   .rodata             ascii   check_state
+16544 0x003c47ab 0x003c47ab 21  22   .rodata             ascii   [Shell]check_state:%s
+16545 0x003c47c1 0x003c47c1 14  15   .rodata             ascii   check_state=%s
+
+=== TssSDKOnRecvSignature ===
+74    0x00002c08 0x00002c08 21  22   .dynstr             ascii   TssSDKOnRecvSignature
+
+=== ano_cert_md5 ===
+16397 0x003c3ba6 0x003c3ba6 12  13   .rodata             ascii   ano_cert_md5
+
+=== code_size ===
+16345 0x003c36e4 0x003c36e4 37  38   .rodata             ascii   ver:%s app_ver:%s code_size:%s crc:%s
+
+=== sig custom ===
+16342 0x003c36aa 0x003c36aa 37  38   .rodata             ascii   sig custom, name:%s, len:%d, crc:%08x
+
+=== ms_data_crc ===
+17538 0x003cd38e 0x003cd38e 11  12   .rodata             ascii   ms_data_crc
+
+=== HBCheck ===
+16293 0x003c3317 0x003c3317 7   8    .rodata             ascii   HBCheck

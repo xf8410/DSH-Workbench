@@ -1,0 +1,6 @@
+000000000002641c T JNI_OnLoad@@VERS_1.1
+00000000001a4b48 B g_tprt_ori_array@@VERS_1.1
+00000000001a3210 D g_tprt_pfn_array@@VERS_1.1
+0000000000146be0 T tp_syscall_imp
+00000000000ba814 T unwind_xx_info_query@@VERS_1.1
+00000000000bab9c T unwind_xx_ioctl@@VERS_1.1

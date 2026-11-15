@@ -1,0 +1,34 @@
+### tprt
+
+=== .apk_path ===
+
+=== !tcj ===
+nth   paddr      vaddr      len size section             type    string
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+0     0x00000034 0x00000034 4   10                       utf16le @8\t@
+1     0x00000244 0x00000244 7   8    .note.android.ident ascii   Android
+2     0x00000250 0x00000250 4   5    .note.android.ident ascii   r27c
+
+=== vap_2 ===
+
+=== inline_hook_opcode ===
+
+=== ms_hook_opcode ===
+
+=== /proc/%d/status ===
+
+=== adt.s3.t ===
+
+=== check_state ===
+
+=== TssSDKOnRecvSignature ===
+
+=== ano_cert_md5 ===
+
+=== code_size ===
+
+=== sig custom ===
+
+=== ms_data_crc ===
+
+=== HBCheck ===

@@ -1,0 +1,203 @@
+=== tp2.so ===
+ace/tp2.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=2020ef0fc297c5347dc1f66ed220934cb71d71aa, for Android 21, built by NDK r21e (7075529), stripped
+
+Dynamic section at offset 0x4b2898 contains 31 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [liblog.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libdl.so]
+ 0x000000000000000e (SONAME)             Library soname: [libtersafe2.so]
+ 0x0000000000000019 (INIT_ARRAY)         0x4ab9d8
+ 0x000000000000001b (INIT_ARRAYSZ)       392 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x4abb60
+ 0x000000000000001c (FINI_ARRAYSZ)       16 (bytes)
+ 0x0000000000000004 (HASH)               0x228
+ 0x000000006ffffef5 (GNU_HASH)           0xab8
+ 0x0000000000000005 (STRTAB)             0x27b0
+ 0x0000000000000006 (SYMTAB)             0xd28
+ 0x000000000000000a (STRSZ)              3385 (bytes)
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000003 (PLTGOT)             0x4b3ac8
+ 0x0000000000000002 (PLTRELSZ)           5880 (bytes)
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000017 (JMPREL)             0xc1e98
+ 0x0000000000000007 (RELA)               0x37b8
+ 0x0000000000000008 (RELASZ)             780000 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffffc (VERDEF)             0x3720
+ 0x000000006ffffffd (VERDEFNUM)          2
+ 0x000000000000001e (FLAGS)              BIND_NOW
+ 0x000000006ffffffb (FLAGS_1)            Flags: NOW
+ 0x000000006ffffffe (VERNEED)            0x3758
+ 0x000000006fffffff (VERNEEDNUM)         3
+ 0x000000006ffffff0 (VERSYM)             0x34ea
+ 0x000000006ffffff9 (RELACOUNT)          32436
+ 0x0000000000000000 (NULL)               0x0
+There are 27 section headers, starting at offset 0x509ed0:
+
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .note.gnu.bu[...] NOTE             0000000000000200  00000200
+       0000000000000024  0000000000000000   A       0     0     4
+  [ 2] .hash             HASH             0000000000000228  00000228
+       0000000000000890  0000000000000004   A       4     0     8
+  [ 3] .gnu.hash         GNU_HASH         0000000000000ab8  00000ab8
+       000000000000026c  0000000000000000   A       4     0     8
+  [ 4] .dynsym           DYNSYM           0000000000000d28  00000d28
+       0000000000001a88  0000000000000018   A       5     3     8
+  [ 5] .dynstr           STRTAB           00000000000027b0  000027b0
+       0000000000000d39  0000000000000000   A       0     0     1
+  [ 6] .gnu.version      VERSYM           00000000000034ea  000034ea
+       0000000000000236  0000000000000002   A       4     0     2
+  [ 7] .gnu.version_d    VERDEF           0000000000003720  00003720
+       0000000000000038  0000000000000000   A       5     2     8
+  [ 8] .gnu.version_r    VERNEED          0000000000003758  00003758
+       0000000000000060  0000000000000000   A       5     3     8
+  [ 9] .rela.dyn         RELA             00000000000037b8  000037b8
+       00000000000be6e0  0000000000000018   A       4     0     8
+  [10] .rela.plt         RELA             00000000000c1e98  000c1e98
+       00000000000016f8  0000000000000018  AI       4    22     8
+  [11] .plt              PROGBITS         00000000000c3590  000c3590
+       0000000000000f70  0000000000000010  AX       0     0     16
+  [12] .text             PROGBITS         00000000000c4500  000c4500
+       00000000002fe3e4  0000000000000000  AX       0     0     16
+  [13] .rodata           PROGBITS         00000000003c28f0  003c28f0
+       00000000000348f9  0000000000000000   A       0     0     16
+  [14] .eh_frame_hdr     PROGBITS         00000000003f71ec  003f71ec
+       000000000001ef24  0000000000000000   A       0     0     4
+  [15] .eh_frame         PROGBITS         0000000000416110  00416110
+       000000000007db28  0000000000000000   A       0     0     8
+  [16] .gcc_except_table PROGBITS         0000000000493c38  00493c38
+       0000000000015d9c  0000000000000000   A       0     0     4
+  [17] .note.androi[...] NOTE             00000000004a99d4  004a99d4
+       0000000000000098  0000000000000000   A       0     0     4
+  [18] .init_array       INIT_ARRAY       00000000004ab9d8  004aa9d8
+       0000000000000188  0000000000000008  WA       0     0     8
+  [19] .fini_array       FINI_ARRAY       00000000004abb60  004aab60
+       0000000000000010  0000000000000008  WA       0     0     8
+  [20] .data.rel.ro      PROGBITS         00000000004abb70  004aab70
+       0000000000007d28  0000000000000000  WA       0     0     8
+  [21] .dynamic          DYNAMIC          00000000004b3898  004b2898
+       0000000000000230  0000000000000010  WA       5     0     8
+  [22] .got              PROGBITS         00000000004b3ac8  004b2ac8
+       0000000000001538  0000000000000008  WA       0     0     8
+  [23] .data             PROGBITS         00000000004b5000  004b4000
+       0000000000055ba8  0000000000000000  WA       0     0     256
+  [24] .bss              NOBITS           000000000050abb0  00509ba8
+       0000000000014330  0000000000000000  WA       0     0     16
+  [25] .comment          PROGBITS         0000000000000000  00509ba8
+       000000000000021e  0000000000000001  MS       0     0     1
+  [26] .shstrtab         STRTAB           0000000000000000  00509dc6
+       000000000000010a  0000000000000000           0     0     1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+=== tprt.so ===
+ace/tprt.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, for Android 21, built by NDK r27c (12479018), BuildID[sha1]=22679299bec8ba3baf066d837c30ff0afce44b29, stripped
+
+Dynamic section at offset 0x161348 contains 32 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [liblog.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libdl.so]
+ 0x000000000000000e (SONAME)             Library soname: [libtprt.so]
+ 0x000000000000001e (FLAGS)              SYMBOLIC BIND_NOW
+ 0x000000006ffffffb (FLAGS_1)            Flags: NOW
+ 0x0000000000000007 (RELA)               0x1df0
+ 0x0000000000000008 (RELASZ)             23256 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffff9 (RELACOUNT)          958
+ 0x0000000000000017 (JMPREL)             0x78c8
+ 0x0000000000000002 (PLTRELSZ)           3384 (bytes)
+ 0x0000000000000003 (PLTGOT)             0x165690
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000006 (SYMTAB)             0x2f8
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000005 (STRTAB)             0x1824
+ 0x000000000000000a (STRSZ)              1482 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x1320
+ 0x0000000000000004 (HASH)               0x135c
+ 0x0000000000000019 (INIT_ARRAY)         0x165328
+ 0x000000000000001b (INIT_ARRAYSZ)       32 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x165318
+ 0x000000000000001c (FINI_ARRAYSZ)       16 (bytes)
+ 0x000000006ffffff0 (VERSYM)             0x1138
+ 0x000000006ffffffc (VERDEF)             0x1268
+ 0x000000006ffffffd (VERDEFNUM)          2
+ 0x000000006ffffffe (VERNEED)            0x12a0
+ 0x000000006fffffff (VERNEEDNUM)         4
+ 0x0000000000000000 (NULL)               0x0
+There are 28 section headers, starting at offset 0x19cb88:
+
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .note.androi[...] NOTE             0000000000000238  00000238
+       0000000000000098  0000000000000000   A       0     0     4
+  [ 2] .note.gnu.bu[...] NOTE             00000000000002d0  000002d0
+       0000000000000024  0000000000000000   A       0     0     4
+  [ 3] .dynsym           DYNSYM           00000000000002f8  000002f8
+       0000000000000e40  0000000000000018   A       9     1     8
+  [ 4] .gnu.version      VERSYM           0000000000001138  00001138
+       0000000000000130  0000000000000002   A       3     0     2
+  [ 5] .gnu.version_d    VERDEF           0000000000001268  00001268
+       0000000000000038  0000000000000000   A       9     2     4
+  [ 6] .gnu.version_r    VERNEED          00000000000012a0  000012a0
+       0000000000000080  0000000000000000   A       9     4     4
+  [ 7] .gnu.hash         GNU_HASH         0000000000001320  00001320
+       000000000000003c  0000000000000000   A       3     0     8
+  [ 8] .hash             HASH             000000000000135c  0000135c
+       00000000000004c8  0000000000000004   A       3     0     4
+  [ 9] .dynstr           STRTAB           0000000000001824  00001824
+       00000000000005ca  0000000000000000   A       0     0     1
+  [10] .rela.dyn         RELA             0000000000001df0  00001df0
+       0000000000005ad8  0000000000000018   A       3     0     8
+  [11] .rela.plt         RELA             00000000000078c8  000078c8
+       0000000000000d38  0000000000000018  AI       3    21     8
+  [12] .eh_frame_hdr     PROGBITS         0000000000008600  00008600
+       00000000000042e4  0000000000000000   A       0     0     4
+  [13] .eh_frame         PROGBITS         000000000000c8e8  0000c8e8
+       00000000000191a8  0000000000000000   A       0     0     8
+  [14] .text             PROGBITS         0000000000025a90  00025a90
+       0000000000138c1c  0000000000000000  AX       0     0     16
+  [15] .plt              PROGBITS         000000000015e6b0  0015e6b0
+       00000000000008f0  0000000000000000  AX       0     0     16
+  [16] .data.rel.ro      PROGBITS         0000000000162fa0  0015efa0
+       0000000000002378  0000000000000000  WA       0     0     8
+  [17] .fini_array       FINI_ARRAY       0000000000165318  00161318
+       0000000000000010  0000000000000000  WA       0     0     8
+  [18] .init_array       INIT_ARRAY       0000000000165328  00161328
+       0000000000000020  0000000000000000  WA       0     0     8
+  [19] .dynamic          DYNAMIC          0000000000165348  00161348
+       0000000000000200  0000000000000010  WA       9     0     8
+  [20] .got              PROGBITS         0000000000165548  00161548
+       0000000000000148  0000000000000000  WA       0     0     8
+  [21] .got.plt          PROGBITS         0000000000165690  00161690
+       0000000000000480  0000000000000000  WA       0     0     8
+  [22] .relro_padding    NOBITS           0000000000165b10  00161b10
+       00000000000004f0  0000000000000000  WA       0     0     1
+  [23] .rodata           PROGBITS         0000000000169b10  00161b10
+       00000000000396a8  0000000000000000 WAMS       0     0     16
+  [24] .data             PROGBITS         00000000001a3200  0019b200
+       0000000000001744  0000000000000000  WA       0     0     256
+  [25] .bss              NOBITS           00000000001a4948  0019c944
+       0000000000003e80  0000000000000000  WA       0     0     8
+  [26] .comment          PROGBITS         0000000000000000  0019c944
+       000000000000012d  0000000000000001  MS       0     0     1
+  [27] .shstrtab         STRTAB           0000000000000000  0019ca71
+       0000000000000110  0000000000000000           0     0     1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)

@@ -1,0 +1,31 @@
+### tprt : string -> address -> xref
+
+--- .apk_path ---
+
+--- !tcj,name ---
+nth   paddr      vaddr      len size section             type    string
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+0     0x00000034 0x00000034 4   10                       utf16le @8\t@
+1     0x00000244 0x00000244 7   8    .note.android.ident ascii   Android
+2     0x00000250 0x00000250 4   5    .note.android.ident ascii   r27c
+3     0x00000290 0x00000290 8   9    .note.android.ident ascii   12479018
+4     0x0000140c 0x0000140c 5   24   .hash               utf32le t{^so
+5     0x00001774 0x00001774 4   20   .hash               utf32le X/g7
+6     0x00001790 0x00001790 5   24   .hash               utf32le \a(Ya.
+7     0x000017b8 0x000017b8 5   24   .hash               utf32le mb<ey
+8     0x000017e0 0x000017e0 4   20   .hash               utf32le j@zB
+9     0x00001825 0x00001825 14  15   .dynstr             ascii   __cxa_finalize
+10    0x00001834 0x00001834 12  13   .dynstr             ascii   __cxa_atexit
+11    0x00001841 0x00001841 6   7    .dynstr             ascii   memset
+12    0x00001848 0x00001848 6   7    .dynstr             ascii   strlen
+13    0x0000184f 0x0000184f 6   7    .dynstr             ascii   sscanf
+14    0x00001856 0x00001856 7   8    .dynstr             ascii   __errno
+15    0x0000185e 0x0000185e 10  11   .dynstr             ascii   JNI_OnLoad
+16    0x00001869 0x00001869 12  13   .dynstr             ascii   pthread_once
+17    0x00001876 0x00001876 5   6    .dynstr             ascii   _Znwm
+
+--- /proc/%d/status ---
+
+--- inline_hook_opcode_dismatch ---
+
+--- adt.s3.t ---
