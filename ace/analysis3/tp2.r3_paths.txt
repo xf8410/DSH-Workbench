@@ -1,0 +1,10 @@
+=== 含 lib/arm64 或 /lib/ ===
+Lcom/cocos/lib/CocosSurfaceView;
+com/cocos/lib/CocosActivity
+
+=== 含 .apk ===
+.apk_path
+
+=== 含 /data/app 或 /data/user ===
+
+=== 含 trampoline / backup / orig ===
