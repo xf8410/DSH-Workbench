@@ -1,0 +1,26 @@
+; CODE XREF from fcn.003bf54c @ 0x3bf558(x)
+0x003bf560      e40a00f0       adrp x4, 0x51e000
+0x003bf564      237c4093       sxtw x3, w1                             ; arg2
+0x003bf568      84803291       add x4, x4, 0xca0
+0x003bf56c      05a041f9       ldr x5, [x0, 0x340]                     ; arg1
+0x003bf570      84686338       ldrb w4, [x4, x3]
+0x003bf574      c500f0b6       tbz x5, 0x3e, 0x3bf58c
+0x003bf578      0300038b       add x3, x0, x3                          ; arg1
+0x003bf57c      63604d39       ldrb w3, [x3, 0x358]
+0x003bf580      63000034       cbz w3, 0x3bf58c
+; DATA XREF from str._.h @ +0x37(r)
+0x003bf584      02d821f8       str x2, [x0, w1, sxtw 3]                ; arg3
+0x003bf588      05000014       b 0x3bf59c
+; CODE XREFS from fcn.003bf54c @ 0x3bf574(x), 0x3bf580(x)
+0x003bf58c      9f200071       cmp w4, 8
+0x003bf590      00d861f8       ldr x0, [x0, w1, sxtw 3]                ; arg1
+0x003bf594      41feff54       b.ne 0x3bf55c
+0x003bf598      020000f9       str x2, [x0]                            ; arg3
+; CODE XREF from fcn.003bf54c @ 0x3bf588(x)
+0x003bf59c      fd7bc1a8       ldp x29, x30, [sp], 0x10
+0x003bf5a0      c0035fd6       ret
+=== fcn.00347f50 ===
+  ;-- case 5:                                                          ; from 0x003480a0
+  ; XREFS(132)
+4: fcn.00347f50 ();
+0x00347f50      b4edf517       b sym.imp.getpid
