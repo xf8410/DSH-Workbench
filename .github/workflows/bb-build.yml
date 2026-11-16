@@ -12,9 +12,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+
+      - name: 磁盘
+        run: df -h /
 
       - name: JDK 21
         uses: actions/setup-java@v4
@@ -25,63 +28,44 @@ jobs:
       - name: Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 安装 SDK + NDK
+      - name: 装 SDK 与 NDK r27c
         run: |
           set +e
           yes | sdkmanager --licenses > /dev/null 2>&1
-          echo "licenses rc=$?"
-          sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools" > /tmp/sdk1.log 2>&1
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" > /tmp/sdk1.log 2>&1
           echo "platform rc=$?"
-          sdkmanager "ndk;29.0.13846066" > /tmp/ndk.log 2>&1
-          echo "ndk29 rc=$?"
-          echo "ANDROID_HOME=$ANDROID_HOME"
+          sdkmanager "ndk;27.2.12479018" > /tmp/ndk.log 2>&1
+          echo "ndk rc=$?"
+          tail -3 /tmp/ndk.log
           echo "--- ndk 目录 ---"
-          ls "$ANDROID_HOME/ndk" 2>/dev/null
-          echo "--- platforms ---"
-          ls "$ANDROID_HOME/platforms" 2>/dev/null
-          echo "--- ndk.log 尾 ---"
-          tail -5 /tmp/ndk.log 2>/dev/null
+          ls "$ANDROID_HOME/ndk"
+          df -h /
           exit 0
 
-      - name: clone 源码
+      - name: clone
         run: |
           set +e
           mkdir -p bb
           git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git bb/src
           echo "clone rc=$?"
-          ls bb/src 2>/dev/null | head -30
+          ls bb/src | head -20
           exit 0
 
-      - name: 工程配置快照
-        run: |
-          set +e
-          cd bb/src || exit 0
-          echo "=== root build.gradle ==="
-          sed -n '1,40p' build.gradle
-          echo "=== gradle.properties ==="
-          sed -n '1,40p' gradle.properties
-          echo "=== 关键文件 ==="
-          find . -name "BActivityThread.java" 2>/dev/null | head -3
-          find . -name "BApplication.java" 2>/dev/null | head -3
-          find . -name "AndroidManifest.xml" 2>/dev/null | head -5
-          find . -name "Android.mk" 2>/dev/null | head -3
-          echo "=== cpp 目录 ==="
-          ls Bcore/src/main/cpp 2>/dev/null | head -20
-          exit 0
-
-      - name: 修正 NDK 版本
+      - name: patch NDK 版本
         run: |
           set +e
           cd bb/src || exit 0
           AVAIL=$(ls "$ANDROID_HOME/ndk" 2>/dev/null | head -1)
-          echo "可用 NDK: ${AVAIL:-NONE}"
+          echo "AVAIL=[$AVAIL]"
           if [ -n "$AVAIL" ]; then
-            for f in $(grep -rl "29.0.13846066" --include="*.gradle" . 2>/dev/null); do
-              echo "patch $f"
-              sed -i "s/29\.0\.13846066/$AVAIL/g" "$f"
+            for f in $(grep -rl "ndkVersion" --include="*.gradle" . 2>/dev/null); do
+              echo "== patch $f =="
+              sed -i -E "s/ndkVersion[[:space:]]*=[[:space:]]*\"[0-9.]+\"/ndkVersion = \"$AVAIL\"/g" "$f"
             done
           fi
-          grep -rn "ndkVersion" --include="*.gradle" . 2>/dev/null | head -5
+          grep -rn "ndkVersion" --include="*.gradle" . 2>/dev/null
+          echo "=== cpp ==="
+          ls Bcore/src/main/cpp 2>/dev/null | head
           exit 0
 
       - name: 编译
@@ -92,21 +76,35 @@ jobs:
           ./gradlew :app:assembleDebug --no-daemon --stacktrace > "$GITHUB_WORKSPACE/build.log" 2>&1
           RC=$?
           echo "===== gradle exit = $RC ====="
-          echo "===== 尾部 100 行 ====="
-          tail -100 "$GITHUB_WORKSPACE/build.log"
+          wc -l "$GITHUB_WORKSPACE/build.log"
+          echo "===== 前 40 行 ====="
+          head -40 "$GITHUB_WORKSPACE/build.log"
           echo "===== 错误摘要 ====="
-          grep -nE "^e: |error:|FAILURE:|What went wrong|Caused by:|FAILED" "$GITHUB_WORKSPACE/build.log" | head -40
+          grep -nE "^e: |error:|FAILURE:|What went wrong|Caused by:|FAILED|Execution failed" "$GITHUB_WORKSPACE/build.log" | head -30
+          df -h /
           exit 0
 
-      - name: 收集产物
+      - name: 立刻写回日志
+        if: always()
+        run: |
+          set +e
+          mkdir -p bb/logs
+          cp build.log bb/logs/build.log 2>/dev/null
+          ls -l bb/logs/
+          git config user.name "bb-bot"
+          git config user.email "bb-bot@users.noreply.github.com"
+          git add bb/logs
+          git commit -m "bb round4: build log" || echo "nothing"
+          git push || echo "push skipped"
+          exit 0
+
+      - name: 收集 APK
         if: always()
         run: |
           set +e
           mkdir -p out
           find bb/src -name "*.apk" -exec cp {} out/ \; 2>/dev/null
-          cp build.log out/build.log 2>/dev/null
-          ls -l out/ 2>/dev/null
-          du -sh out/ 2>/dev/null
+          ls -l out/
           exit 0
 
       - name: 上传
@@ -117,17 +115,3 @@ jobs:
           path: out/
           retention-days: 30
           if-no-files-found: warn
-
-      - name: 日志写回仓库
-        if: always()
-        run: |
-          set +e
-          mkdir -p bb/logs
-          cp build.log bb/logs/build.log 2>/dev/null
-          ls -l bb/logs/
-          git config user.name "bb-bot"
-          git config user.email "bb-bot@users.noreply.github.com"
-          git add bb/logs
-          git commit -m "bb-build: round2 log" || echo "nothing to commit"
-          git push || echo "push skipped"
-          exit 0
