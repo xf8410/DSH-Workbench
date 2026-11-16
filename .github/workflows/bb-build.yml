@@ -29,14 +29,6 @@ jobs:
           S="$GITHUB_WORKSPACE/bb/logs/summary.txt"
           : > "$S"
 
-          {
-            echo "ANDROID_HOME=$ANDROID_HOME"
-            echo "--- ndk ---"
-            ls $ANDROID_HOME/ndk 2>/dev/null
-            echo "--- platforms ---"
-            ls $ANDROID_HOME/platforms 2>/dev/null
-          } >> "$S"
-
           NDK=$(ls $ANDROID_HOME/ndk 2>/dev/null | sort -V | tail -1)
           echo "NDK=[$NDK]" >> "$S"
 
@@ -48,23 +40,26 @@ jobs:
           for f in $(grep -rl "ndkVersion" --include="*.gradle" . 2>/dev/null); do
             sed -i -E "s/ndkVersion[[:space:]]*=[[:space:]]*\"[0-9.]+\"/ndkVersion = \"$NDK\"/g" "$f"
           done
-          echo "--- ndkVersion after patch ---" >> "$S"
-          grep -rh "ndkVersion" --include="*.gradle" . 2>/dev/null | head -3 >> "$S"
 
           chmod +x gradlew
           ./gradlew :app:assembleDebug --no-daemon > /tmp/b.log 2>&1
           echo "gradle rc=$?" >> "$S"
 
           echo "=== KEY LINES ===" >> "$S"
-          grep -E "FAILURE|Execution failed|Caused by|^e: |error:|What went wrong|requires|Unable|not found|NDK" /tmp/b.log 2>/dev/null | head -40 >> "$S"
+          grep -E "FAILURE|Execution failed|Caused by|^e: |error:|What went wrong" /tmp/b.log 2>/dev/null | head -30 >> "$S"
+          echo "=== LAST 15 ===" >> "$S"
+          tail -15 /tmp/b.log 2>/dev/null >> "$S"
 
-          echo "=== LAST 40 ===" >> "$S"
-          tail -40 /tmp/b.log 2>/dev/null >> "$S"
+          # 把 universal APK 复制到仓库里，方便手机直接下载
+          UNI=$(find . -name "*universal*.apk" | head -1)
+          echo "UNI=[$UNI]" >> "$S"
+          if [ -n "$UNI" ]; then
+            mkdir -p "$GITHUB_WORKSPACE/bb/apk"
+            cp "$UNI" "$GITHUB_WORKSPACE/bb/apk/blackbox-universal-debug.apk"
+            ls -l "$GITHUB_WORKSPACE/bb/apk/" >> "$S"
+          fi
 
-          cp /tmp/b.log "$GITHUB_WORKSPACE/bb/logs/build.txt" 2>/dev/null
           find . -name "*.apk" -exec cp {} "$GITHUB_WORKSPACE/out/" \; 2>/dev/null
-          echo "--- apk ---" >> "$S"
-          ls -l "$GITHUB_WORKSPACE/out/" 2>/dev/null >> "$S"
           exit 0
 
       - name: 写回
@@ -74,7 +69,8 @@ jobs:
           git config user.name "bb-bot"
           git config user.email "bb-bot@users.noreply.github.com"
           git add -f bb/logs
-          git commit -m "bb round7: summary" || echo nothing
+          git add -f bb/apk 2>/dev/null
+          git commit -m "bb: build log + universal apk" || echo nothing
           git push || echo skipped
           exit 0
 
