@@ -12,6 +12,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -26,58 +27,87 @@ jobs:
 
       - name: 安装 SDK + NDK
         run: |
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platforms;android-35" "platforms;android-36" "build-tools;35.0.0" "platform-tools" > /dev/null 2>&1 || true
-          echo "=== 可用的 NDK 版本 ==="
-          sdkmanager --list 2>/dev/null | grep -i "ndk;" | head -20
-          echo "=== 尝试装 NDK 29 ==="
-          sdkmanager "ndk;29.0.13846066" 2>&1 | tail -3 || echo "NDK29 安装失败"
-          ls "$ANDROID_HOME/ndk" 2>/dev/null || echo "no ndk dir"
+          set +e
+          yes | sdkmanager --licenses > /dev/null 2>&1
+          echo "licenses rc=$?"
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools" > /tmp/sdk1.log 2>&1
+          echo "platform rc=$?"
+          sdkmanager "ndk;29.0.13846066" > /tmp/ndk.log 2>&1
+          echo "ndk29 rc=$?"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "--- ndk 目录 ---"
+          ls "$ANDROID_HOME/ndk" 2>/dev/null
+          echo "--- platforms ---"
+          ls "$ANDROID_HOME/platforms" 2>/dev/null
+          echo "--- ndk.log 尾 ---"
+          tail -5 /tmp/ndk.log 2>/dev/null
+          exit 0
 
       - name: clone 源码
         run: |
+          set +e
           mkdir -p bb
-          git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git bb/src || exit 1
-          cd bb/src
-          echo "=== 工程配置 ==="
-          cat build.gradle 2>/dev/null | head -30
-          echo "=== gradle.properties ==="
-          cat gradle.properties 2>/dev/null | head -30
-          echo "=== 关键文件 ==="
-          find . -name "BActivityThread.java" -o -name "BApplication.java" -o -name "AndroidManifest.xml" 2>/dev/null | head -20
+          git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git bb/src
+          echo "clone rc=$?"
+          ls bb/src 2>/dev/null | head -30
+          exit 0
 
-      - name: 修正 NDK 版本为实际可用版本
+      - name: 工程配置快照
         run: |
-          cd bb/src
+          set +e
+          cd bb/src || exit 0
+          echo "=== root build.gradle ==="
+          sed -n '1,40p' build.gradle
+          echo "=== gradle.properties ==="
+          sed -n '1,40p' gradle.properties
+          echo "=== 关键文件 ==="
+          find . -name "BActivityThread.java" 2>/dev/null | head -3
+          find . -name "BApplication.java" 2>/dev/null | head -3
+          find . -name "AndroidManifest.xml" 2>/dev/null | head -5
+          find . -name "Android.mk" 2>/dev/null | head -3
+          echo "=== cpp 目录 ==="
+          ls Bcore/src/main/cpp 2>/dev/null | head -20
+          exit 0
+
+      - name: 修正 NDK 版本
+        run: |
+          set +e
+          cd bb/src || exit 0
           AVAIL=$(ls "$ANDROID_HOME/ndk" 2>/dev/null | head -1)
-          echo "可用 NDK: ${AVAIL:-none}"
+          echo "可用 NDK: ${AVAIL:-NONE}"
           if [ -n "$AVAIL" ]; then
-            grep -rl "29.0.13846066" --include="*.gradle" . 2>/dev/null | while read f; do
+            for f in $(grep -rl "29.0.13846066" --include="*.gradle" . 2>/dev/null); do
               echo "patch $f"
               sed -i "s/29\.0\.13846066/$AVAIL/g" "$f"
             done
           fi
           grep -rn "ndkVersion" --include="*.gradle" . 2>/dev/null | head -5
+          exit 0
 
       - name: 编译
         run: |
-          cd bb/src
+          set +e
+          cd bb/src || exit 0
           chmod +x gradlew
-          ./gradlew :app:assembleDebug --no-daemon --stacktrace > ../build.log 2>&1
-          EXIT=$?
-          echo "gradle exit = $EXIT"
-          echo "=== 尾部 120 行 ==="
-          tail -120 ../build.log
-          echo "=== 错误行 ==="
-          grep -nE "error:|FAILURE:|What went wrong|Caused by" ../build.log | head -30
+          ./gradlew :app:assembleDebug --no-daemon --stacktrace > "$GITHUB_WORKSPACE/build.log" 2>&1
+          RC=$?
+          echo "===== gradle exit = $RC ====="
+          echo "===== 尾部 100 行 ====="
+          tail -100 "$GITHUB_WORKSPACE/build.log"
+          echo "===== 错误摘要 ====="
+          grep -nE "^e: |error:|FAILURE:|What went wrong|Caused by:|FAILED" "$GITHUB_WORKSPACE/build.log" | head -40
+          exit 0
 
       - name: 收集产物
         if: always()
         run: |
+          set +e
           mkdir -p out
-          find bb/src -name "*.apk" -exec cp {} out/ \; 2>/dev/null || true
-          cp bb/build.log out/build.log 2>/dev/null || true
-          ls -l out/ || true
+          find bb/src -name "*.apk" -exec cp {} out/ \; 2>/dev/null
+          cp build.log out/build.log 2>/dev/null
+          ls -l out/ 2>/dev/null
+          du -sh out/ 2>/dev/null
+          exit 0
 
       - name: 上传
         if: always()
@@ -91,10 +121,13 @@ jobs:
       - name: 日志写回仓库
         if: always()
         run: |
+          set +e
           mkdir -p bb/logs
-          cp bb/build.log bb/logs/build.log 2>/dev/null || true
+          cp build.log bb/logs/build.log 2>/dev/null
+          ls -l bb/logs/
           git config user.name "bb-bot"
           git config user.email "bb-bot@users.noreply.github.com"
-          git add bb/logs || true
-          git commit -m "bb-build: compile log" || echo "nothing"
+          git add bb/logs
+          git commit -m "bb-build: round2 log" || echo "nothing to commit"
           git push || echo "push skipped"
+          exit 0
