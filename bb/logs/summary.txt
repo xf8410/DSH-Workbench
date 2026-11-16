@@ -1,0 +1,77 @@
+ANDROID_HOME=/usr/local/lib/android/sdk
+--- ndk ---
+27.3.13750724
+29.0.14206865
+30.0.16248370
+--- platforms ---
+android-34
+android-34-ext10
+android-34-ext11
+android-34-ext12
+android-34-ext8
+android-35
+android-35-ext14
+android-35-ext15
+android-36
+android-36-ext18
+android-36-ext19
+android-36.1
+android-37.0
+android-37.1
+android-37.2
+android-37.2-beta1
+android-37.2-beta2
+android-37.2-beta3
+NDK=[30.0.16248370]
+clone rc=0
+--- ndkVersion after patch ---
+        ndkVersion = "30.0.16248370"
+    ndkVersion = "30.0.16248370"
+gradle rc=0
+=== KEY LINES ===
+=== LAST 40 ===
+w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/view/gms/GmsFactory.kt:11:35 Unchecked cast: GmsViewModel to T
+w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/view/list/ListActivity.kt:124:19 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/view/main/BlackBoxLoader.kt:283:45 Variable 'packageInfo' is never used
+w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/view/main/BlackBoxLoader.kt:301:20 Parameter 'context' is never used
+
+> Task :Bcore:buildNdkBuildDebug[arm64-v8a]
+
+> Task :app:compileDebugJavaWithJavac
+Note: /home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/util/Resolution.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:processDebugJavaRes
+> Task :app:mergeProjectDexDebug
+> Task :Bcore:configureNdkBuildDebug[armeabi-v7a]
+> Task :app:mergeDebugJavaResource
+> Task :Bcore:buildNdkBuildDebug[armeabi-v7a]
+> Task :Bcore:mergeDebugJniLibFolders
+> Task :Bcore:mergeDebugNativeLibs
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :Bcore:copyDebugJniLibsProjectOnly
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+
+[Incubating] Problems report is available at: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.5/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 3m 9s
+70 actionable tasks: 70 executed
+--- apk ---
+total 26464
+-rw-r--r-- 1 runner runner 9015511 Nov 16 10:12 BlackBox_4.0.0_arm64-v8a-debug.apk
+-rw-r--r-- 1 runner runner 9002612 Nov 16 10:12 BlackBox_4.0.0_armeabi-v7a-debug.apk
+-rw-r--r-- 1 runner runner 9075893 Nov 16 10:12 BlackBox_4.0.0_universal-debug.apk

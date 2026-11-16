@@ -1,5 +1,5 @@
 Downloading https://services.gradle.org/distributions/gradle-8.14.5-bin.zip
-.............10%.............20%.............30%.............40%.............50%.............60%..............70%.............80%.............90%.............100%
+.............10%.............20%.............30%.............40%.............50%..............60%.............70%.............80%.............90%.............100%
 
 Welcome to Gradle 8.14.5!
 
@@ -17,8 +17,8 @@ Daemon will be stopped at the end of the build
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:checkKotlinGradlePluginConfigurationErrors
-> Task :app:generateDebugResValues
 > Task :app:dataBindingMergeDependencyArtifactsDebug
+> Task :app:generateDebugResValues
 > Task :app:generateDebugResources
 > Task :Bcore:preBuild UP-TO-DATE
 > Task :Bcore:preDebugBuild UP-TO-DATE
@@ -33,16 +33,16 @@ Daemon will be stopped at the end of the build
 /home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/res/values-zh-rCN/strings.xml:12:4: Multiple substitutions specified in non-positional format of string resource string/set_location. Did you mean to add the formatted="false" attribute?
 
 > Task :app:processDebugNavigationResources
+> Task :Bcore:writeDebugAarMetadata
 
 > Task :app:mergeDebugResources
 /home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/res/values-zh-rTW/strings.xml:17:4: Multiple substitutions specified in non-positional format of string resource string/set_location. Did you mean to add the formatted="false" attribute?
 
-> Task :Bcore:writeDebugAarMetadata
 > Task :Bcore:parseDebugLocalResources
 > Task :app:parseDebugLocalResources
-> Task :app:compileDebugNavigationResources
-> Task :Bcore:generateDebugRFile
 > Task :app:checkDebugAarMetadata
+> Task :Bcore:generateDebugRFile
+> Task :app:compileDebugNavigationResources
 > Task :app:dataBindingGenBaseClassesDebug
 > Task :app:mapDebugSourceSetPaths
 > Task :app:createDebugCompatibleScreenManifests
@@ -356,12 +356,13 @@ Daemon will be stopped at the end of the build
 > Task :black-reflection:processResources NO-SOURCE
 > Task :black-reflection:classes
 > Task :black-reflection:jar
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
 > Task :compiler:compileJava
 > Task :compiler:processResources NO-SOURCE
 > Task :compiler:classes
 > Task :compiler:jar
 > Task :Bcore:javaPreCompileDebug
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -370,9 +371,11 @@ Daemon will be stopped at the end of the build
 > Task :Bcore:compileDebugShaders NO-SOURCE
 > Task :Bcore:generateDebugAssets UP-TO-DATE
 > Task :Bcore:mergeDebugAssets
-> Task :Bcore:compileDebugAidl
 > Task :app:mergeDebugAssets
-> Task :app:processDebugResources
+> Task :app:compressDebugAssets
+> Task :Bcore:compileDebugAidl
+> Task :app:checkDebugDuplicateClasses
+> Task :app:desugarDebugFileDependencies
 
 > Task :Bcore:compileDebugJavaWithJavac
 The following annotation processors are not incremental: compiler.jar (project :compiler).
@@ -384,17 +387,13 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 1 warning
 
-> Task :app:compressDebugAssets
-> Task :Bcore:bundleLibCompileToJarDebug
-> Task :Bcore:bundleLibRuntimeToJarDebug
-> Task :app:desugarDebugFileDependencies
 > Task :Bcore:processDebugJavaRes
-> Task :app:mergeDebugJniLibFolders
-> Task :app:checkDebugDuplicateClasses
-> Task :Bcore:configureNdkBuildDebug[arm64-v8a]
-> Task :app:compileDebugKotlin
+> Task :Bcore:bundleLibRuntimeToJarDebug
+> Task :Bcore:bundleLibCompileToJarDebug
 > Task :app:mergeExtDexDebug
-
+> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeLibDexDebug
+> Task :Bcore:configureNdkBuildDebug[arm64-v8a]
 > Task :app:compileDebugKotlin
 w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/app/AppManager.kt:63:34 Parameter 'context' is never used
 w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/biz/cache/AppSharedPreferenceDelegate.kt:48:27 Unchecked cast: Any to Data
@@ -412,6 +411,8 @@ w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java
 w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/view/main/BlackBoxLoader.kt:283:45 Variable 'packageInfo' is never used
 w: file:///home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/view/main/BlackBoxLoader.kt:301:20 Parameter 'context' is never used
 
+> Task :Bcore:buildNdkBuildDebug[arm64-v8a]
+
 > Task :app:compileDebugJavaWithJavac
 Note: /home/runner/work/DSH-Workbench/DSH-Workbench/bb/src/app/src/main/java/top/niunaijun/blackboxa/util/Resolution.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
@@ -420,10 +421,8 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
 > Task :app:mergeProjectDexDebug
-> Task :app:mergeLibDexDebug
-> Task :app:mergeDebugJavaResource
-> Task :Bcore:buildNdkBuildDebug[arm64-v8a]
 > Task :Bcore:configureNdkBuildDebug[armeabi-v7a]
+> Task :app:mergeDebugJavaResource
 > Task :Bcore:buildNdkBuildDebug[armeabi-v7a]
 > Task :Bcore:mergeDebugJniLibFolders
 > Task :Bcore:mergeDebugNativeLibs
