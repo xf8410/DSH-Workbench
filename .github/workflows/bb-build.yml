@@ -15,51 +15,72 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: JDK 17
+      - name: JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 安装 SDK 组件
+      - name: 安装 SDK + NDK
         run: |
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools" 2>&1 | tail -5 || true
+          sdkmanager "platforms;android-35" "platforms;android-36" "build-tools;35.0.0" "platform-tools" > /dev/null 2>&1 || true
+          echo "=== 可用的 NDK 版本 ==="
+          sdkmanager --list 2>/dev/null | grep -i "ndk;" | head -20
+          echo "=== 尝试装 NDK 29 ==="
+          sdkmanager "ndk;29.0.13846066" 2>&1 | tail -3 || echo "NDK29 安装失败"
+          ls "$ANDROID_HOME/ndk" 2>/dev/null || echo "no ndk dir"
 
-      - name: clone 上游源码并摸结构
+      - name: clone 源码
         run: |
           mkdir -p bb
           git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git bb/src || exit 1
           cd bb/src
-          echo "=== settings.gradle ==="
-          cat settings.gradle
+          echo "=== 工程配置 ==="
+          cat build.gradle 2>/dev/null | head -30
+          echo "=== gradle.properties ==="
+          cat gradle.properties 2>/dev/null | head -30
           echo "=== 关键文件 ==="
-          find . -name "BActivityThread.java" -o -name "BApplication.java" -o -name "AndroidManifest.xml" | head -20
-          echo "=== app/build.gradle 前 60 行 ==="
-          sed -n '1,60p' app/build.gradle 2>/dev/null || true
+          find . -name "BActivityThread.java" -o -name "BApplication.java" -o -name "AndroidManifest.xml" 2>/dev/null | head -20
 
-      - name: 编译原版
+      - name: 修正 NDK 版本为实际可用版本
+        run: |
+          cd bb/src
+          AVAIL=$(ls "$ANDROID_HOME/ndk" 2>/dev/null | head -1)
+          echo "可用 NDK: ${AVAIL:-none}"
+          if [ -n "$AVAIL" ]; then
+            grep -rl "29.0.13846066" --include="*.gradle" . 2>/dev/null | while read f; do
+              echo "patch $f"
+              sed -i "s/29\.0\.13846066/$AVAIL/g" "$f"
+            done
+          fi
+          grep -rn "ndkVersion" --include="*.gradle" . 2>/dev/null | head -5
+
+      - name: 编译
         run: |
           cd bb/src
           chmod +x gradlew
-          ./gradlew :app:assembleDebug --no-daemon --stacktrace > ../build.log 2>&1 || true
-          echo "=== 尾部 80 行 ==="
-          tail -80 ../build.log
-          echo "=== 找 apk ==="
-          find . -name "*.apk" | head -10
+          ./gradlew :app:assembleDebug --no-daemon --stacktrace > ../build.log 2>&1
+          EXIT=$?
+          echo "gradle exit = $EXIT"
+          echo "=== 尾部 120 行 ==="
+          tail -120 ../build.log
+          echo "=== 错误行 ==="
+          grep -nE "error:|FAILURE:|What went wrong|Caused by" ../build.log | head -30
 
-      - name: 收集
+      - name: 收集产物
+        if: always()
         run: |
           mkdir -p out
           find bb/src -name "*.apk" -exec cp {} out/ \; 2>/dev/null || true
-          cp bb/build.log logs-build.log 2>/dev/null || true
+          cp bb/build.log out/build.log 2>/dev/null || true
           ls -l out/ || true
-          du -sh out/ || true
 
       - name: 上传
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: bb-apk
@@ -68,6 +89,7 @@ jobs:
           if-no-files-found: warn
 
       - name: 日志写回仓库
+        if: always()
         run: |
           mkdir -p bb/logs
           cp bb/build.log bb/logs/build.log 2>/dev/null || true
