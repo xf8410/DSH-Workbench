@@ -22,59 +22,59 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: 环境侦察
+      - name: 全流程
         run: |
           set +e
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          which sdkmanager
-          echo "--- ndk ---"
-          ls $ANDROID_HOME/ndk 2>/dev/null
-          echo "--- platforms ---"
-          ls $ANDROID_HOME/platforms 2>/dev/null
-          echo "--- build-tools ---"
-          ls $ANDROID_HOME/build-tools 2>/dev/null
-          exit 0
+          mkdir -p bb/logs out
+          S="$GITHUB_WORKSPACE/bb/logs/summary.txt"
+          : > "$S"
 
-      - name: 编译
-        run: |
-          set +e
+          {
+            echo "ANDROID_HOME=$ANDROID_HOME"
+            echo "--- ndk ---"
+            ls $ANDROID_HOME/ndk 2>/dev/null
+            echo "--- platforms ---"
+            ls $ANDROID_HOME/platforms 2>/dev/null
+          } >> "$S"
+
           NDK=$(ls $ANDROID_HOME/ndk 2>/dev/null | sort -V | tail -1)
-          echo "NDK=[$NDK]"
+          echo "NDK=[$NDK]" >> "$S"
 
-          mkdir -p bb
           git clone --depth 1 https://github.com/ALEX5402/NewBlackbox.git bb/src > /tmp/c.log 2>&1
-          echo "clone rc=$?"
+          echo "clone rc=$?" >> "$S"
 
-          cd bb/src || exit 0
+          cd bb/src || { echo "no src" >> "$S"; exit 0; }
+
           for f in $(grep -rl "ndkVersion" --include="*.gradle" . 2>/dev/null); do
             sed -i -E "s/ndkVersion[[:space:]]*=[[:space:]]*\"[0-9.]+\"/ndkVersion = \"$NDK\"/g" "$f"
           done
-          echo "--- patch 后 ---"
-          grep -rh "ndkVersion" --include="*.gradle" . 2>/dev/null | head -3
+          echo "--- ndkVersion after patch ---" >> "$S"
+          grep -rh "ndkVersion" --include="*.gradle" . 2>/dev/null | head -3 >> "$S"
 
           chmod +x gradlew
           ./gradlew :app:assembleDebug --no-daemon > /tmp/b.log 2>&1
-          echo "gradle rc=$?"
-          echo "=== 错误行 ==="
-          grep -E "^e: |error:|FAILURE:|What went wrong|Caused by:|Execution failed|NDK|not found" /tmp/b.log | head -25
-          echo "=== 末 30 行 ==="
-          tail -30 /tmp/b.log
+          echo "gradle rc=$?" >> "$S"
 
-          mkdir -p "$GITHUB_WORKSPACE/bb/logs" "$GITHUB_WORKSPACE/out"
+          echo "=== KEY LINES ===" >> "$S"
+          grep -E "FAILURE|Execution failed|Caused by|^e: |error:|What went wrong|requires|Unable|not found|NDK" /tmp/b.log 2>/dev/null | head -40 >> "$S"
+
+          echo "=== LAST 40 ===" >> "$S"
+          tail -40 /tmp/b.log 2>/dev/null >> "$S"
+
           cp /tmp/b.log "$GITHUB_WORKSPACE/bb/logs/build.txt" 2>/dev/null
           find . -name "*.apk" -exec cp {} "$GITHUB_WORKSPACE/out/" \; 2>/dev/null
-          ls -l "$GITHUB_WORKSPACE/out/"
+          echo "--- apk ---" >> "$S"
+          ls -l "$GITHUB_WORKSPACE/out/" 2>/dev/null >> "$S"
           exit 0
 
       - name: 写回
         if: always()
         run: |
           set +e
-          mkdir -p bb/logs
           git config user.name "bb-bot"
           git config user.email "bb-bot@users.noreply.github.com"
           git add -f bb/logs
-          git commit -m "bb round6: build.txt" || echo nothing
+          git commit -m "bb round7: summary" || echo nothing
           git push || echo skipped
           exit 0
 
