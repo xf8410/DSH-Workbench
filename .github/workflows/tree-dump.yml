@@ -1,0 +1,42 @@
+name: "tree dump"
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/tree-dump.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dump:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Dump tree + memory hits
+        run: |
+          set -euo pipefail
+          mkdir -p ci
+          git ls-files > ci/tree.txt
+          echo "--- 文件总数: $(wc -l < ci/tree.txt)" >> ci/tree.txt
+          {
+            echo "# 含 memory/记忆 关键字的文件"
+            grep -ril -e memory -e '记忆' --include='*.kt' --include='*.java' --include='*.rs' --include='*.md' --include='*.yml' --include='*.json' . 2>/dev/null | grep -v '^./ci/' | head -80 || true
+            echo
+            echo "# 目录概览（前两层）"
+            find . -maxdepth 2 -type d -not -path './.git*' | sort | head -80
+            echo
+            echo "# version.properties"
+            cat version.properties 2>/dev/null || true
+          } > ci/memory-hits.txt
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name dsh-ci
+          git config user.email dsh-ci@users.noreply.github.com
+          git add ci/tree.txt ci/memory-hits.txt
+          git commit -m "ci: dump tree + memory hits" || echo nothing
+          git push origin HEAD:main || echo "push failed"
