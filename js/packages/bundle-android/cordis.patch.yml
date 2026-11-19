@@ -137,7 +137,7 @@
 # The row exists only here; the user layer replaces its `config` (patch layers never deep-merge).
 - insert:
     - id: llm-service-lite
-      name: '@snnh/dsh-llm-service-lite'
+      name: '@snnh/dsh-service-lite'
 
 # ── DSH-Android plugins ────────────────────────────────────────────────────
 - insert:
@@ -172,3 +172,10 @@
         # The completion page in the in-app sign-in WebView opens this app link.
         appScheme: dsh-android
         appPackage: !!js "process.env.DSH_ANDROID_PACKAGE || ''"
+
+    # TokenTracker（github.com/xiufengsun/TokenTracker 口径的本机牌本）：把
+    # $DSH_HOME/sessions 里每条落定 assistant/message 的 usage 折成 天/模型/会话 的
+    # token 与 CNY 估算，写 $DSH_HOME/tokentracker/{usage.json,records.jsonl}。
+    # 只读元数据（不读提示词/工具输出/文件内容），不联网、不碰账号；工具名 `tokentracker`。
+    - id: android-tokentracker
+      name: '@dsh-android/plugin-tokentracker'
