@@ -1,0 +1,11 @@
+# Pinned release of the dsh-purge community plugin, shipped inside the engine tree so a
+# fresh install boots with it instead of needing `dsh plugin add` by hand.
+#
+# build-engine.sh fetches url=, verifies sha256= against the upstream SHA256SUMS.txt,
+# extracts it as node_modules/dsh-purge-community, and the rows in
+# js/packages/bundle-android/cordis.patch.yml mount it. Bump both fields together;
+# PURGE_TGZ=/path/to.tgz builds offline from a staged copy.
+url=https://github.com/kingcharleslzy-ai/dsh-purge/releases/download/v1.7.20/dsh-purge-community-1.7.20.tgz
+sha256=5b3d66e804ea0b1cf6ef01035a292755ab9fea771b8f5338000954075dd6b45a
+size=2264596
+version=1.7.20
