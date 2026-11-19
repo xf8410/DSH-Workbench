@@ -1,0 +1,35 @@
+{
+  "name": "@dsh-android/plugin-tokentracker",
+  "version": "0.1.0",
+  "description": "TokenTracker for DSH on the phone: folds the usage of every settled assistant message in $DSH_HOME/sessions into per-day / per-model / per-session token and CNY cost totals, and exports a TokenTracker-shaped records.jsonl. Metadata only, offline, no native modules.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./reader": "./reader.js",
+    "./store": "./store.js",
+    "./pricing": "./pricing.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "reader.js",
+    "store.js",
+    "pricing.js",
+    "package.json"
+  ],
+  "engines": {
+    "dsh": "0.2.1-rc.5"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "tokentracker",
+    "tokens",
+    "cost",
+    "usage",
+    "android"
+  ]
+}
