@@ -4,11 +4,13 @@
 #   js/build-engine.sh            # -> $OUT_DIR/engine.zip, engine.sha256, engine-version.txt, size-report.txt
 #
 # Steps: npm ci (exact lockfile, production, no install scripts) -> add our
-# packages -> add the sharp WebAssembly build -> apply patches/ -> prune ->
-# verify (no symlinks, patches present) -> deterministic zip.
+# packages -> add the pinned dsh-purge-community tarball -> add the sharp
+# WebAssembly build -> apply patches/ -> prune -> verify (no symlinks, patches
+# present) -> deterministic zip.
 #
 # Env overrides: OUT_DIR (default <agent>/toolchains/out/engine),
 #                WORK_DIR (default <agent>/toolchains/out/engine-build),
+#                PURGE_TGZ (pre-staged dsh-purge-community tarball; skips the download),
 #                TMPDIR (default <agent>/toolchains/tmp; /tmp is not used).
 set -euo pipefail
 
@@ -59,6 +61,44 @@ for pkg in "${OUR_PKGS[@]}"; do
     fs.writeFileSync(stagePkg, JSON.stringify(j, null, 2) + "\n")
   ' "$JS_DIR/packages/$pkg" "$NM" "$STAGE/package.json"
 done
+
+# ── 2b. built-in dsh-purge-community (pinned release tarball) ────────────────
+# The prompt-rules plugin that used to be a manual `dsh plugin add`: its rows live in
+# bundle-android/cordis.patch.yml, its tree ships here. js/purge-community.pin carries
+# url + sha256, so a moved tag, a truncated download or a tampered tarball fails the
+# build instead of shipping half a plugin. PURGE_TGZ=<file> builds offline from a copy.
+PURGE_URL="$(sed -n 's/^url=//p' "$JS_DIR/purge-community.pin")"
+PURGE_SHA="$(sed -n 's/^sha256=//p' "$JS_DIR/purge-community.pin")"
+PURGE_SIZE="$(sed -n 's/^size=//p' "$JS_DIR/purge-community.pin")"
+[[ -n "$PURGE_URL" && "$PURGE_SHA" =~ ^[0-9a-f]{64}$ ]] || die "purge-community.pin must carry url= and a 64-hex sha256="
+PURGE_TGZ="${PURGE_TGZ:-$WORK_DIR/third-party/dsh-purge-community.tgz}"
+purge_sha_ok() { [[ -f "$1" && "$(sha256sum "$1" | cut -d' ' -f1)" == "$PURGE_SHA" ]]; }
+if purge_sha_ok "$PURGE_TGZ"; then
+  log "dsh-purge-community tarball already staged ($(basename "$PURGE_TGZ"))"
+else
+  mkdir -p "$(dirname "$PURGE_TGZ")"
+  log "fetching dsh-purge-community: $PURGE_URL"
+  curl -fsSL --retry 3 --retry-delay 2 -o "$PURGE_TGZ.part" "$PURGE_URL" \
+    || die "cannot download the dsh-purge-community tarball (stage one and pass PURGE_TGZ=<file>)"
+  mv "$PURGE_TGZ.part" "$PURGE_TGZ"
+fi
+purge_sha_ok "$PURGE_TGZ" || die "dsh-purge-community tarball sha256 mismatch (want $PURGE_SHA)"
+if [[ -n "$PURGE_SIZE" && "$(stat -c %s "$PURGE_TGZ")" != "$PURGE_SIZE" ]]; then
+  die "dsh-purge-community tarball size mismatch (want $PURGE_SIZE bytes)"
+fi
+rm -rf "$NM/dsh-purge-community"
+mkdir -p "$NM/dsh-purge-community"
+tar -xzf "$PURGE_TGZ" -C "$NM/dsh-purge-community" --strip-components=1
+node -e '
+  const [stagePkg, pkgDir] = process.argv.slice(1)
+  const fs = require("node:fs"), path = require("node:path")
+  const manifest = require(path.join(pkgDir, "package.json"))
+  const j = JSON.parse(fs.readFileSync(stagePkg, "utf8"))
+  j.dependencies[manifest.name] = manifest.version
+  fs.writeFileSync(stagePkg, JSON.stringify(j, null, 2) + "\n")
+  console.log(`[build-engine] bundled ${manifest.name}@${manifest.version}`)
+' "$STAGE/package.json" "$NM/dsh-purge-community"
+
 # The vendored adapter's runtime dependencies must come from the lockfile-pinned tree (no new
 # downloads): each must already be installed at the locked version and satisfy the declared range.
 node -e '
@@ -191,6 +231,9 @@ grep -q 'patch 15' "$NM/@deepseek-ai/dsh-http-proxy/lib/index.js" || die "http-p
 grep -q 'appendPluginRecord' "$NM/@deepseek-ai/dsh-session/lib/index.js" || die "dsh-session lacks appendPluginRecord (plugin-mode records its selection with it)"
 [[ -f "$NM/@dsh-android/plugin-mode/index.js" ]] || die "plugin-mode missing"
 [[ -f "$NM/@dsh-android/plugin-tokentracker/index.js" && -f "$NM/@dsh-android/plugin-tokentracker/reader.js" ]] || die "plugin-tokentracker missing (TokenTracker usage ledger)"
+# Bundled prompt-rules plugin: entry point, its own bundle patch, and the rows that mount it.
+[[ -f "$NM/dsh-purge-community/lib/index.js" && -f "$NM/dsh-purge-community/package.json" ]] || die "dsh-purge-community missing (bundled prompt-rules plugin)"
+grep -q "name: 'dsh-purge-community'" "$NM/@dsh-android/bundle-android/cordis.patch.yml" || die "bundle patch lost the dsh-purge rows"
 [[ -f "$NM/@dsh-android/bundle-android/main.mjs" ]] || die "engine entry main.mjs missing"
 [[ -f "$NM/@dsh-android/plugin-extensions/pnpmfile.cjs" && -s "$NM/@dsh-android/plugin-extensions/installation-packages.json" ]] || die "plugin-extensions gate missing"
 grep -q 'js patch 19' "$NM/@deepseek-ai/dsh-tools/lib/index.js" && grep -q 'js patch 19' "$NM/@deepseek-ai/dsh-commands/lib/index.js" || die "tool/command owner patch (19) missing"
@@ -208,11 +251,13 @@ log "no symlinks; entry point and patches verified"
 
 # ── 8. version, zip, digest, report ──────────────────────────────────────────
 INPUT_HASH=$( (cd "$JS_DIR" && cat engine/package-lock.json patches/*.patch \
-  packages/bundle-android/cordis.patch.yml packages/bundle-android/android-env.cjs packages/bundle-android/main.mjs packages/*/package.json packages/plugin-*/*.js packages/plugin-extensions/*.cjs packages/plugin-extensions/*.mjs packages/plugin-extensions/*.json packages/llm-service-lite/lib/index.js scripts/*.mjs build-engine.sh) | sha256sum | cut -c1-10)
+  packages/bundle-android/cordis.patch.yml packages/bundle-android/android-env.cjs packages/bundle-android/main.mjs packages/*/package.json packages/plugin-*/*.js packages/plugin-extensions/*.cjs packages/plugin-extensions/*.mjs packages/plugin-extensions/*.json packages/llm-service-lite/lib/index.js scripts/*.mjs purge-community.pin build-engine.sh) | sha256sum | cut -c1-10)
 ENGINE_VERSION="${DSH_VERSION}-a${INPUT_HASH}"
 printf '%s\n' "$ENGINE_VERSION" > "$STAGE/engine-version.txt"
 printf '%s\n' "$ENGINE_VERSION" > "$OUT_DIR/engine-version.txt"
 log "engine version $ENGINE_VERSION"
+
+PURGE_VERSION="$(node -p 'require(process.argv[1]).version' "$NM/dsh-purge-community/package.json")"
 
 rm -f "$OUT_DIR/engine.zip"
 python3 -I "$JS_DIR/scripts/make-zip.py" "$STAGE" "$OUT_DIR/engine.zip"
@@ -226,6 +271,7 @@ python3 -I "$JS_DIR/scripts/make-zip.py" "$STAGE" "$OUT_DIR/engine.zip"
   echo "node_modules after prune:  $((after_kb / 1024)) MiB"
   echo "files: $(find "$STAGE" -type f | wc -l), symlinks: $links"
   echo "bundled pnpm $PNPM_VERSION: $(du -sk "$NM/pnpm" | cut -f1) KiB unpacked"
+  echo "bundled dsh-purge-community $PURGE_VERSION: $(du -sk "$NM/dsh-purge-community" | cut -f1) KiB unpacked"
   echo "engine.zip: $(du -k "$OUT_DIR/engine.zip" | cut -f1) KiB ($(stat -c %s "$OUT_DIR/engine.zip") bytes)"
   echo "sha256: $(cut -d' ' -f1 "$OUT_DIR/engine.sha256")"
   echo
