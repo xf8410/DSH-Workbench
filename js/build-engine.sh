@@ -42,7 +42,7 @@ cp "$JS_DIR/engine/package.json" "$JS_DIR/engine/package-lock.json" "$STAGE/"
 # js/packages/<dir> → node_modules/<package name>: our @dsh-android packages plus the vendored
 # third-party LLM adapter @snnh/dsh-llm-service-lite (MIT; see its package.json "//vendored").
 log "adding @dsh-android packages + vendored @snnh/dsh-llm-service-lite"
-OUR_PKGS=(bundle-android plugin-device plugin-guard plugin-mode plugin-account plugin-extensions plugin-memory llm-service-lite)
+OUR_PKGS=(bundle-android plugin-device plugin-guard plugin-mode plugin-account plugin-extensions plugin-memory plugin-tokentracker llm-service-lite)
 for pkg in "${OUR_PKGS[@]}"; do
   node -e '
     const [src, nm, stagePkg] = process.argv.slice(1)
@@ -190,6 +190,7 @@ grep -q 'patch 22' "$NM/@snnh/dsh-llm-service-lite/lib/index.js" || die "llm-ser
 grep -q 'patch 15' "$NM/@deepseek-ai/dsh-http-proxy/lib/index.js" || die "http-proxy exclusion-glob patch missing"
 grep -q 'appendPluginRecord' "$NM/@deepseek-ai/dsh-session/lib/index.js" || die "dsh-session lacks appendPluginRecord (plugin-mode records its selection with it)"
 [[ -f "$NM/@dsh-android/plugin-mode/index.js" ]] || die "plugin-mode missing"
+[[ -f "$NM/@dsh-android/plugin-tokentracker/index.js" && -f "$NM/@dsh-android/plugin-tokentracker/reader.js" ]] || die "plugin-tokentracker missing (TokenTracker usage ledger)"
 [[ -f "$NM/@dsh-android/bundle-android/main.mjs" ]] || die "engine entry main.mjs missing"
 [[ -f "$NM/@dsh-android/plugin-extensions/pnpmfile.cjs" && -s "$NM/@dsh-android/plugin-extensions/installation-packages.json" ]] || die "plugin-extensions gate missing"
 grep -q 'js patch 19' "$NM/@deepseek-ai/dsh-tools/lib/index.js" && grep -q 'js patch 19' "$NM/@deepseek-ai/dsh-commands/lib/index.js" || die "tool/command owner patch (19) missing"
