@@ -179,3 +179,80 @@
     # 只读元数据（不读提示词、工具输出、文件内容），不联网、不碰账号；工具名 `tokentracker`。
     - id: android-tokentracker
       name: '@dsh-android/plugin-tokentracker'
+
+# ── built-in prompt-rules plugin (dsh-purge-community) ─────────────────────
+# Shipped in the engine tree by build-engine.sh from the pinned release tarball
+# (js/purge-community.pin), so a fresh install boots with it instead of needing
+# `dsh plugin add`. Rows mirror the plugin's own cordis.patch.yml so this file stays the
+# complete row list; tuning and drill data stay in $DSH_HOME (dsh-purge/, redteam/).
+#
+# Standalone red-team packages, off when one was installed by hand: the plugin carries
+# its own redteam preset, store and HTTP bridge below.
+- id: redteam-store
+  name: dsh-redteam-store
+  disabled: true
+- id: redteam-ui
+  name: dsh-redteam-ui
+  disabled: true
+- id: redteam-mode
+  name: dsh-redteam-mode
+  disabled: true
+- id: redteam-mode-store
+  name: dsh-redteam-mode/store
+  disabled: true
+- id: redteam-mode-ui
+  name: dsh-redteam-mode/ui
+  disabled: true
+
+# The plugin owns the prompt layer: no harness identity line and no app persona prefix.
+# Drop this block to keep the "You are DSH, an AI agent running on the user's own Android
+# phone" persona set at the top of this file.
+- id: system-prompt
+  config:
+    includeHarnessIdentity: false
+    personaPrefix: ""
+    personaSuffix: ""
+
+- insert:
+    # Prompt rules, refusal retry, mnemonic strip, capability protocol, redteam preset.
+    # autoApplyOnStart stays false: the bundled tree is shared, and its 88 source patches
+    # rewrite dsh's own files (apply them deliberately, not on every cold start).
+    - id: dsh-purge
+      name: 'dsh-purge-community'
+      inject: [systemPrompt, tools]
+      config:
+        enabled: true
+        excludePresets: []
+        autoApplyOnStart: false
+        autoUpdateOnStart: false
+        autoRevertOnMissing: false
+        injectOnce: false
+        stripMnemon: true
+        verbose: false
+        postPrompt: ""
+        postPromptOrder: 5100
+        autoRetry: true
+        retryMax: 3
+        autoContinue: false
+        continueMax: 3
+        continueText: "继续"
+        capabilityProtocol: true
+        hooksDenyBypass: true
+
+    # 演练台（预设 + 技能落地，本插件 lib/redteam）
+    - id: dsh-purge-redteam
+      name: dsh-purge-community/redteam
+
+    # 自带 agent 预设：unrestricted（无限制模式）
+    - id: dsh-purge-presets
+      name: dsh-purge-community/presets-plugin
+
+    # 演练台事实库（SQLite），数据在 $DSH_HOME/redteam
+    - id: dsh-purge-redteam-store
+      name: dsh-purge-community/redteam/store
+      config:
+        root: !!js dshHomePath('redteam')
+
+    # 演练台 HTTP 桥 POST /redteam/api
+    - id: dsh-purge-redteam-ui
+      name: dsh-purge-community/redteam/ui
