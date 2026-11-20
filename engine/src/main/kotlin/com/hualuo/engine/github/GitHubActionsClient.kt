@@ -2,6 +2,11 @@ package com.hualuo.engine.github
 
 import java.io.File
 
+/** 一条 workflow 定义（手动触发前要先知道文件名）。 */
+data class GitHubWorkflow(val id: Long, val name: String, val path: String, val state: String)
+
+data class GitHubWorkflowList(val workflows: List<GitHubWorkflow>, val badEntries: Int, val error: String?)
+
 /** 一次「动手 CI」的收场：成功/失败 + 状态码 + 人话。 */
 data class GitHubActionResult(val ok: Boolean, val httpStatus: Int?, val error: String?)
 
@@ -67,6 +72,41 @@ class GitHubActionsClient(
             result.status == 409 -> GitHubActionResult(false, 409, "这次运行已经结束了（409）：没什么可取消的")
             else -> GitHubActionResult(false, result.status, ghIssue(result.status, result.body, "取消 run $runId "))
         }
+    }
+
+    /**
+     * 仓库里有哪些 workflow（手动触发前要先知道 .github/workflows/ 下的文件名）。
+     * 只取 id/name/path/state 四项，坏条目计数不静默。
+     */
+    fun workflows(repo: String, token: String?, limit: Int = 20): GitHubWorkflowList {
+        val full = normalizeGitHubRepo(repo)
+            ?: return GitHubWorkflowList(emptyList(), 0, repoProblem(repo))
+        val result = fetch(
+            "$GITHUB_API_ROOT/repos/$full/actions/workflows?per_page=${limit.coerceIn(1, 50)}",
+            token,
+            null,
+            GITHUB_MAX_BODY_CHARS,
+        )
+        if (result.status != 200) return GitHubWorkflowList(emptyList(), 0, ghIssue(result.status, result.body, "列 workflow "))
+        val root = runCatching { ghJson.parseToJsonElement(result.body) }.getOrNull() as? kotlinx.serialization.json.JsonObject
+            ?: return GitHubWorkflowList(emptyList(), 0, "workflow 清单读不懂（200 但不是 JSON 对象）")
+        val array = root.arr("workflows")
+            ?: return GitHubWorkflowList(emptyList(), 0, "workflow 清单形状变了（没有 workflows 数组）")
+        val out = ArrayList<GitHubWorkflow>()
+        var bad = 0
+        for (element in array) {
+            if (out.size >= limit.coerceIn(1, 50)) break
+            if (element !is kotlinx.serialization.json.JsonObject) { bad += 1; continue }
+            val id = element.lng("id")
+            if (id == null) { bad += 1; continue }
+            out += GitHubWorkflow(
+                id = id,
+                name = element.str("name"),
+                path = element.str("path"),
+                state = element.str("state"),
+            )
+        }
+        return GitHubWorkflowList(out, bad, null)
     }
 
     /** 仓库最近产生的 artifact（新在前是 GitHub 的顺序）。 */

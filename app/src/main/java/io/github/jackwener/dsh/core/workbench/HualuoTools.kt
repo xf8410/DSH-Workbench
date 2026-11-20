@@ -5,6 +5,8 @@ import com.hualuo.engine.observe.ObserveClient
 import com.hualuo.engine.observe.ObserveState
 import com.hualuo.engine.observe.UmaTool
 import com.hualuo.engine.toolcalls.ActionConfirmer
+import com.hualuo.engine.toolcalls.ApkTool
+import com.hualuo.engine.toolcalls.HttpFetchTool
 import com.hualuo.engine.toolcalls.GitHubCreateRepoTool
 import com.hualuo.engine.toolcalls.GitHubExtraReadTool
 import com.hualuo.engine.toolcalls.GitHubExtraWriteTool
@@ -60,6 +62,14 @@ class HualuoTools @Inject constructor(
         // 同样两道闸：这里的 ActionConfirmer 恒真，真正的审批在 DSH 的 Risk.write 流程。
         GitHubExtraWriteTool.register(this, loadToken, defaultRepo, ActionConfirmer { true })
     }
+    private val netFetch = ToolRegistry().apply {
+        // 通用 HTTP：http_head 看对方给什么，http_download 流式落盘（P1 补，替代每轮手写 curl 脚本）。
+        HttpFetchTool.register(this)
+    }
+    private val apkInspect = ToolRegistry().apply {
+        // APK 体检：包名/版本/签名证书指纹（P1 补，装包前核对「会不会被签名拒」）。
+        ApkTool.register(this)
+    }
     private val githubTransfer = ToolRegistry().apply {
         // 建仓与传文件：DSH 的非读风险审批在引擎侧，走到这里说明已经授权过。
         GitHubCreateRepoTool.register(this, loadToken)
@@ -76,6 +86,8 @@ class HualuoTools @Inject constructor(
         githubWrite.specs().forEach { put(it.name, githubWrite) }
         githubWriteExtra.specs().forEach { put(it.name, githubWriteExtra) }
         githubTransfer.specs().forEach { put(it.name, githubTransfer) }
+        netFetch.specs().forEach { put(it.name, netFetch) }
+        apkInspect.specs().forEach { put(it.name, apkInspect) }
         uma.specs().filter { it.name in UMA_WHITELIST }.forEach { put(it.name, uma) }
     }
 
@@ -96,6 +108,7 @@ class HualuoTools @Inject constructor(
             "github_ci_rerun", "github_ci_cancel", "github_ci_dispatch", "github_artifact_download",
             "github_issue_create", "github_issue_comment", "github_issue_close",
             "github_release_create", "github_release_upload_asset",
+            "github_edit_file", "github_pr_comment", "http_download",
             -> Risk.write
             else -> Risk.read
         }
