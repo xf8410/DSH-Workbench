@@ -47,6 +47,7 @@ object ApkTool {
     private fun format(file: File, includeEntries: Boolean, maxEntries: Int): String {
         val report = runCatching { ApkInspector.inspect(file) }.getOrNull()
             ?: fail("这个文件读不成 APK（可能不是 zip，或读不动）")
+        if (!report.magicOk) fail("这不是 APK：" + report.magicNote)
         val manifest = runCatching { AxmlManifest.parseFromApk(file) }.getOrNull()
         val signature = runCatching { ApkSignature.inspect(file) }.getOrNull()
 

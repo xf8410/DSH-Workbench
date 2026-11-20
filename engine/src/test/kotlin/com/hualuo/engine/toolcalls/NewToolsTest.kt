@@ -66,7 +66,7 @@ class NewToolsTest {
         val outcome = apkRegistry().execute("apk_inspect", """{"path":"${tmp.path}"}""")
         tmp.delete()
         assertFalse(outcome.ok)
-        assertTrue(outcome.text.contains("读不成"))
+        assertTrue(outcome.text, outcome.text.contains("不是 APK"))
     }
 
     @Test
