@@ -23,7 +23,7 @@ class GitHubExtraToolTest {
         }
 
     @Test
-    fun readFamilyRegistersTheEightReadTools() {
+    fun readFamilyRegistersTheNineReadTools() {
         val names = readRegistry().specs().map { it.name }.toSet()
         assertEquals(
             setOf(
@@ -35,6 +35,7 @@ class GitHubExtraToolTest {
                 "github_issue_read",
                 "github_release_list",
                 "github_artifact_list",
+                "github_workflow_list",
             ),
             names,
         )
@@ -47,7 +48,7 @@ class GitHubExtraToolTest {
     }
 
     @Test
-    fun writeFamilyRegistersNineActionsWithGate() {
+    fun writeFamilyRegistersElevenActionsWithGate() {
         val names = writeRegistry(ActionConfirmer { true }).specs().map { it.name }.toSet()
         assertEquals(
             setOf(
@@ -60,6 +61,8 @@ class GitHubExtraToolTest {
                 "github_issue_close",
                 "github_release_create",
                 "github_release_upload_asset",
+                "github_edit_file",
+                "github_pr_comment",
             ),
             names,
         )

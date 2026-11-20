@@ -4,6 +4,7 @@ import com.hualuo.engine.github.GitHubActionsClient
 import com.hualuo.engine.github.GitHubCiClient
 import com.hualuo.engine.github.GitHubIssueClient
 import com.hualuo.engine.github.GitHubReleaseClient
+import com.hualuo.engine.github.GitHubRepoClient
 import java.io.File
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -53,6 +54,7 @@ object GitHubExtraWriteTool {
         issueClient: GitHubIssueClient = GitHubIssueClient(),
         releaseClient: GitHubReleaseClient = GitHubReleaseClient(),
         ciClient: GitHubCiClient = GitHubCiClient(),
+        repoClient: GitHubRepoClient = GitHubRepoClient(),
     ): ToolRegistry {
         if (confirmer == null) return registry // 不给闸门就一个都不注册（默认拒）
         val token: () -> String? = { loadToken()?.trim()?.takeIf { it.isNotEmpty() } }
@@ -261,6 +263,76 @@ object GitHubExtraWriteTool {
             val problem = result.error
             if (problem != null) fail(problem)
             "已上传 $name（${formatBytes(result.sizeBytes)}）${if (result.downloadUrl.isEmpty()) "" else "：${result.downloadUrl}"}"
+        }
+
+        registry.register(
+            ToolSpec(
+                name = "github_edit_file",
+                description = "局部改仓库里的一个文本文件：给一段原文与替换文（需要 DSH 风险审批）。" +
+                    "比 github_update_file 省 token：只传改动而不传整文件。默认要求 old 只出现一次；" +
+                    "重复就加长锚点，或传 replace_all=true 全改",
+                parametersJson = """{"type":"object","properties":{"repo":{"type":"string","description":"owner/name；缺省用默认仓库"},"path":{"type":"string","description":"仓库内路径"},"old":{"type":"string","description":"要被替换掉的原文（尽量带上下文，保证唯一）"},"new":{"type":"string","description":"替换成什么；空串=删掉这段"},"message":{"type":"string","description":"提交说明（必填）"},"branch":{"type":"string","description":"分支，缺省 main"},"replace_all":{"type":"boolean","description":"true=把出现的每一处都换掉"}},"required":["path","old","message"]}""",
+            ),
+        ) { argumentsJson ->
+            val args = argsOf(argumentsJson)
+            val repo = repoArg(args, defaultRepo)
+            val path = reqStr(args, "path", "仓库内路径")
+            val oldText = reqStr(args, "old", "要被替换掉的原文")
+            val newText = optStr(args, "new") ?: ""
+            val message = reqStr(args, "message", "提交说明（会进仓库历史）")
+            val branch = optStr(args, "branch") ?: "main"
+            val replaceAll = optBool(args, "replace_all")
+            val tk = token()
+            val current = repoClient.readFile(repo, path, branch, tk)
+            val readError = current.error
+            if (readError != null) fail(readError)
+            val text = current.text ?: fail("这个文件没有可编辑的文本（二进制或读不出来）：换 github_update_file 整文件覆盖")
+            val sha = current.sha ?: fail("读不到文件 sha：没法做覆盖对账，先 github_read_file 再看一次")
+            val count = text.split(oldText).size - 1
+            if (count == 0) fail("原文没找到：old 要跟文件里的字符一字不差（含缩进），先 github_read_file 核对")
+            if (count > 1 && !replaceAll) {
+                fail("原文出现 $count 次：加长锚点让它唯一，或传 replace_all=true 全改")
+            }
+            val updated = if (replaceAll) {
+                text.split(oldText).joinToString(newText)
+            } else {
+                val idx = text.indexOf(oldText)
+                text.substring(0, idx) + newText + text.substring(idx + oldText.length)
+            }
+            if (updated.length > GitHubWriteTool.MAX_WRITE_CHARS) {
+                fail("改完 ${updated.length} 字符，超了单次写入上限 ${GitHubWriteTool.MAX_WRITE_CHARS}：拆成几次小改动")
+            }
+            gate(
+                confirmer,
+                GitHubActionProposal(
+                    "改文件",
+                    repo,
+                    path,
+                    "$count 处替换，${text.length} -> ${updated.length} 字符，分支 $branch",
+                ),
+            )
+            val result = repoClient.updateFile(repo, path, branch, updated, message, sha, tk)
+            val problem = result.error
+            if (problem != null) fail(problem)
+            "已提交：$repo/$path（分支 $branch，改 $count 处，commit ${result.commitSha?.take(8) ?: "?"}）"
+        }
+
+        registry.register(
+            ToolSpec(
+                name = "github_pr_comment",
+                description = "在一个 PR（或 issue）下留评论（需要 DSH 风险审批）。正文支持 markdown",
+                parametersJson = """{"type":"object","properties":{"repo":{"type":"string","description":"owner/name；缺省用默认仓库"},"number":{"type":"integer","description":"PR/issue 编号"},"body":{"type":"string","description":"评论正文（markdown）"}},"required":["number","body"]}""",
+            ),
+        ) { argumentsJson ->
+            val args = argsOf(argumentsJson)
+            val repo = repoArg(args, defaultRepo)
+            val number = optLong(args, "number") ?: fail("缺参数 number（PR/issue 编号）")
+            val body = reqStr(args, "body", "评论正文")
+            gate(confirmer, GitHubActionProposal("评论 PR", repo, "#$number", "${body.length} 字符"))
+            val result = issueClient.comment(repo, number, body, token())
+            val problem = result.error
+            if (problem != null) fail(problem)
+            "已评论 #$number${if (result.htmlUrl.isEmpty()) "" else "：${result.htmlUrl}"}"
         }
 
         return registry

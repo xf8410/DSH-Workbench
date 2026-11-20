@@ -166,6 +166,32 @@ object GitHubExtraReadTool {
             else actionsClient.artifacts(repo, token(), limit)
             formatArtifacts(list, limit)
         }
+
+        registry.register(
+            ToolSpec(
+                name = "github_workflow_list",
+                description = "列仓库里可用的 GitHub Actions workflow（名字与 .github/workflows/ 下的路径）。" +
+                    "github_ci_dispatch 要的 workflow 文件名从这里拿",
+                parametersJson = """{"type":"object","properties":{"repo":{"type":"string","description":"owner/name；缺省用默认仓库"},"limit":{"type":"integer","description":"最多几条，默认 20，范围 1-50"}}}""",
+            ),
+        ) { argumentsJson ->
+            val args = argsOf(argumentsJson)
+            val repo = repoArg(args, defaultRepo)
+            val limit = (optInt(args, "limit") ?: 20).coerceIn(1, 50)
+            val list = actionsClient.workflows(repo, token(), limit)
+            val problem = list.error
+            if (problem != null) fail(problem)
+            if (list.workflows.isEmpty()) {
+                "这个仓库没有 workflow（.github/workflows/ 下没有 yml）"
+            } else {
+                val sb = StringBuilder("共 ${list.workflows.size} 个 workflow：")
+                list.workflows.forEach { wf ->
+                    sb.append("\n- ").append(wf.name).append("（").append(wf.path).append("，").append(wf.state).append("）")
+                }
+                if (list.badEntries > 0) sb.append("\n（另有 ${list.badEntries} 条读不懂，已跳过）")
+                sb.toString()
+            }
+        }
     }
 
     // ── 结果文本（省着写；账目出声） ────────────────────────────────
