@@ -4,7 +4,10 @@ import com.hualuo.engine.api.UrlConnTransport
 import com.hualuo.engine.observe.ObserveClient
 import com.hualuo.engine.observe.ObserveState
 import com.hualuo.engine.observe.UmaTool
+import com.hualuo.engine.toolcalls.ActionConfirmer
 import com.hualuo.engine.toolcalls.GitHubCreateRepoTool
+import com.hualuo.engine.toolcalls.GitHubExtraReadTool
+import com.hualuo.engine.toolcalls.GitHubExtraWriteTool
 import com.hualuo.engine.toolcalls.GitHubPrTool
 import com.hualuo.engine.toolcalls.GitHubToolFamily
 import com.hualuo.engine.toolcalls.GitHubWriteTool
@@ -42,11 +45,20 @@ class HualuoTools @Inject constructor(
     private val loadToken = { secrets.read(GITHUB_TOKEN_SLOT) }
     private val defaultRepo = { DEFAULT_REPO }
     private val github = GitHubToolFamily.build(loadToken, defaultRepo)
+    private val githubReadExtra = ToolRegistry().apply {
+        // P0 十四件的「看得见」那一半：PR 读、commit diff、issue 读、release 列表、artifact 列表。
+        GitHubExtraReadTool.register(this, loadToken, defaultRepo)
+    }
     private val githubWrite = ToolRegistry().apply {
         // CapabilityHub/DSH's engine upgrades every non-read tool to its own approval flow.
         // Reaching these synchronous gates therefore means that DSH already authorized the call.
         GitHubWriteTool.register(this, loadToken, defaultRepo, com.hualuo.engine.github.GitHubRepoClient(), WriteConfirmer { true })
         GitHubPrTool.register(this, loadToken, defaultRepo, com.hualuo.engine.github.GitHubPrClient(), PrConfirmer { true })
+    }
+    private val githubWriteExtra = ToolRegistry().apply {
+        // P0 十四件的「动得了」那一半：CI 重跑/取消/触发、artifact 下载、issue 写、release 建与传附件。
+        // 同样两道闸：这里的 ActionConfirmer 恒真，真正的审批在 DSH 的 Risk.write 流程。
+        GitHubExtraWriteTool.register(this, loadToken, defaultRepo, ActionConfirmer { true })
     }
     private val githubTransfer = ToolRegistry().apply {
         // 建仓与传文件：DSH 的非读风险审批在引擎侧，走到这里说明已经授权过。
@@ -60,7 +72,9 @@ class HualuoTools @Inject constructor(
     }
     private val routes: Map<String, ToolRegistry> = buildMap {
         github.specs().forEach { put(it.name, github) }
+        githubReadExtra.specs().forEach { put(it.name, githubReadExtra) }
         githubWrite.specs().forEach { put(it.name, githubWrite) }
+        githubWriteExtra.specs().forEach { put(it.name, githubWriteExtra) }
         githubTransfer.specs().forEach { put(it.name, githubTransfer) }
         uma.specs().filter { it.name in UMA_WHITELIST }.forEach { put(it.name, uma) }
     }
@@ -78,6 +92,11 @@ class HualuoTools @Inject constructor(
             "github_merge_pull_request" -> Risk.dangerous
             "github_update_file", "github_create_pull_request" -> Risk.write
             "github_create_repo", "github_upload_files" -> Risk.write
+            // P0 十四件里的动件：改远端状态，一律走 DSH 的风险审批。
+            "github_ci_rerun", "github_ci_cancel", "github_ci_dispatch", "github_artifact_download",
+            "github_issue_create", "github_issue_comment", "github_issue_close",
+            "github_release_create", "github_release_upload_asset",
+            -> Risk.write
             else -> Risk.read
         }
         return object : Tool(spec.name, ToolGroup.System, risk, false, dshDescription(spec.description), {
