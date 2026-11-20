@@ -48,7 +48,7 @@ object GitHubExtraReadTool {
         registry.register(
             ToolSpec(
                 name = "github_pr_list",
-                description = "列仓库的 Pull Request（编号、标题、状态、作者、源分支→目标分支、更新时间）。" +
+                description = "列仓库的 Pull Request（编号、标题、状态、作者、源分支->目标分支、更新时间）。" +
                     "回答「有哪些 PR 还开着」用这个；repo 缺省用默认仓库",
                 parametersJson = """{"type":"object","properties":{"repo":{"type":"string","description":"owner/name；缺省用默认仓库"},"state":{"type":"string","description":"open / closed / all，缺省 open"},"limit":{"type":"integer","description":"最多几条，默认 10，范围 1-30"}}}""",
             ),
@@ -179,7 +179,7 @@ object GitHubExtraReadTool {
             sb.append("\n- #").append(pr.number).append(" [").append(pr.state)
             if (pr.draft) sb.append("/draft")
             sb.append("] ").append(pr.title)
-            if (pr.headRef.isNotEmpty()) sb.append("（").append(pr.headRef).append(" → ").append(pr.baseRef).append("）")
+            if (pr.headRef.isNotEmpty()) sb.append("（").append(pr.headRef).append(" -> ").append(pr.baseRef).append("）")
             if (pr.user.isNotEmpty()) sb.append(" @").append(pr.user)
         }
         if (list.badEntries > 0) sb.append("\n（另有 ${list.badEntries} 条读不懂，已跳过）")
@@ -193,7 +193,7 @@ object GitHubExtraReadTool {
         sb.append("\n- 状态：").append(detail.state)
         if (detail.draft) sb.append("（草稿）")
         sb.append("｜作者 @").append(detail.user.ifEmpty { "?" })
-        sb.append("\n- 分支：").append(detail.headRef).append(" → ").append(detail.baseRef)
+        sb.append("\n- 分支：").append(detail.headRef).append(" -> ").append(detail.baseRef)
         if (detail.headSha.isNotEmpty()) sb.append("（head ").append(detail.headSha.take(8)).append("）")
         sb.append("\n- 改动：+").append(detail.additions).append(" / −").append(detail.deletions)
         sb.append("，").append(detail.changedFiles).append(" 个文件")

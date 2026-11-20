@@ -141,7 +141,7 @@ object GitHubExtraWriteTool {
             val result = actionsClient.downloadArtifact(repo, artifactId, token(), target)
             val problem = result.error
             if (problem != null) fail(problem)
-            "已下载 artifact $artifactId → ${result.path}（${formatBytes(result.bytes)}）"
+            "已下载 artifact $artifactId -> ${result.path}（${formatBytes(result.bytes)}）"
         }
 
         registry.register(
@@ -194,7 +194,7 @@ object GitHubExtraWriteTool {
             val args = argsOf(argumentsJson)
             val repo = repoArg(args, defaultRepo)
             val number = optLong(args, "number") ?: fail("缺参数 number（issue 编号）")
-            gate(confirmer, GitHubActionProposal("关 issue", repo, "#$number", "state → closed"))
+            gate(confirmer, GitHubActionProposal("关 issue", repo, "#$number", "state -> closed"))
             val result = issueClient.close(repo, number, token())
             val problem = result.error
             if (problem != null) fail(problem)

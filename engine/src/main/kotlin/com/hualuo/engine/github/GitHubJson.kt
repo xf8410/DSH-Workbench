@@ -15,11 +15,11 @@ import kotlinx.serialization.json.contentOrNull
  */
 internal val ghJson: Json = Json { ignoreUnknownKeys = true; isLenient = true }
 
-/** 取字符串字段：没有 / 不是字符串 / 是 null → 空串。 */
+/** 取字符串字段：没有 / 不是字符串 / 是 null -> 空串。 */
 internal fun JsonObject.str(key: String): String =
     (this[key] as? JsonPrimitive)?.contentOrNull ?: ""
 
-/** 取长整型字段：读不出数字 → null（不当 0 用，0 与「没有」在本仓是两件事）。 */
+/** 取长整型字段：读不出数字 -> null（不当 0 用，0 与「没有」在本仓是两件事）。 */
 internal fun JsonObject.lng(key: String): Long? =
     (this[key] as? JsonPrimitive)?.contentOrNull?.toLongOrNull()
 
