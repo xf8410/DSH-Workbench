@@ -163,13 +163,15 @@ jobs:
           if-no-files-found: error
 
       # 双开包：同一份源码、同一个固定签名，只换 applicationId，让第二个实例与主包并存。
+      # 包名默认 io.github.jackwener.dsh.dual，可用仓库变量 DSH_DUAL_APP_ID 覆盖
+      # （与手机上已装的第三方克隆签名冲突时，换名并存是唯一不丢数据的办法）。
       # 主包已经发布完才跑这一步：assembleRelease 会覆盖同一路径的 app-release.apk。
       - name: Assemble dual APK (io.github.jackwener.dsh.dual)
         shell: bash
         run: |
           set -o pipefail
           bash gradlew :app:assembleRelease \
-            -Pdsh.applicationId=io.github.jackwener.dsh.dual \
+            -Pdsh.applicationId=${{ vars.DSH_DUAL_APP_ID || 'io.github.jackwener.dsh.dual' }} \
             -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
             -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
             --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-dual.log"
