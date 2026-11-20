@@ -27,7 +27,10 @@ android {
 
     defaultConfig {
         // 与手机上已装的 0.4.1（旧签名，无法覆盖）并存：换包名安装，旧 App 和数据原样保留。
-        applicationId = "io.github.jackwener.dsh.wb"
+        // 默认包名 .wb（与手机上旧签名 0.4.1 的 .dsh 并存）。
+        // 双开包用 -Pdsh.applicationId=io.github.jackwener.dsh.dual 构建，其余完全一致：
+        // 换名只为让两个实例并存，签名仍是 signing/release.keystore。
+        applicationId = providers.gradleProperty("dsh.applicationId").getOrElse("io.github.jackwener.dsh.wb")
         minSdk = 29
         targetSdk = 36
         versionCode = appVersion.getProperty("versionCode").toInt()

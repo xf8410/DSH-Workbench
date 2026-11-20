@@ -162,6 +162,35 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
 
+      # 双开包：同一份源码、同一个固定签名，只换 applicationId，让第二个实例与主包并存。
+      # 主包已经发布完才跑这一步：assembleRelease 会覆盖同一路径的 app-release.apk。
+      - name: Assemble dual APK (io.github.jackwener.dsh.dual)
+        shell: bash
+        run: |
+          set -o pipefail
+          bash gradlew :app:assembleRelease \
+            -Pdsh.applicationId=io.github.jackwener.dsh.dual \
+            -Pdsh.nativeOut=${{ github.workspace }}/toolchains/out/jniLibs \
+            -Pdsh.engineOut=${{ github.workspace }}/toolchains/out/engine \
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-dual.log"
+          cp app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/dsh-workbench-dual.apk"
+          ls -l "$RUNNER_TEMP/dsh-workbench-dual.apk"
+
+      - name: Publish dual APK to prerelease
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: gh release upload workbench-latest "$RUNNER_TEMP/dsh-workbench-dual.apk" --clobber
+
+      - name: Upload dual APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DSH-Workbench-dual-apk
+          path: ${{ runner.temp }}/dsh-workbench-dual.apk
+          if-no-files-found: error
+
   app-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 60
