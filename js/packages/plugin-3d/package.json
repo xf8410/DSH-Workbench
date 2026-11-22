@@ -1,0 +1,30 @@
+{
+  "name": "@dsh-android/plugin-3d",
+  "version": "0.1.0",
+  "description": "GLB 3D toolkit for DSH on the phone: ships a pure-node glb.mjs (info / silhouette / proportion fix / compare) and installs it as the bundled `glb3d` skill into $DSH_HOME/skills on boot, so model checking and proportion edits need neither Blender nor Python.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "tools",
+    "skills",
+    "package.json"
+  ],
+  "engines": {
+    "dsh": "0.2.1-rc.5"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "glb",
+    "gltf",
+    "3d",
+    "android"
+  ]
+}
