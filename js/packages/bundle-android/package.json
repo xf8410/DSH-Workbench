@@ -26,6 +26,7 @@
     "dsh": "0.2.1-rc.5"
   },
   "dependencies": {
+    "@dsh-android/plugin-3d": "0.1.0",
     "@dsh-android/plugin-account": "0.1.0",
     "@dsh-android/plugin-device": "0.1.0",
     "@dsh-android/plugin-extensions": "0.1.0",
