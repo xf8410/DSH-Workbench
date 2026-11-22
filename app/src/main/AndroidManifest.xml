@@ -292,7 +292,7 @@
     <!-- 桌宠：assets/pets/teio 的悬浮层与快捷开关（PetOverlay.show / PetTile） -->
     <service
         android:name=".pet.PetOverlayService"
-        android:exported="false"
+        android:exported="true"
         android:foregroundServiceType="specialUse">
         <property
             android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
