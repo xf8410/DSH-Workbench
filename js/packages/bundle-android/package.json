@@ -1,7 +1,7 @@
 {
   "name": "@dsh-android/bundle-android",
   "version": "0.1.0",
-  "description": "DSH-Android profile bundle and engine entry (main.mjs): layered over dsh-base + dsh-sdk-app; trims desktop/web/experimental rows, runs approval-only without an OS sandbox, mounts the device, guard, mode, account and extensions plugins, dsh's plugin manager and market, and the dormant llm-service-lite row for third-party models. Also ships glb3d.mjs (GLB preview renderer / proportion measurer / band scaler) as a built-in skill.",
+  "description": "DSH-Android profile bundle and engine entry (main.mjs): layered over dsh-base + dsh-sdk-app; trims desktop/web/experimental rows, runs approval-only without an OS sandbox, mounts the device, guard, mode, account and extensions plugins, dsh's plugin manager and market, and the dormant llm-service-lite row for third-party models. Also ships two built-in skills: glb3d (GLB preview renderer / proportion measurer / band scaler) and imagegen (images/edits + images/generations client).",
   "type": "module",
   "private": true,
   "license": "MIT",
@@ -11,7 +11,9 @@
     "android-env.cjs",
     "main.mjs",
     "glb3d.mjs",
-    "glb3d-skill.md"
+    "glb3d-skill.md",
+    "imagegen.mjs",
+    "imagegen-skill.md"
   ],
   "exports": {
     "./cordis.patch.yml": "./cordis.patch.yml",
