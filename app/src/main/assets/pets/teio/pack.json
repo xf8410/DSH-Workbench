@@ -1,0 +1,571 @@
+{
+  "schema": 1,
+  "id": "teio",
+  "name": "东海帝皇",
+  "author": "本机生成（DSH 会话）",
+  "license": "同人二创，仅供个人使用；角色版权属 Cygames",
+  "source": "Q 版母版与表情/动作帧均由 GPT 生图（gpt-image-2.6-sunburst）绘制",
+  "pixelArt": false,
+  "scale": 2,
+  "canvas": {
+    "w": 160,
+    "h": 160
+  },
+  "anchor": {
+    "x": 80,
+    "baseline": 155
+  },
+  "contentBox": {
+    "x": 8,
+    "y": 4,
+    "w": 144,
+    "h": 151
+  },
+  "hitBoxes": {
+    "default": {
+      "x": 8,
+      "y": 4,
+      "w": 144,
+      "h": 151
+    },
+    "wide": {
+      "x": 4,
+      "y": 2,
+      "w": 152,
+      "h": 153
+    },
+    "sleeping": {
+      "x": 4,
+      "y": 6,
+      "w": 152,
+      "h": 149
+    },
+    "byAnim": {},
+    "wideAnims": [
+      "happy",
+      "wave",
+      "stretch"
+    ],
+    "sleepingAnims": [
+      "sleep"
+    ]
+  },
+  "animations": {
+    "idle": {
+      "sheet": "idle.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 12,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 2400,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 200
+        },
+        {
+          "i": 1,
+          "ms": 200
+        },
+        {
+          "i": 2,
+          "ms": 200
+        },
+        {
+          "i": 3,
+          "ms": 200
+        },
+        {
+          "i": 4,
+          "ms": 200
+        },
+        {
+          "i": 5,
+          "ms": 200
+        },
+        {
+          "i": 6,
+          "ms": 200
+        },
+        {
+          "i": 7,
+          "ms": 200
+        },
+        {
+          "i": 8,
+          "ms": 200
+        },
+        {
+          "i": 9,
+          "ms": 200
+        },
+        {
+          "i": 10,
+          "ms": 200
+        },
+        {
+          "i": 11,
+          "ms": 200
+        }
+      ]
+    },
+    "type": {
+      "sheet": "type.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 8,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 880,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 110
+        },
+        {
+          "i": 1,
+          "ms": 110
+        },
+        {
+          "i": 2,
+          "ms": 110
+        },
+        {
+          "i": 3,
+          "ms": 110
+        },
+        {
+          "i": 4,
+          "ms": 110
+        },
+        {
+          "i": 5,
+          "ms": 110
+        },
+        {
+          "i": 6,
+          "ms": 110
+        },
+        {
+          "i": 7,
+          "ms": 110
+        }
+      ]
+    },
+    "happy": {
+      "sheet": "happy.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 8,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": false,
+      "ms": 760,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 95
+        },
+        {
+          "i": 1,
+          "ms": 95
+        },
+        {
+          "i": 2,
+          "ms": 95
+        },
+        {
+          "i": 3,
+          "ms": 95
+        },
+        {
+          "i": 4,
+          "ms": 95
+        },
+        {
+          "i": 5,
+          "ms": 95
+        },
+        {
+          "i": 6,
+          "ms": 95
+        },
+        {
+          "i": 7,
+          "ms": 95
+        }
+      ]
+    },
+    "notify": {
+      "sheet": "notify.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 6,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 1020,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 170
+        },
+        {
+          "i": 1,
+          "ms": 170
+        },
+        {
+          "i": 2,
+          "ms": 170
+        },
+        {
+          "i": 3,
+          "ms": 170
+        },
+        {
+          "i": 4,
+          "ms": 170
+        },
+        {
+          "i": 5,
+          "ms": 170
+        }
+      ]
+    },
+    "wave": {
+      "sheet": "wave.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 4,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 880,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 220
+        },
+        {
+          "i": 1,
+          "ms": 220
+        },
+        {
+          "i": 2,
+          "ms": 220
+        },
+        {
+          "i": 3,
+          "ms": 220
+        }
+      ]
+    },
+    "sleep": {
+      "sheet": "sleep.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 4,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 2600,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 650
+        },
+        {
+          "i": 1,
+          "ms": 650
+        },
+        {
+          "i": 2,
+          "ms": 650
+        },
+        {
+          "i": 3,
+          "ms": 650
+        }
+      ]
+    },
+    "poke": {
+      "sheet": "poke.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 6,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": false,
+      "ms": 660,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 110
+        },
+        {
+          "i": 1,
+          "ms": 110
+        },
+        {
+          "i": 2,
+          "ms": 110
+        },
+        {
+          "i": 3,
+          "ms": 110
+        },
+        {
+          "i": 4,
+          "ms": 110
+        },
+        {
+          "i": 5,
+          "ms": 110
+        }
+      ]
+    },
+    "think": {
+      "sheet": "think.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 4,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 2080,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 520
+        },
+        {
+          "i": 1,
+          "ms": 520
+        },
+        {
+          "i": 2,
+          "ms": 520
+        },
+        {
+          "i": 3,
+          "ms": 520
+        }
+      ]
+    },
+    "cry": {
+      "sheet": "cry.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 4,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 1120,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 280
+        },
+        {
+          "i": 1,
+          "ms": 280
+        },
+        {
+          "i": 2,
+          "ms": 280
+        },
+        {
+          "i": 3,
+          "ms": 280
+        }
+      ]
+    },
+    "annoyed": {
+      "sheet": "annoyed.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 4,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 680,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 170
+        },
+        {
+          "i": 1,
+          "ms": 170
+        },
+        {
+          "i": 2,
+          "ms": 170
+        },
+        {
+          "i": 3,
+          "ms": 170
+        }
+      ]
+    },
+    "stretch": {
+      "sheet": "stretch.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 6,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": false,
+      "ms": 900,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 150
+        },
+        {
+          "i": 1,
+          "ms": 150
+        },
+        {
+          "i": 2,
+          "ms": 150
+        },
+        {
+          "i": 3,
+          "ms": 150
+        },
+        {
+          "i": 4,
+          "ms": 150
+        },
+        {
+          "i": 5,
+          "ms": 150
+        }
+      ]
+    },
+    "look": {
+      "sheet": "look.png",
+      "frameW": 320,
+      "frameH": 320,
+      "cols": 4,
+      "box": {
+        "x": 8,
+        "y": 4,
+        "w": 152,
+        "h": 154
+      },
+      "loop": true,
+      "ms": 1600,
+      "frames": [
+        {
+          "i": 0,
+          "ms": 400
+        },
+        {
+          "i": 1,
+          "ms": 400
+        },
+        {
+          "i": 2,
+          "ms": 400
+        },
+        {
+          "i": 3,
+          "ms": 400
+        }
+      ]
+    }
+  },
+  "states": {
+    "idle": [
+      "idle"
+    ],
+    "thinking": [
+      "think"
+    ],
+    "working": [
+      "type"
+    ],
+    "juggling": [
+      "type"
+    ],
+    "sweeping": [
+      "type"
+    ],
+    "notification": [
+      "notify"
+    ],
+    "attention": [
+      "wave"
+    ],
+    "error": [
+      "cry"
+    ],
+    "carrying": [
+      "stretch"
+    ],
+    "sleeping": [
+      "sleep"
+    ],
+    "waking": [
+      "look"
+    ]
+  },
+  "tiers": {},
+  "idlePool": [
+    "idle",
+    "look"
+  ],
+  "reactions": {
+    "click": "poke",
+    "doubleClick": "happy"
+  }
+}
