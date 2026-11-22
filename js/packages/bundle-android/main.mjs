@@ -15,7 +15,7 @@
 //  4. a crash recorder and the boot journal (`ready` once the tree is up).
 // Extra argv after this script reaches the booted app unchanged (like bin.js's inner args).
 import { installCrashRecorder, markBoot, prepareBoot } from '@dsh-android/plugin-extensions/boot.js'
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -27,25 +27,32 @@ process.env.DSH_ANDROID_ENV_CJS ||= boot.paths.preload
 process.env.DSH_ANDROID_MCP_DIR ||= boot.paths.mcpServers
 installCrashRecorder(boot.paths)
 
-// ── 内置 GLB 工具（glb3d）────────────────────────────────────────────────────
-// 这个包自带 glb3d.mjs（渲染多视角预览 / 量比例 / 按高度带改比例）和它的技能说明。
-// 启动时落进 $DSH_HOME/skills/glb3d/，于是每次开机、每次升级都自带这个技能，不需要
-// 走插件市场、也不占用审批门后的工具面。内容一致就不重写，失败只记一行日志。
+// ── 内置技能 ─────────────────────────────────────────────────────────────────
+// 包内自带的脚本与说明，在启动时落进 $DSH_HOME/skills/<id>/，于是每次开机、每次升级都
+// 自带这些技能：不需要走插件市场，也不占用审批门后的工具面。内容一致就不重写，
+// 单个技能失败只记一行日志，绝不拦住引擎启动。
+//   glb3d    GLB 渲染预览 / 比例测量 / 按高度带改比例
+//   imagegen 生图 / 改图（images/edits multipart、images/generations）
 const here = dirname(fileURLToPath(import.meta.url))
 const home = process.env.DSH_HOME || join(process.env.HOME || '', '.dsh')
-try {
-  const skillDir = join(home, 'skills', 'glb3d')
-  mkdirSync(skillDir, { recursive: true })
-  const pairs = [['glb3d.mjs', 'glb.mjs'], ['glb3d-skill.md', 'SKILL.md']]
-  for (const [src, dst] of pairs) {
-    const from = join(here, src)
-    const to = join(skillDir, dst)
-    let same = false
-    try { same = readFileSync(from).equals(readFileSync(to)) } catch { same = false }
-    if (!same) writeFileSync(to, readFileSync(from))
+const BUNDLED_SKILLS = [
+  { id: 'glb3d', files: [['glb3d.mjs', 'glb.mjs'], ['glb3d-skill.md', 'SKILL.md']] },
+  { id: 'imagegen', files: [['imagegen.mjs', 'imagegen.mjs'], ['imagegen-skill.md', 'SKILL.md']] },
+]
+for (const skill of BUNDLED_SKILLS) {
+  try {
+    const dir = join(home, 'skills', skill.id)
+    mkdirSync(dir, { recursive: true })
+    for (const [src, dst] of skill.files) {
+      const from = join(here, src)
+      const to = join(dir, dst)
+      let same = false
+      try { same = readFileSync(from).equals(readFileSync(to)) } catch { same = false }
+      if (!same) writeFileSync(to, readFileSync(from))
+    }
+  } catch (error) {
+    console.warn(`${skill.id}: install skipped: ${error && error.message ? error.message : error}`)
   }
-} catch (error) {
-  console.warn(`glb3d: install skipped: ${error && error.message ? error.message : error}`)
 }
 
 let ready = false
