@@ -289,5 +289,25 @@
             android:exported="true"
             android:multiprocess="false"
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
-    </application>
+    <!-- 桌宠：assets/pets/teio 的悬浮层与快捷开关（PetOverlay.show / PetTile） -->
+    <service
+        android:name=".pet.PetOverlayService"
+        android:exported="false"
+        android:foregroundServiceType="specialUse">
+        <property
+            android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+            android:value="desktop pet overlay" />
+    </service>
+    <service
+        android:name=".pet.PetTile"
+        android:exported="true"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:label="东海帝皇"
+        android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+        <intent-filter>
+            <action android:name="android.service.quicksettings.action.QS_TILE" />
+        </intent-filter>
+    </service>
+
+</application>
 </manifest>
