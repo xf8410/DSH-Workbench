@@ -15,6 +15,7 @@
 //  4. a crash recorder and the boot journal (`ready` once the tree is up).
 // Extra argv after this script reaches the booted app unchanged (like bin.js's inner args).
 import { installCrashRecorder, markBoot, prepareBoot } from '@dsh-android/plugin-extensions/boot.js'
+import { apply as installGlb3dSkill } from '@dsh-android/plugin-3d'
 
 const boot = prepareBoot(process.env)
 // What the app's overlay rows and plugins may reference (`!!js process.env.…`): the node
@@ -23,6 +24,10 @@ process.env.DSH_NODE_BIN ||= boot.packageManager.command
 process.env.DSH_ANDROID_ENV_CJS ||= boot.paths.preload
 process.env.DSH_ANDROID_MCP_DIR ||= boot.paths.mcpServers
 installCrashRecorder(boot.paths)
+// The GLB toolkit ships as a skill, not as a row: mount it here so every boot has
+// $DSH_HOME/skills/glb3d/{SKILL.md,glb.mjs} without touching the approval-gated tool surface.
+// Failures are logged inside the plugin; a broken asset must never stop the boot.
+await installGlb3dSkill({ logger: console }).catch(() => {})
 let ready = false
 // A stop before the tree is up (the app gave up or the user left) is not a failed boot. Until
 // dsh installs its own handlers, this one also keeps the default exit.
