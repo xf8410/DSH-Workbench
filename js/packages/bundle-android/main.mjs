@@ -15,7 +15,9 @@
 //  4. a crash recorder and the boot journal (`ready` once the tree is up).
 // Extra argv after this script reaches the booted app unchanged (like bin.js's inner args).
 import { installCrashRecorder, markBoot, prepareBoot } from '@dsh-android/plugin-extensions/boot.js'
-import { apply as installGlb3dSkill } from '@dsh-android/plugin-3d'
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const boot = prepareBoot(process.env)
 // What the app's overlay rows and plugins may reference (`!!js process.env.…`): the node
@@ -24,10 +26,28 @@ process.env.DSH_NODE_BIN ||= boot.packageManager.command
 process.env.DSH_ANDROID_ENV_CJS ||= boot.paths.preload
 process.env.DSH_ANDROID_MCP_DIR ||= boot.paths.mcpServers
 installCrashRecorder(boot.paths)
-// The GLB toolkit ships as a skill, not as a row: mount it here so every boot has
-// $DSH_HOME/skills/glb3d/{SKILL.md,glb.mjs} without touching the approval-gated tool surface.
-// Failures are logged inside the plugin; a broken asset must never stop the boot.
-await installGlb3dSkill({ logger: console }).catch(() => {})
+
+// ── 内置 GLB 工具（glb3d）────────────────────────────────────────────────────
+// 这个包自带 glb3d.mjs（渲染多视角预览 / 量比例 / 按高度带改比例）和它的技能说明。
+// 启动时落进 $DSH_HOME/skills/glb3d/，于是每次开机、每次升级都自带这个技能，不需要
+// 走插件市场、也不占用审批门后的工具面。内容一致就不重写，失败只记一行日志。
+const here = dirname(fileURLToPath(import.meta.url))
+const home = process.env.DSH_HOME || join(process.env.HOME || '', '.dsh')
+try {
+  const skillDir = join(home, 'skills', 'glb3d')
+  mkdirSync(skillDir, { recursive: true })
+  const pairs = [['glb3d.mjs', 'glb.mjs'], ['glb3d-skill.md', 'SKILL.md']]
+  for (const [src, dst] of pairs) {
+    const from = join(here, src)
+    const to = join(skillDir, dst)
+    let same = false
+    try { same = readFileSync(from).equals(readFileSync(to)) } catch { same = false }
+    if (!same) writeFileSync(to, readFileSync(from))
+  }
+} catch (error) {
+  console.warn(`glb3d: install skipped: ${error && error.message ? error.message : error}`)
+}
+
 let ready = false
 // A stop before the tree is up (the app gave up or the user left) is not a failed boot. Until
 // dsh installs its own handlers, this one also keeps the default exit.
